@@ -20,7 +20,7 @@ const userLastWarningTime = {}; // Untuk menyimpan kapan terakhir user diberi pe
 const userLastBreakWarningTime = {}; // Untuk menyimpan kapan terakhir user diberi peringatan jam istirahat
 const SPAM_COOLDOWN_MS = 2000; // jeda minimal 2 detik antar chat (bisa diubah)
 // Nomor Admin tujuan untuk meneruskan chat dari masyarakat
-const ADMIN_NUMBER = process.env.ADMIN_WA_NUMBER || '6281111129996@c.us';
+const ADMIN_NUMBER = process.env.ADMIN_WA_NUMBER;
 
 // Inisialisasi client WhatsApp
 const client = new Client({
