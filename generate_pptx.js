@@ -51,7 +51,7 @@ async function createPresentation() {
     }
 
     // Helper: Footer Slide Terang
-    function addFooter(slide, pageNum, totalPages = 12) {
+    function addFooter(slide, pageNum, totalPages = 13) {
         slide.addShape(pres.shapes.LINE, {
             x: 0.8, y: 5.15, w: 8.4, h: 0,
             line: { color: C_CARD_BORDER, width: 0.8 }
@@ -817,7 +817,93 @@ async function createPresentation() {
     }
 
     // ==========================================
-    // SLIDE 11: ROADMAP PENGEMBANGAN
+    // SLIDE 11: PENCAPAIAN TAHAP 2 (FITUR LIVE)
+    // ==========================================
+    {
+        const slide = pres.addSlide();
+        slide.background = { color: C_SLATE_BG };
+        addHeader(slide, "Implementasi Tahap 2", "Realisasi Tahap 2: Integrasi Layanan Digital & IKM", "Otomasi end-to-end pelacakan tiket, permohonan digital, push notifikasi berkas, dan evaluasi kepuasan.");
+
+        const t2Features = [
+            {
+                tag: "PELACAKAN TIKET REALTIME",
+                title: "1. Tracking Status Tiket di WhatsApp",
+                desc: "Pemohon dapat melacak status berkas permohonan informasi langsung dari WhatsApp (Menu 2) tanpa harus membuka portal web. Menampilkan No. Tiket, Eselon penanggung jawab, status proses, dan estimasi tenggat waktu 10 hari kerja sesuai UU KIP No. 14/2008.",
+                badgeColor: '0284C7',
+                bgColor: 'F0F9FF'
+            },
+            {
+                tag: "FORMULIR DIGITAL WA",
+                title: "2. Pendaftaran Mandiri 4 Langkah",
+                desc: "Pemohon dapat mengajukan permohonan informasi publik secara langsung di WhatsApp cukup dengan mengetik DAFTAR. Bot memandu pengisian Nama, NIK KTP (16 digit), Rincian Informasi, & Tujuan, lalu otomatis menerbitkan nomor tiket resmi (PPID-YYYY-XXX).",
+                badgeColor: '10B981',
+                bgColor: 'F0FDF4'
+            },
+            {
+                tag: "PUSH NOTIFIKASI OTOMATIS",
+                title: "3. Pemberitahuan Status Berkas Realtime",
+                desc: "Setiap kali petugas memperbarui progres tiket via perintah admin /update_tiket [No] [Status] | [Catatan], sistem seketika mengirimkan push notification resmi ke WhatsApp pemohon secara otomatis beserta tautan unduh dokumen jika telah disetujui.",
+                badgeColor: '8B5CF6',
+                bgColor: 'F5F3FF'
+            },
+            {
+                tag: "SURVEI KEPUASAN (IKM)",
+                title: "4. Evaluasi Mutu Standar PermenPAN-RB",
+                desc: "Kuesioner kepuasan skala 1-5 bintang otomatis dikirimkan saat sesi konsultasi selesai atau berkas mencapai status Selesai. Terintegrasi dengan kalkulasi indeks kepuasan berstandar PermenPAN-RB (skala 25-100) dan laporan pimpinan via /ikm.",
+                badgeColor: 'F59E0B',
+                bgColor: 'FEFCE8'
+            }
+        ];
+
+        t2Features.forEach((f, idx) => {
+            const col = idx % 2;
+            const row = Math.floor(idx / 2);
+            const xPos = 0.8 + col * 4.35;
+            const yPos = 1.55 + row * 1.75;
+
+            // Card container
+            slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+                x: xPos, y: yPos, w: 4.15, h: 1.6,
+                rectRadius: 0.1,
+                fill: { color: C_WHITE },
+                line: { color: C_CARD_BORDER, width: 1 }
+            });
+
+            // Accent Left Bar
+            slide.addShape(pres.shapes.RECTANGLE, {
+                x: xPos, y: yPos + 0.15, w: 0.08, h: 1.3,
+                fill: { color: f.badgeColor }
+            });
+
+            // Tag badge
+            slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+                x: xPos + 0.25, y: yPos + 0.15, w: 2.1, h: 0.24,
+                rectRadius: 0.04,
+                fill: { color: f.bgColor }
+            });
+            slide.addText(f.tag, {
+                x: xPos + 0.25, y: yPos + 0.15, w: 2.1, h: 0.24,
+                fontSize: 7.5, bold: true, color: f.badgeColor, align: 'center', fontFace: 'Segoe UI'
+            });
+
+            // Title
+            slide.addText(f.title, {
+                x: xPos + 0.25, y: yPos + 0.44, w: 3.75, h: 0.32,
+                fontSize: 10.5, bold: true, color: C_TEXT_MAIN, fontFace: 'Segoe UI'
+            });
+
+            // Description
+            slide.addText(f.desc, {
+                x: xPos + 0.25, y: yPos + 0.78, w: 3.75, h: 0.74,
+                fontSize: 8.5, color: C_TEXT_MUTED, fontFace: 'Segoe UI', lineSpacingMultiple: 1.15
+            });
+        });
+
+        addFooter(slide, 11, 13);
+    }
+
+    // ==========================================
+    // SLIDE 12: ROADMAP PENGEMBANGAN (TAHAP 1 & 2 AKTIF)
     // ==========================================
     {
         const slide = pres.addSlide();
@@ -826,90 +912,127 @@ async function createPresentation() {
 
         const phases = [
             {
-                phase: "TAHAP 1 (AKTIF)",
+                phase: "TAHAP 1 (TERLAKSANA)",
+                badgeText: "TERLAKSANA ✅",
                 title: "Pondasi Bot & AI Agent",
                 items: [
                     "Engine WhatsApp Web Multi-device",
                     "Knowledge Base FAQ lokal (faq.json)",
                     "Integrasi Google Gemini Flash Lite",
-                    "Sistem Live Chat multi-operator"
+                    "Sistem Live Chat multi-operator",
+                    "Rekap harian otomatis ke Excel (16.00 WIB)"
                 ],
-                active: true
+                status: 'completed'
             },
             {
-                phase: "TAHAP 2 (SEGERA)",
+                phase: "TAHAP 2 (AKTIF & LIVE)",
+                badgeText: "AKTIF & LIVE 🚀",
                 title: "Integrasi API Portal PPID",
                 items: [
                     "Pelacakan status tiket langsung di WA",
                     "Pemberitahuan otomatis status berkas",
-                    "Sinkronisasi berkas permohonan digital",
-                    "Survey kepuasan (IKM) otomatis via WA"
+                    "Formulir permohonan digital mandiri",
+                    "Survei kepuasan (IKM) berstandar PermenPAN",
+                    "Perintah admin /list_tiket, /update_tiket, /ikm"
                 ],
-                active: false
+                status: 'active'
             },
             {
                 phase: "TAHAP 3 (MENENGAH)",
+                badgeText: "SELANJUTNYA ⏳",
                 title: "Official WhatsApp Cloud API",
                 items: [
                     "Verifikasi Centang Hijau Resmi KKP",
                     "Kapasitas pesan tanpa batas (High Volume)",
                     "Dashboard analytics percakapan web",
-                    "Multi-agent routing berdasarkan direktorat"
+                    "Multi-agent routing berdasarkan eselon I",
+                    "Integrasi SLA response time per direktorat"
                 ],
-                active: false
+                status: 'upcoming'
             },
             {
                 phase: "TAHAP 4 (LANJUTAN)",
+                badgeText: "JANGKA PANJANG 🎯",
                 title: "AI OCR & Auto-Verification",
                 items: [
                     "Ekstraksi data KTP pemohon otomatis via AI",
                     "Validasi kelengkapan berkas permohonan",
                     "Penyusunan draft jawaban berbasis arsip",
-                    "Integrasi Satu Data Kelautan KKP"
+                    "Integrasi Satu Data Kelautan KKP",
+                    "Smart analytics tren permohonan publik"
                 ],
-                active: false
+                status: 'future'
             }
         ];
 
         phases.forEach((ph, i) => {
             const xPos = 0.8 + i * 2.15;
+            const isActive = ph.status === 'active';
+            const isCompleted = ph.status === 'completed';
+
+            let cardFill = C_WHITE;
+            let cardBorder = C_CARD_BORDER;
+            let borderWidth = 1;
+            let badgeBg = 'E2E8F0';
+            let badgeTextColor = C_TEXT_MUTED;
+
+            if (isActive) {
+                cardFill = 'F0FDF4';
+                cardBorder = C_GREEN;
+                borderWidth = 1.8;
+                badgeBg = C_GREEN;
+                badgeTextColor = C_WHITE;
+            } else if (isCompleted) {
+                cardFill = 'F8FAFC';
+                cardBorder = '0284C7';
+                borderWidth = 1.2;
+                badgeBg = 'E0F2FE';
+                badgeTextColor = '0284C7';
+            }
+
             slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-                x: xPos, y: 1.6, w: 2.0, h: 3.3,
+                x: xPos, y: 1.55, w: 2.0, h: 3.45,
                 rectRadius: 0.1,
-                fill: { color: ph.active ? 'F0FDF4' : C_WHITE },
-                line: { color: ph.active ? C_GREEN : C_CARD_BORDER, width: ph.active ? 1.5 : 1 }
+                fill: { color: cardFill },
+                line: { color: cardBorder, width: borderWidth }
             });
 
             // Phase tag
             slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
-                x: xPos + 0.15, y: 1.8, w: 1.7, h: 0.28,
+                x: xPos + 0.15, y: 1.7, w: 1.7, h: 0.28,
                 rectRadius: 0.05,
-                fill: { color: ph.active ? C_GREEN : 'E2E8F0' }
+                fill: { color: badgeBg }
             });
-            slide.addText(ph.phase, {
-                x: xPos + 0.15, y: 1.8, w: 1.7, h: 0.28,
-                fontSize: 7.5, bold: true, color: ph.active ? C_WHITE : C_TEXT_MUTED, align: 'center', fontFace: 'Segoe UI'
+            slide.addText(ph.badgeText, {
+                x: xPos + 0.15, y: 1.7, w: 1.7, h: 0.28,
+                fontSize: 7.5, bold: true, color: badgeTextColor, align: 'center', fontFace: 'Segoe UI'
             });
 
             // Title
             slide.addText(ph.title, {
-                x: xPos + 0.15, y: 2.2, w: 1.7, h: 0.45,
-                fontSize: 10, bold: true, color: C_TEXT_MAIN, align: 'center', fontFace: 'Segoe UI'
+                x: xPos + 0.15, y: 2.05, w: 1.7, h: 0.45,
+                fontSize: 9.8, bold: true, color: C_TEXT_MAIN, align: 'center', fontFace: 'Segoe UI'
+            });
+
+            // Divider line
+            slide.addShape(pres.shapes.LINE, {
+                x: xPos + 0.25, y: 2.55, w: 1.5, h: 0,
+                line: { color: cardBorder, width: 0.6 }
             });
 
             // Items
             const itemsText = ph.items.map(it => `• ${it}`).join('\n');
             slide.addText(itemsText, {
-                x: xPos + 0.15, y: 2.75, w: 1.7, h: 2.0,
-                fontSize: 8, color: C_TEXT_MUTED, fontFace: 'Segoe UI', lineSpacingMultiple: 1.2
+                x: xPos + 0.12, y: 2.65, w: 1.76, h: 2.25,
+                fontSize: 7.6, color: C_TEXT_MUTED, fontFace: 'Segoe UI', lineSpacingMultiple: 1.15
             });
         });
 
-        addFooter(slide, 11);
+        addFooter(slide, 12, 13);
     }
 
     // ==========================================
-    // SLIDE 12: PENUTUP & TANYA JAWAB (DARK THEME)
+    // SLIDE 13: PENUTUP & TANYA JAWAB (DARK THEME)
     // ==========================================
     {
         const slide = pres.addSlide();
@@ -984,9 +1107,20 @@ async function createPresentation() {
         });
     }
 
-    const outputPath = path.join(__dirname, 'Presentasi_PPID_Bot_WhatsApp_KKP.pptx');
-    await pres.writeFile({ fileName: outputPath });
-    console.log(`✅ File presentasi berhasil dibuat di: ${outputPath}`);
+    let outputPath = path.join(__dirname, 'Presentasi_PPID_Bot_WhatsApp_KKP.pptx');
+    try {
+        await pres.writeFile({ fileName: outputPath });
+        console.log(`✅ File presentasi berhasil dibuat di: ${outputPath}`);
+    } catch (saveErr) {
+        if (saveErr.code === 'EBUSY') {
+            outputPath = path.join(__dirname, 'Presentasi_PPID_Bot_WhatsApp_KKP_Tahap2.pptx');
+            console.log(`⚠️ File utama sedang dibuka di PowerPoint. Menyimpan ke alternatif: ${outputPath}`);
+            await pres.writeFile({ fileName: outputPath });
+            console.log(`✅ File presentasi Tahap 2 berhasil dibuat di: ${outputPath}`);
+        } else {
+            throw saveErr;
+        }
+    }
 }
 
 createPresentation().catch(err => {

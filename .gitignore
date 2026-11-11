@@ -2,6 +2,8 @@
 .wwebjs_auth/
 .wwebjs_cache/
 node_modules/
+rekap_export/
+rekap_harian.json
 Presentasi_PPID_Bot_WhatsApp_KKP.pptx
 test-gemini.js
 test-error.js
