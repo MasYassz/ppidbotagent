@@ -26,8 +26,9 @@ ATURAN FORMATTING WHATSAPP:
 - DILARANG KERAS menggunakan tanda bintang ganda **teks** karena merusak kerapian tampilan di WhatsApp.
 
 PENGALIHAN WEWENANG:
-- Untuk SEGALA BENTUK perizinan (SIPI, SIUP, PKKPRL, OSS, SILAT, izin usaha, izin kapal, izin penangkapan, izin budidaya, izin berlayar, lisensi, surat izin, permit), WAJIB arahkan ke *PTSA (Pelayanan Terpadu Satu Atap)* KKP melalui WhatsApp: 0811-8430-610. JANGAN jawab pertanyaan perizinan sendiri, langsung redirect ke PTSA.
-- Untuk Pengaduan Illegal Fishing atau keluhan teknis, arahkan ke Call Center KKP di 141 atau pengaduan@kkp.go.id
+- Untuk SEGALA BENTUK perizinan (SIPI, SIUP, PKKPRL, OSS, SILAT, izin usaha, izin kapal, izin penangkapan, izin budidaya, izin berlayar, lisensi, surat izin, permit), WAJIB arahkan ke *PTSA (Pelayanan Terpadu Satu Atap)* KKP melalui WhatsApp: 0811-8430-610, Email: ptsp@kkp.go.id, Telepon: 021-3519070 ext. 2826. JANGAN jawab pertanyaan perizinan sendiri, langsung redirect ke PTSA.
+- Untuk Pengaduan Awak Kapal Perikanan (AKP / ABK, gaji, kecelakaan kapal, kendala di kapal), arahkan ke: Pengaduan AKP: 0811251744 atau https://lapor.go.id, atau Call Center Gangguan Operasional (Pengaduan AKP): +62 811-1000-3132.
+- Untuk Pengaduan Umum / Laporan lainnya, jawab persis: "Baik Sahabat, saat ini kami sudah mendata mengenai laporannya. Boleh juga Sahabat bantu untuk melaporkannya melalui informasi ini ya: Email: pengaduan@kkp.go.id, WhatsApp: 0811989011, Website: https://lapor.go.id".
 - Untuk info umum kelautan, arahkan ke website resmi kkp.go.id
 - Jika informasi tidak memadai atau butuh verifikasi berkas, sarankan mengetik *BANTUAN* untuk diteruskan ke Petugas PPID.`
 });
@@ -64,10 +65,115 @@ function isPerizinanQuery(text) {
 
 const PTSA_REDIRECT_MESSAGE =
     `Halo #SahabatBahari,\n\n` +
-    `Terkait permohonan *perizinan*, silakan langsung menghubungi *PTSA (Pelayanan Terpadu Satu Atap)* KKP:\n\n` +
-    `📱 *WhatsApp PTSA:* 0811-8430-610\n\n` +
-    `Melalui kanal tersebut, Sahabat akan mendapatkan penjelasan lebih lengkap dan akurat mengenai perizinan.\n\n` +
+    `Terkait permohonan *perizinan*, silakan langsung berkonsultasi dengan *PTSA (Pelayanan Terpadu Satu Atap)* KKP:\n\n` +
+    `📱 *WhatsApp PTSA:* 0811-8430-610\n` +
+    `📧 *Email:* ptsp@kkp.go.id\n` +
+    `☎️ *Telepon:* 021-3519070 ext. 2826\n` +
+    `🏢 *Layanan Tatap Muka:* Gedung Mina Bahari IV Lt. 1, Gambir, Jakarta Pusat (Senin–Kamis 08.00–15.30 WIB)\n\n` +
     `Salam hormat.`;
+
+// ==========================================
+// 🔒 DETEKSI PENGADUAN (AKP/ABK & UMUM)
+// ==========================================
+function isPengaduanAkpQuery(text) {
+    const t = (text || '').toLowerCase();
+    const hasAkpAbk = /\b(akp|abk|awak kapal|pelaut|pelaut perikanan)\b/.test(t);
+    const hasPengaduan = /\b(pengaduan|aduan|lapor|laporkan|keluhan|gaji|kecelakaan|ditahan|masalah|kasus|korban)\b/.test(t);
+    const specificKeywords = [
+        'pengaduan akp', 'pengaduan abk', 'lapor akp', 'lapor abk',
+        'gaji abk', 'gaji akp', 'abk ditahan', 'abk disiksa', 'abk terlantar',
+        'kecelakaan kapal abk', 'kecelakaan akp', 'masalah abk', 'masalah akp',
+        'gangguan operasional akp', 'aduan akp', 'aduan abk'
+    ];
+    return specificKeywords.some(k => t.includes(k)) || (hasAkpAbk && hasPengaduan);
+}
+
+function isPengaduanQuery(text) {
+    const t = (text || '').toLowerCase();
+    const keywords = [
+        'pengaduan', 'lapor', 'laporkan', 'aduan', 'melaporkan', 'keluhan',
+        'pungli', 'whistleblower', 'wbs', 'pelanggaran perikanan', 'lapor.go.id'
+    ];
+    return keywords.some(k => t.includes(k));
+}
+
+const AKP_PENGADUAN_MESSAGE =
+    `Halo #SahabatBahari,\n\n` +
+    `Terkait laporan atau pengaduan mengenai *Awak Kapal Perikanan (AKP / ABK)* (gaji, kecelakaan, atau kendala di kapal), silakan dapat langsung disampaikan melalui:\n\n` +
+    `📱 *Pengaduan AKP:* 0811251744 atau ke https://lapor.go.id\n` +
+    `📞 *Call Center Gangguan Operasional (Pengaduan AKP):* +62 811-1000-3132\n\n` +
+    `Salam hormat.`;
+
+const PENGADUAN_UMUM_MESSAGE =
+    `Halo #SahabatBahari,\n\n` +
+    `Baik Sahabat, saat ini kami sudah mendata mengenai laporannya. Boleh juga Sahabat bantu untuk melaporkannya melalui informasi ini ya:\n\n` +
+    `📧 *Email:* pengaduan@kkp.go.id\n` +
+    `📱 *WhatsApp:* 0811989011\n` +
+    `🌐 *Website:* https://lapor.go.id\n\n` +
+    `Salam hormat.`;
+
+// ==========================================
+// 👨‍💻 DETEKSI PERMINTAAN HUBUNGI PETUGAS (ESKALASI CS)
+// ==========================================
+function isEscalationQuery(text) {
+    const t = (text || '').toLowerCase().trim();
+
+    // 1. Menu angka 6
+    if (t === '6') return true;
+
+    // 2. Proteksi Bantuan Pemerintah: Jika mengandung topik bantuan sarana/bantuan program KKP, BUKAN eskalasi!
+    const bantuanPemerintahKeywords = [
+        'bantuan alat', 'alat tangkap', 'bantuan kapal', 'bantuan perahu',
+        'bantuan mesin', 'bantuan benih', 'bantuan bibit', 'bantuan pakan',
+        'bantuan kolam', 'bantuan tambak', 'bantuan budidaya', 'bantuan budi daya',
+        'bantuan bioflok', 'bantuan jaring', 'bantuan rumpon', 'bantuan modal',
+        'bantuan dana', 'bantuan uang', 'bantuan hibah', 'bantuan pupuk',
+        'bantuan pemerintah', 'bantuan pokdakan', 'bantuan kelompok',
+        'bantuan nelayan', 'juknis bantuan', 'proposal bantuan', 'syarat bantuan',
+        'info bantuan', 'daftar bantuan', 'cara dapat bantuan', 'ada bantuan',
+        'dapat bantuan', 'bantuan kkp', 'bantuan dari kkp', 'program bantuan'
+    ];
+    if (bantuanPemerintahKeywords.some(k => t.includes(k))) {
+        return false;
+    }
+
+    // 3. Perintah tunggal atau kata kunci pasti untuk minta bantuan manusia / CS
+    const exactCommands = [
+        'bantuan', 'help', 'cs', 'petugas', 'admin', 'operator', 'manusia',
+        'live chat', 'livechat', 'hubungi petugas', 'hubungi admin',
+        'hubungi cs', 'bicara dengan petugas', 'bicara dengan manusia',
+        'chat petugas', 'chat admin', 'chat cs', 'minta bantuan',
+        'butuh bantuan', 'sambungkan ke petugas', 'terhubung ke petugas',
+        'petugas ppid', 'operator ppid'
+    ];
+    if (exactCommands.includes(t)) return true;
+
+    // 4. Pola frasa eksplisit ingin terhubung ke petugas / CS manusia
+    const escalationPatterns = [
+        /\b(hubungi|bicara|sambung(kan)?|terhubung|kontak|pindah(kan)?)\s+(dengan\s+|ke\s+)?(petugas|cs|customer service|admin|operator|manusia)\b/i,
+        /\b(mau|ingin|bisa)\s+(bicara|ngobrol|chat|konsultasi)\s+(sama\s+|dengan\s+)?(petugas|cs|admin|manusia|orang)\b/i,
+        /\b(minta|butuh|tolong)\s+(bantuan\s+)?(petugas|cs|admin|manusia)\b/i,
+        /\b(petugas|cs|admin)\s+(asli|manusia|helpdesk|pelayanan)\b/i,
+        /\b(live\s*chat|livechat)\b/i
+    ];
+
+    if (escalationPatterns.some(pattern => pattern.test(t))) {
+        return true;
+    }
+
+    // 5. Kalimat sangat pendek (<= 3 kata) yang spesifik mengandung kata kunci eskalasi
+    const words = t.split(/\s+/);
+    if (words.length <= 3) {
+        if (words.includes('petugas') || words.includes('cs') || words.includes('admin') || words.includes('operator')) {
+            return true;
+        }
+        if (words.includes('bantuan') && (words.includes('butuh') || words.includes('minta') || words.includes('tolong') || words.includes('dong') || words.includes('min') || words.includes('kak'))) {
+            return true;
+        }
+    }
+
+    return false;
+}
 // Helper normalisasi nomor telepon ke format 628...
 function normalizePhone(num) {
     if (!num) return '';
@@ -1047,8 +1153,7 @@ client.on('message', async (message) => {
         }
 
         // Cek jika user ingin eskalasi ke petugas
-        const escalationKeywords = /\b(petugas|cs|customer service|agen|admin|manusia|bantuan|komplain)\b/i;
-        if (escalationKeywords.test(text)) {
+        if (isEscalationQuery(text)) {
             // Trigger 3: Hanya izinkan eskalasi jika sudah mencoba bertanya minimal 1 kali
             if (userAiChatCount[sender] && userAiChatCount[sender] >= 1) {
                 userState[sender] = 'CS_MODE';
@@ -1060,13 +1165,41 @@ client.on('message', async (message) => {
             }
         }
 
+        // 🔒 Intercept Pengaduan AKP / ABK
+        if (isPengaduanAkpQuery(text)) {
+            await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Diarahkan ke Layanan Pengaduan AKP (WA: 0811251744, Call Center: +62 811-1000-3132)',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        // 🔒 Intercept Pengaduan Umum
+        if (isPengaduanQuery(text)) {
+            await sendUserMessage(sender, PENGADUAN_UMUM_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Diarahkan ke Layanan Pengaduan KKP (Email: pengaduan@kkp.go.id, WA: 0811989011)',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
         // 🔒 Intercept perizinan → redirect ke PTSA
         if (isPerizinanQuery(text)) {
             await sendUserMessage(sender, PTSA_REDIRECT_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
             tracker.recordConversation({
                 phone: senderPhone,
                 text: message.body,
-                answer: 'Diarahkan ke PTSA KKP (WA: 0811-8430-610)',
+                answer: 'Diarahkan ke PTSA KKP (WA: 0811-8430-610, Email: ptsp@kkp.go.id)',
                 source: 'BOT',
                 aiModel,
                 status: 'DONE'
@@ -1250,9 +1383,9 @@ client.on('message', async (message) => {
     else if (text === '4') {
         await sendUserMessage(sender, "⚖️ *Tata Cara Pengajuan Keberatan*\n\nApabila permohonan informasi Anda ditolak atau tidak ditanggapi dalam waktu 10 hari kerja, Anda berhak mengajukan keberatan secara tertulis kepada Atasan PPID KKP.\n\nPanduan lengkap dan formulir keberatan dapat dilihat di: https://ppid.kkp.go.id\n\nKetik *0* untuk kembali ke Menu Utama.");
     }
-    else if (text === '6' || text.match(/\b(petugas|cs|customer service|agen|admin|manusia|bantuan|komplain)\b/i)) {
-        // Jika memilih menu '6' langsung terhubung, atau jika kata kunci maka terhubung jika sudah pernah interaksi
-        if (text === '6' || (userAiChatCount[sender] && userAiChatCount[sender] >= 1)) {
+    else if (isEscalationQuery(text)) {
+        // Jika memilih menu '6', ketik 'bantuan', atau jika sudah pernah interaksi tanya-jawab
+        if (text === '6' || text === 'bantuan' || (userAiChatCount[sender] && userAiChatCount[sender] >= 1)) {
             userState[sender] = 'CS_MODE';
             await sendUserMessage(sender, "👨‍💻 *Terhubung ke Petugas PPID*\n\nMohon tunggu, pesan Anda akan langsung diteruskan ke Petugas Layanan Informasi PPID kami.\n\nSilakan ketikkan permohonan atau pertanyaan Anda secara lengkap di bawah ini:\n\n_(Ketik *0* jika Anda ingin membatalkan dan kembali ke Menu Utama)_");
         } else {
@@ -1285,13 +1418,41 @@ client.on('message', async (message) => {
         }
         // Jika teks berupa pertanyaan panjang -> Cek Template Dulu, jika tidak ada baru panggil AI
         else {
+            // 🔒 Intercept Pengaduan AKP / ABK (sebelum FAQ/AI)
+            if (isPengaduanAkpQuery(text)) {
+                await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE + "\n\n_(Ketik *0* atau *Menu* untuk melihat opsi layanan lain)_");
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: 'Diarahkan ke Layanan Pengaduan AKP (WA: 0811251744, Call Center: +62 811-1000-3132)',
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+                return;
+            }
+
+            // 🔒 Intercept Pengaduan Umum (sebelum FAQ/AI)
+            if (isPengaduanQuery(text)) {
+                await sendUserMessage(sender, PENGADUAN_UMUM_MESSAGE + "\n\n_(Ketik *0* atau *Menu* untuk melihat opsi layanan lain)_");
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: 'Diarahkan ke Layanan Pengaduan KKP (Email: pengaduan@kkp.go.id, WA: 0811989011)',
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+                return;
+            }
+
             // 🔒 Intercept perizinan → redirect ke PTSA (sebelum FAQ/AI)
             if (isPerizinanQuery(text)) {
                 await sendUserMessage(sender, PTSA_REDIRECT_MESSAGE + "\n\n_(Ketik *0* atau *Menu* untuk melihat opsi layanan lain)_");
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
-                    answer: 'Diarahkan ke PTSA KKP (WA: 0811-8430-610)',
+                    answer: 'Diarahkan ke PTSA KKP (WA: 0811-8430-610, Email: ptsp@kkp.go.id)',
                     source: 'BOT',
                     aiModel,
                     status: 'DONE'
