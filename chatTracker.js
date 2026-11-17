@@ -51,29 +51,70 @@ function cleanWhatsAppFormatting(text) {
     return clean;
 }
 
-// Muat data rekap harian dari file JSON
+// Muat data rekap harian dari file JSON dengan proteksi persistensi & arsip permanen
 function loadRekapData() {
     const today = getTodayDateWIB();
     try {
         if (fs.existsSync(REKAP_FILE)) {
             const raw = fs.readFileSync(REKAP_FILE, 'utf8');
             const data = JSON.parse(raw);
-            if (data && data.date === today && data.records) {
+            if (data && typeof data === 'object') {
+                data.archive = data.archive || {};
+                data.records = data.records || {};
+
+                // 1. Jika tanggal file sama dengan hari ini, gunakan langsung (tidak ada reset)
+                if (data.date === today) {
+                    return data;
+                }
+
+                // 2. Jika tanggal file adalah hari sebelumnya (rollover hari baru / restart di hari lain):
+                // JANGAN HAPUS data hari sebelumnya! Simpan ke arsip dan export file cadangan harian.
+                const prevDate = data.date;
+                if (prevDate && Object.keys(data.records).length > 0) {
+                    data.archive[prevDate] = data.records;
+
+                    try {
+                        if (!fs.existsSync(EXPORT_DIR)) fs.mkdirSync(EXPORT_DIR, { recursive: true });
+                        const backupJsonPath = path.join(EXPORT_DIR, `rekap_harian_${prevDate}.json`);
+                        if (!fs.existsSync(backupJsonPath)) {
+                            fs.writeFileSync(backupJsonPath, JSON.stringify({ date: prevDate, records: data.records }, null, 2), 'utf8');
+                            console.log(`[REKAP PERSISTENCE] Berhasil mencadangkan rekapan ${prevDate} ke ${backupJsonPath}`);
+                        }
+                    } catch (e) {
+                        console.error(`[REKAP PERSISTENCE] Gagal backup arsip harian ${prevDate}:`, e);
+                    }
+                }
+
+                // Inisialisasi untuk hari baru (pulihkan jika hari ini sudah pernah ada data)
+                data.date = today;
+                if (data.archive[today] && Object.keys(data.records).length === 0) {
+                    data.records = data.archive[today];
+                } else if (prevDate !== today) {
+                    data.records = {};
+                }
+
+                saveRekapData(data);
                 return data;
             }
         }
     } catch (err) {
         console.error('Gagal membaca rekap_harian.json:', err);
     }
-    return {
+    const newData = {
         date: today,
-        records: {}
+        records: {},
+        archive: {}
     };
+    saveRekapData(newData);
+    return newData;
 }
 
-// Simpan data rekap harian ke file JSON
+// Simpan data rekap harian ke file JSON dengan proteksi arsip
 function saveRekapData(data) {
     try {
+        if (!data || typeof data !== 'object') return;
+        data.records = data.records || {};
+        data.archive = data.archive || {};
         fs.writeFileSync(REKAP_FILE, JSON.stringify(data, null, 2), 'utf8');
     } catch (err) {
         console.error('Gagal menyimpan rekap_harian.json:', err);
@@ -144,28 +185,30 @@ function determineFallbackCategory(text) {
 
     // Kategori
     let kategori = 'Informasi';
-    const pengaduanKeywords = ['keluhan', 'kecewa', 'rugi', 'lambat', 'rusak', 'salah', 'tidak bisa', 'gagal', 'lapor', 'aduan', 'komplain', 'penipuan', 'kendala', 'hilang', 'musibah', 'tenggelam', 'tolong'];
+    const pengaduanKeywords = ['keluhan', 'kecewa', 'rugi', 'lambat', 'rusak', 'salah', 'tidak bisa', 'gagal', 'lapor', 'aduan', 'komplain', 'penipuan', 'surat palsu', 'pemalsuan', 'palsu', 'bodong', 'fiktif', 'kendala', 'hilang', 'musibah', 'tenggelam', 'tolong'];
     if (pengaduanKeywords.some(k => t.includes(k))) {
         kategori = 'Pengaduan';
     }
 
     // Unit Eselon I KKP
     let eselon = 'Setjen / PPID';
-    if (t.includes('hilang') || t.includes('tenggelam') || t.includes('illegal') || t.includes('pencurian ikan') || t.includes('patroli') || t.includes('tangkap liar') || t.includes('psdkp')) {
+    if (t.includes('surat palsu') || t.includes('pemalsuan') || t.includes('palsu') || t.includes('bodong') || t.includes('fiktif') || t.includes('keaslian') || t.includes('keabsahan') || t.includes('gratifikasi') || t.includes('pungli') || t.includes('wbs')) {
+        eselon = 'Itjen';
+    } else if (t.includes('hilang') || t.includes('tenggelam') || t.includes('illegal') || t.includes('pencurian ikan') || t.includes('patroli') || t.includes('tangkap liar') || t.includes('psdkp') || t.includes('bom')) {
         eselon = 'PSDKP';
-    } else if (t.includes('pkkprl') || t.includes('ruang laut') || t.includes('pesisir') || t.includes('buaya') || t.includes('penyu') || t.includes('konservasi')) {
+    } else if (t.includes('pkkprl') || t.includes('ruang laut') || t.includes('pesisir') || t.includes('buaya') || t.includes('penyu') || t.includes('konservasi') || t.includes('bcl') || t.includes('bulan cinta laut') || t.includes('garam')) {
         eselon = 'PKRL';
-    } else if (t.includes('pelatihan') || t.includes('puslat') || t.includes('akp') || t.includes('bst') || t.includes('diklat') || t.includes('absen') || t.includes('penyuluh') || t.includes('digiluh') || t.includes('sdmkp')) {
+    } else if (t.includes('pelatihan') || t.includes('puslat') || t.includes('akp') || t.includes('bst') || t.includes('diklat') || t.includes('absen') || t.includes('penyuluh') || t.includes('digiluh') || t.includes('sdmkp') || t.includes('e-laut')) {
         eselon = 'BPPSDM';
-    } else if (t.includes('kapal') || t.includes('sipi') || t.includes('siup') || t.includes('tangkap') || t.includes('pelabuhan') || t.includes('bubu')) {
+    } else if (t.includes('kapal') || t.includes('sipi') || t.includes('siup') || t.includes('tangkap') || t.includes('pelabuhan') || t.includes('bubu') || t.includes('knmp') || t.includes('nelayan') || t.includes('sicefi') || t.includes('skkp')) {
         eselon = 'DJPT';
-    } else if (t.includes('budidaya') || t.includes('tambak') || t.includes('benih') || t.includes('bibit') || t.includes('pakan')) {
+    } else if (t.includes('budidaya') || t.includes('tambak') || t.includes('benih') || t.includes('bibit') || t.includes('pakan') || t.includes('pantura') || t.includes('nila salin') || t.includes('bioflok')) {
         eselon = 'DJPB';
     } else if (t.includes('mutu') || t.includes('lab') || t.includes('buski') || t.includes('karantina') || t.includes('bppmhkp')) {
         eselon = 'BPPMHKP';
     } else if (t.includes('ekspor') || t.includes('impor') || t.includes('pasar') || t.includes('bazar') || t.includes('promosi') || t.includes('neraca')) {
         eselon = 'PDSPKP';
-    } else if (t.includes('lpmukp') || t.includes('modal') || t.includes('pinjaman') || t.includes('lpse') || t.includes('lelang') || t.includes('ukpbj') || t.includes('magang') || t.includes('ppid') || t.includes('surat')) {
+    } else if (t.includes('lpmukp') || t.includes('modal') || t.includes('pinjaman') || t.includes('lpse') || t.includes('lelang') || t.includes('ukpbj') || t.includes('magang') || t.includes('ppid') || t.includes('surat') || t.includes('pkpn') || t.includes('ekonomi biru')) {
         eselon = 'Setjen / PPID';
     }
 
@@ -181,8 +224,12 @@ function isSubstantialQuestion(text) {
     if (!text || typeof text !== 'string') return false;
     const t = text.trim().toLowerCase();
 
-    // Menu navigasi tunggal
-    const menuCommands = ['1', '2', '3', '4', '5', '6', '0', 'menu', 'kembali', 'selesai', 'akhiri', 'daftar', '/daftar'];
+    // Menu navigasi tunggal & opsi tertutup
+    const menuCommands = [
+        '1', '2', '3', '4', '5', '6', '0', 'menu', 'kembali', 'selesai', 'akhiri', 'daftar', '/daftar',
+        'ya', 'tidak', 'sudah', 'cukup', 'oke', 'ok', 'batal',
+        'a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'c4', 'c5', 'd1', 'd2', 'd3', 'd4', 'd5'
+    ];
     if (menuCommands.includes(t)) return false;
 
     // Perintah admin
@@ -317,7 +364,69 @@ Keluarkan HANYA teks ringkasan jawaban inti bersih tanpa tanda kutip.`;
     return `${existingAnswer}\n• ${coreNew}`;
 }
 
-// Catat atau perbarui rekapan percakapan harian (1 nomor = 1 baris rekap per hari)
+// Jendela inaktivitas maksimal untuk satu sesi aktif (30 menit)
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+
+// Cari record sesi aktif pemohon berdasarkan nomor HP
+function findActiveUserRecord(rekapData, cleanPhone) {
+    if (!rekapData || !rekapData.records || !cleanPhone) return null;
+    const now = Date.now();
+    const records = Object.values(rekapData.records);
+
+    // Filter record yang sesuai nomor HP pemohon
+    const userRecords = records.filter(r => {
+        const rClean = (r.cleanPhone || (r.phone ? r.phone.replace(/\D/g, '') : '')).toString();
+        return rClean === cleanPhone || (r.id && r.id.startsWith(cleanPhone));
+    });
+
+    if (userRecords.length === 0) return null;
+
+    // Urutkan dari yang paling baru
+    userRecords.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    const latest = userRecords[0];
+
+    // Jika sesi ini telah ditutup secara eksplisit (misal user ketik 'ya' / 'selesai' / admin ketik '/selesai')
+    if (latest.isClosed === true) {
+        return null;
+    }
+
+    // Jika sesi masih Pending (menunggu respon petugas), sesi tetap aktif
+    if ((latest.status || '').toLowerCase() === 'pending') {
+        return latest;
+    }
+
+    // Jika sesi masih dalam batas jeda waktu inaktivitas 30 menit
+    const lastTime = latest.timestamp || 0;
+    if (now - lastTime < SESSION_TIMEOUT_MS) {
+        return latest;
+    }
+
+    // Lewat dari 30 menit tanpa aktivitas, sesi lama otomatis ditutup
+    latest.isClosed = true;
+    return null;
+}
+
+// Menutup sesi percakapan pemohon secara eksplisit (sehingga chat berikutnya menjadi sesi baru)
+function closeUserSession(phone) {
+    if (!phone) return;
+    const cleanPhone = phone.toString().replace(/\D/g, '');
+    if (!cleanPhone) return;
+
+    try {
+        const rekapData = loadRekapData();
+        const activeRecord = findActiveUserRecord(rekapData, cleanPhone);
+        if (activeRecord) {
+            activeRecord.isClosed = true;
+            activeRecord.closedAt = Date.now();
+            saveRekapData(rekapData);
+            console.log(`[SESSION] Sesi percakapan ${cleanPhone} (${activeRecord.id}) berhasil ditutup.`);
+        }
+    } catch (err) {
+        console.error('[SESSION] Gagal menutup sesi pemohon:', err);
+    }
+}
+
+// Catat atau perbarui rekapan percakapan harian (Mendukung banyak sesi terpisah per nomor dalam 1 hari)
 async function recordConversation({ phone, text, answer, source, aiModel, status = 'Done' }) {
     if (!phone) return;
     const cleanPhone = phone.toString().replace(/\D/g, '');
@@ -325,22 +434,18 @@ async function recordConversation({ phone, text, answer, source, aiModel, status
     const formattedPhone = cleanPhone.startsWith('62') ? `+${cleanPhone}` : `+62${cleanPhone.replace(/^0/, '')}`;
 
     const rekapData = loadRekapData();
-    const existing = rekapData.records[cleanPhone];
-
-    // Status diseragamkan ke Title Case ('Done' atau 'Pending')
     const finalStatus = status.toLowerCase() === 'pending' ? 'Pending' : 'Done';
+    const now = Date.now();
 
     // 1. Jika balasan berasal dari petugas manusia (Live Chat Admin)
     if (source === 'MANUSIA') {
-        // Cari record yang cocok:
-        // Prioritas 1: Kecocokan langsung nomor cleanPhone
-        // Prioritas 2: Jika nomor pengirim adalah LID atau tidak cocok, cari record yang sedang 'Pending' (karena admin sedang membalas pemohon yang menunggu)
-        let targetRecord = rekapData.records[cleanPhone];
+        let targetRecord = findActiveUserRecord(rekapData, cleanPhone);
+
+        // Jika tidak ketemu berdasarkan cleanPhone (misal sender adalah LID atau nomor admin),
+        // cari record yang sedang 'Pending' (karena admin sedang membalas pemohon yang menunggu)
         if (!targetRecord) {
-            const pendingKey = Object.keys(rekapData.records).find(k => (rekapData.records[k].status || '').toLowerCase() === 'pending');
-            if (pendingKey) {
-                targetRecord = rekapData.records[pendingKey];
-            }
+            const allRecords = Object.values(rekapData.records);
+            targetRecord = allRecords.find(r => (r.status || '').toLowerCase() === 'pending');
         }
 
         if (targetRecord) {
@@ -356,21 +461,34 @@ async function recordConversation({ phone, text, answer, source, aiModel, status
             targetRecord.sumberJawaban = 'MANUSIA';
             targetRecord.status = 'Done';
             targetRecord.waktu = getCurrentTimeFormattedWIB();
+            targetRecord.timestamp = now;
         } else {
             // Hanya buat baris baru jika bukan nomor LID (nomor HP valid biasanya dimulai 62 atau 08)
             const isLid = cleanPhone.length > 13 && !cleanPhone.startsWith('628') && !cleanPhone.startsWith('08');
             if (!isLid) {
                 const initialAnswer = cleanCourtesyFluff(cleanWhatsAppFormatting(answer));
-                rekapData.records[cleanPhone] = {
+                const allUserRecords = Object.values(rekapData.records).filter(r => {
+                    const rClean = (r.cleanPhone || (r.phone ? r.phone.replace(/\D/g, '') : '')).toString();
+                    return rClean === cleanPhone || (r.id && r.id.startsWith(cleanPhone));
+                });
+                const sessionIndex = allUserRecords.length + 1;
+                const recordId = `${cleanPhone}_${sessionIndex}`;
+
+                rekapData.records[recordId] = {
+                    id: recordId,
+                    sessionIndex,
+                    cleanPhone,
                     phone: formattedPhone,
                     waktu: getCurrentTimeFormattedWIB(),
+                    timestamp: now,
                     kanal: 'WhatsApp',
                     pertanyaan: cleanWhatsAppFormatting(text || '[Konsultasi Langsung dengan Petugas]'),
                     eselon: 'Setjen / PPID',
                     jawaban: initialAnswer,
                     sumberJawaban: 'MANUSIA',
                     status: 'Done',
-                    kategori: 'Informasi'
+                    kategori: 'Informasi',
+                    isClosed: false
                 };
             }
         }
@@ -380,7 +498,6 @@ async function recordConversation({ phone, text, answer, source, aiModel, status
 
     // 2. Jika pesan pemohon diteruskan ke live chat petugas tapi belum dibalas (Pending)
     if (finalStatus === 'Pending') {
-        // Abaikan jika hanya berupa ucapan terima kasih / konfirmasi / basa-basi penutup dari pemohon
         if (!isSubstantialQuestion(text)) {
             return;
         }
@@ -388,32 +505,47 @@ async function recordConversation({ phone, text, answer, source, aiModel, status
         const analysis = await analyzeChatWithAI(text, aiModel);
         const newQuestion = cleanWhatsAppFormatting(analysis.pertanyaanInti || text);
 
-        if (existing) {
-            // Gabungkan pertanyaan jika nomor yang sama menanyakan hal baru (dengan format bullet point)
-            if (!existing.pertanyaan.toLowerCase().includes(newQuestion.toLowerCase())) {
-                existing.pertanyaan = `${existing.pertanyaan}\n• ${newQuestion}`;
-            }
-            existing.eselon = analysis.eselon;
-            existing.kategori = analysis.kategori;
-            existing.waktu = getCurrentTimeFormattedWIB();
+        let activeRecord = findActiveUserRecord(rekapData, cleanPhone);
 
-            // Jika belum dijawab oleh petugas manusia, status menjadi Pending
-            if (existing.sumberJawaban !== 'MANUSIA') {
-                existing.status = 'Pending';
-                existing.jawaban = 'Menunggu respon petugas...';
-                existing.sumberJawaban = 'BELUM DIJAWAB';
+        if (activeRecord) {
+            // Gabungkan pertanyaan jika nomor yang sama menanyakan hal baru dalam sesi aktif ini
+            if (!activeRecord.pertanyaan.toLowerCase().includes(newQuestion.toLowerCase())) {
+                activeRecord.pertanyaan = `${activeRecord.pertanyaan}\n• ${newQuestion}`;
+            }
+            activeRecord.eselon = analysis.eselon;
+            activeRecord.kategori = analysis.kategori;
+            activeRecord.waktu = getCurrentTimeFormattedWIB();
+            activeRecord.timestamp = now;
+
+            if (activeRecord.sumberJawaban !== 'MANUSIA') {
+                activeRecord.status = 'Pending';
+                activeRecord.jawaban = 'Menunggu respon petugas...';
+                activeRecord.sumberJawaban = 'BELUM DIJAWAB';
             }
         } else {
-            rekapData.records[cleanPhone] = {
+            // Buat baris sesi baru terpisah
+            const allUserRecords = Object.values(rekapData.records).filter(r => {
+                const rClean = (r.cleanPhone || (r.phone ? r.phone.replace(/\D/g, '') : '')).toString();
+                return rClean === cleanPhone || (r.id && r.id.startsWith(cleanPhone));
+            });
+            const sessionIndex = allUserRecords.length + 1;
+            const recordId = `${cleanPhone}_${sessionIndex}`;
+
+            rekapData.records[recordId] = {
+                id: recordId,
+                sessionIndex,
+                cleanPhone,
                 phone: formattedPhone,
                 waktu: getCurrentTimeFormattedWIB(),
+                timestamp: now,
                 kanal: 'WhatsApp',
                 pertanyaan: newQuestion,
                 eselon: analysis.eselon,
                 jawaban: 'Menunggu respon petugas...',
                 sumberJawaban: 'BELUM DIJAWAB',
                 status: 'Pending',
-                kategori: analysis.kategori
+                kategori: analysis.kategori,
+                isClosed: false
             };
         }
         saveRekapData(rekapData);
@@ -426,32 +558,47 @@ async function recordConversation({ phone, text, answer, source, aiModel, status
         const newQuestion = cleanWhatsAppFormatting(analysis.pertanyaanInti || text);
         const cleanAnswer = cleanWhatsAppFormatting(answer);
 
-        if (existing) {
-            // Gabungkan pertanyaan jika belum ada di rekapan baris nomor tersebut
-            if (!existing.pertanyaan.toLowerCase().includes(newQuestion.toLowerCase())) {
-                existing.pertanyaan = `${existing.pertanyaan}\n• ${newQuestion}`;
-            }
-            existing.eselon = analysis.eselon;
-            existing.kategori = analysis.kategori;
-            existing.waktu = getCurrentTimeFormattedWIB();
+        let activeRecord = findActiveUserRecord(rekapData, cleanPhone);
 
-            // Hanya update jawaban bot jika belum ada jawaban petugas manusia
-            if (existing.sumberJawaban !== 'MANUSIA') {
-                existing.jawaban = cleanAnswer;
-                existing.sumberJawaban = 'BOT';
-                existing.status = 'Done';
+        if (activeRecord) {
+            // Gabungkan pertanyaan jika masih dalam sesi yang sama
+            if (!activeRecord.pertanyaan.toLowerCase().includes(newQuestion.toLowerCase())) {
+                activeRecord.pertanyaan = `${activeRecord.pertanyaan}\n• ${newQuestion}`;
+            }
+            activeRecord.eselon = analysis.eselon;
+            activeRecord.kategori = analysis.kategori;
+            activeRecord.waktu = getCurrentTimeFormattedWIB();
+            activeRecord.timestamp = now;
+
+            if (activeRecord.sumberJawaban !== 'MANUSIA') {
+                activeRecord.jawaban = cleanAnswer;
+                activeRecord.sumberJawaban = 'BOT';
+                activeRecord.status = 'Done';
             }
         } else {
-            rekapData.records[cleanPhone] = {
+            // Sesi baru terpisah untuk nomor ini!
+            const allUserRecords = Object.values(rekapData.records).filter(r => {
+                const rClean = (r.cleanPhone || (r.phone ? r.phone.replace(/\D/g, '') : '')).toString();
+                return rClean === cleanPhone || (r.id && r.id.startsWith(cleanPhone));
+            });
+            const sessionIndex = allUserRecords.length + 1;
+            const recordId = `${cleanPhone}_${sessionIndex}`;
+
+            rekapData.records[recordId] = {
+                id: recordId,
+                sessionIndex,
+                cleanPhone,
                 phone: formattedPhone,
                 waktu: getCurrentTimeFormattedWIB(),
+                timestamp: now,
                 kanal: 'WhatsApp',
                 pertanyaan: newQuestion,
                 eselon: analysis.eselon,
                 jawaban: cleanAnswer,
                 sumberJawaban: 'BOT',
                 status: 'Done',
-                kategori: analysis.kategori
+                kategori: analysis.kategori,
+                isClosed: false
             };
         }
         saveRekapData(rekapData);
@@ -464,7 +611,25 @@ async function generateExcelRecap(customDateStr = null) {
     const dateLabel = customDateStr || rekapData.date || getTodayDateWIB();
     const displayDate = getDisplayDateWIB();
     const currentTimeWIB = getCurrentTimeOnlyWIB();
-    const recordsArray = Object.values(rekapData.records || {});
+    let recordsArray = Object.values(rekapData.records || {});
+
+    // Jika customDateStr disediakan dan berbeda dari tanggal aktif saat ini, ambil dari arsip
+    if (customDateStr && customDateStr !== rekapData.date) {
+        if (rekapData.archive && rekapData.archive[customDateStr]) {
+            recordsArray = Object.values(rekapData.archive[customDateStr]);
+        } else {
+            const archiveFile = path.join(EXPORT_DIR, `rekap_harian_${customDateStr}.json`);
+            if (fs.existsSync(archiveFile)) {
+                try {
+                    const parsed = JSON.parse(fs.readFileSync(archiveFile, 'utf8'));
+                    recordsArray = Object.values(parsed.records || {});
+                } catch (e) {}
+            }
+        }
+    }
+
+    // Urutkan secara kronologis berdasarkan timestamp
+    recordsArray.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
 
     // Inisialisasi ExcelJS Workbook
     const workbook = new ExcelJS.Workbook();
@@ -739,15 +904,22 @@ async function generateExcelRecap(customDateStr = null) {
     };
 }
 
-// Reset data rekapan harian ("setelah jam 4 sore bisa dilupakan")
+// Reset data rekapan harian dengan pengarsipan aman (tidak pernah menghapus data secara permanen)
 function resetDailyRecords() {
-    const today = getTodayDateWIB();
-    const emptyData = {
-        date: today,
-        records: {}
-    };
-    saveRekapData(emptyData);
-    console.log(`[REKAP] Data rekapan harian untuk ${today} telah di-reset untuk hari berikutnya.`);
+    const rekapData = loadRekapData();
+    const curDate = rekapData.date || getTodayDateWIB();
+    if (rekapData.records && Object.keys(rekapData.records).length > 0) {
+        if (!rekapData.archive) rekapData.archive = {};
+        rekapData.archive[curDate] = { ...rekapData.records };
+        try {
+            if (!fs.existsSync(EXPORT_DIR)) fs.mkdirSync(EXPORT_DIR, { recursive: true });
+            const backupPath = path.join(EXPORT_DIR, `rekap_harian_${curDate}.json`);
+            fs.writeFileSync(backupPath, JSON.stringify({ date: curDate, records: rekapData.records }, null, 2), 'utf8');
+        } catch (e) {}
+    }
+    rekapData.records = {};
+    saveRekapData(rekapData);
+    console.log(`[REKAP] Data rekapan harian untuk ${curDate} telah diarsipkan dan dibersihkan.`);
 }
 
 module.exports = {
@@ -765,6 +937,8 @@ module.exports = {
     isCourtesyOrFillerReply,
     cleanCourtesyFluff,
     synthesizeHumanAnswer,
+    findActiveUserRecord,
+    closeUserSession,
     recordConversation,
     generateExcelRecap,
     resetDailyRecords
