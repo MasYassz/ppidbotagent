@@ -509,3 +509,6 @@ const targetPath = path.resolve(__dirname, '../faq.json');
 fs.writeFileSync(targetPath, JSON.stringify(updatedFaqList, null, 2), 'utf8');
 console.log(`✅ Berhasil menulis ${updatedFaqList.length} entri FAQ ke ${targetPath}`);
 
+module.exports = updatedFaqList;
+
+

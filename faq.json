@@ -52,10 +52,11 @@
       "gaji akp",
       "abk ditahan",
       "kecelakaan abk",
-      "awak kapal perikanan",
       "gangguan operasional akp",
       "masalah abk",
-      "masalah akp"
+      "masalah akp",
+      "pengaduan awak kapal",
+      "lapor awak kapal"
     ],
     "answer": "Halo #SahabatBahari,\n\nTerkait laporan atau pengaduan mengenai *Awak Kapal Perikanan (AKP / ABK)* (gaji, kecelakaan, atau kendala di kapal), silakan dapat langsung disampaikan melalui:\n\n📱 *Pengaduan AKP:* 0811251744 atau ke https://lapor.go.id\n📞 *Call Center Gangguan Operasional (Pengaduan AKP):* +62 811-1000-3132\n\nSalam hormat."
   },
@@ -84,13 +85,6 @@
       "pemalsuan surat",
       "pemalsuan dokumen",
       "dokumen palsu",
-      "apakah dokumen ini palsu",
-      "apakah surat ini palsu",
-      "apakah surat ini asli",
-      "dokumen bodong",
-      "surat fiktif",
-      "dokumen fiktif",
-      "keaslian dokumen",
       "surat tugas palsu",
       "surat sekjen palsu",
       "tanda tangan sekjen",
@@ -118,9 +112,17 @@
       "destructive fishing",
       "penyelundupan benih",
       "limbah laut",
-      "psdkp"
+      "psdkp",
+      "penyu",
+      "penangkapan penyu",
+      "satwa dilindungi",
+      "biota laut dilindungi",
+      "perburuan penyu",
+      "telur penyu",
+      "penangkapan hiu",
+      "hiu paus"
     ],
-    "answer": "Halo #SahabatBahari,\n\nUntuk laporan pelanggaran perikanan (destructive fishing, bom ikan, alat tangkap terlarang, atau pencemaran laut), silakan hubungi:\n• *Ditjen PSDKP:* +62 811-947-141\n• *Hotline Pengendalian Ruang Laut:* +62 811-1012-0010\n• *Kanal Pengaduan:* https://lapor.go.id atau pengaduan@kkp.go.id\n\nMohon sertakan koordinat lokasi, waktu, dan foto/video kejadian. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nUntuk laporan pelanggaran perikanan (destructive fishing, bom ikan, alat tangkap terlarang, atau penangkapan satwa/biota laut dilindungi seperti penyu), silakan hubungi:\n• *Call Center Terpadu KKP:* 141\n• *Ditjen PSDKP:* +62 811-947-141\n• *Hotline Pengendalian Ruang Laut:* +62 811-1012-0010\n• *Kanal Pengaduan:* https://lapor.go.id atau pengaduan@kkp.go.id\n\nMohon sertakan koordinat lokasi, waktu, dan foto/video kejadian. Seluruh identitas pelapor dijamin kerahasiaannya. Salam hormat."
   },
   {
     "keywords": [
@@ -246,7 +248,7 @@
       "ukuran kapal tidak cocok",
       "panjang kapal beda"
     ],
-    "answer": "Halo #SahabatBahari,\n\nJika terdapat *ketidaksesuaian ukuran fisik (LoA / Gross Tonnage GT)* saat cek fisik di *SICEFI*:\n1. Ajukan permohonan cek fisik / ukur ulang ke Kantor Pelabuhan Perikanan pangkalan atau UPT Ditjen Perikanan Tangkap.\n2. Marine Inspector KKP akan memeriksa fisik kapal dan melakukan rekonsiliasi data ukur.\n3. Hasil verifikasi akan diunggah ke aplikasi SICEFI (https://kapal.kkp.go.id/sicefi/) untuk penerbitan SKKP.\n\nBantuan kendala sistem: WA PTSA di 0811-8430-610. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nJika terdapat *ketidaksesuaian ukuran fisik (LoA / Gross Tonnage GT)* saat cek fisik di *SICEFI*:\n1. Ajukan permohonan cek fisik / ukur ulang ke Kantor Pelabuhan Perikanan pangkalan atau UPT Ditjen Perikanan Tangkap.\n2. Marine Inspector KKP akan memeriksa fisik kapal dan melakukan rekonsiliasi data ukur.\n3. Hasil verifikasi akan diunggah ke aplikasi SICEFI (https://kapal.kkp.go.id/sicefi/ ) untuk penerbitan SKKP.\n\nBantuan kendala sistem: WA PTSA di 0811-8430-610. Salam hormat."
   },
   {
     "keywords": [
@@ -257,7 +259,7 @@
       "skkp belum terbit",
       "terkendala skkp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nPengajuan *Sertifikat Kelaikan Kapal Perikanan (SKKP)* diajukan daring melalui aplikasi *SICEFI*: https://kapal.kkp.go.id/sicefi/.\n\nSyarat penerbitan:\n• Cek fisik konstruksi lambung, mesin, dan palka pendingin\n• Kelengkapan alat penangkapan ikan & alat bantu keselamatan\n\nJika berkas belum diverifikasi petugas pelabuhan pangkalan, silakan koordinasi via *WA PTSA KKP:* 0811-8430-610. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nPengajuan *Sertifikat Kelaikan Kapal Perikanan (SKKP)* diajukan daring melalui aplikasi *SICEFI*: https://kapal.kkp.go.id/sicefi/ .\n\nSyarat penerbitan:\n• Cek fisik konstruksi lambung, mesin, dan palka pendingin\n• Kelengkapan alat penangkapan ikan & alat bantu keselamatan\n\nJika berkas belum diverifikasi petugas pelabuhan pangkalan, silakan koordinasi via *WA PTSA KKP:* 0811-8430-610. Salam hormat."
   },
   {
     "keywords": [
@@ -268,7 +270,7 @@
       "alih izin kapal",
       "migrasi sipi"
     ],
-    "answer": "Halo #SahabatBahari,\n\nKapal berizin daerah yang beroperasi di wilayah di atas 12 mil laut atau berukuran di atas 30 GT *wajib bermigrasi ke izin pusat KKP*:\n1. Ajukan mutasi/penghapusan dari daftar kapal dinas provinsi.\n2. Lakukan pemeriksaan kelaikan kapal via *SICEFI* untuk penerbitan SKKP pusat.\n3. Terbitkan NIB dan izin usaha (SIUP/SIPI) melalui portal terintegrasi OSS dan SILAT (https://perizinan.kkp.go.id).\n\nAsistensi: WA PTSA 0811-8430-610. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nKapal berizin daerah yang beroperasi di wilayah di atas 12 mil laut atau berukuran di atas 30 GT *wajib bermigrasi ke izin pusat KKP*:\n1. Ajukan mutasi/penghapusan dari daftar kapal dinas provinsi.\n2. Lakukan pemeriksaan kelaikan kapal via *SICEFI* untuk penerbitan SKKP pusat.\n3. Terbitkan NIB dan izin usaha (SIUP/SIPI) melalui portal terintegrasi OSS dan SILAT (https://perizinan.kkp.go.id ).\n\nAsistensi: WA PTSA 0811-8430-610. Salam hormat."
   },
   {
     "keywords": [
@@ -300,7 +302,7 @@
       "kepmen kp 20",
       "kepmen 55/2025"
     ],
-    "answer": "Halo #SahabatBahari,\n\nPenetapan lokasi *Kampung Nelayan Merah Putih (KNMP)* diatur dalam *Kepmen KP No. 55 Tahun 2025* (mencakup 65 lokasi prioritas Tahap I di seluruh Indonesia) dan Satuan Tugas dipandu *Kepmen KP No. 20 Tahun 2026*.\n\nSebaran 65 titik tahap pertama mencakup pesisir Aceh, Sumut, Sumbar, Riau, Lampung, Jabar, Jateng, Jatim, Bali, NTB, NTT, Sulsel, Sultra, Maluku, hingga Papua Selatan.\n\nPeta sebaran digital spasial interaktif dapat diakses di situs resmi https://kkp.go.id atau dokumen JDIH KKP di https://jdih.kkp.go.id. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nPenetapan lokasi *Kampung Nelayan Merah Putih (KNMP)* diatur dalam *Kepmen KP No. 55 Tahun 2025* (mencakup 65 lokasi prioritas Tahap I di seluruh Indonesia) dan Satuan Tugas dipandu *Kepmen KP No. 20 Tahun 2026*.\n\nSebaran 65 titik tahap pertama mencakup pesisir Aceh, Sumut, Sumbar, Riau, Lampung, Jabar, Jateng, Jatim, Bali, NTB, NTT, Sulsel, Sultra, Maluku, hingga Papua Selatan.\n\nPeta sebaran digital spasial interaktif dapat diakses di situs resmi https://kkp.go.id atau dokumen JDIH KKP di https://jdih.kkp.go.id . Salam hormat."
   },
   {
     "keywords": [
@@ -339,15 +341,16 @@
   },
   {
     "keywords": [
-      "knmp",
-      "kampung nelayan merah putih",
-      "kontak knmp",
-      "manajer knmp",
-      "satgas knmp",
       "rekrutmen knmp",
-      "aduan knmp"
+      "loker knmp",
+      "pengumuman knmp",
+      "hasil seleksi knmp",
+      "kendala sistem knmp",
+      "tes knmp",
+      "manajer knmp daftar",
+      "fasilitator knmp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nKontak Resmi Pengelolaan & Satgas Operasionalisasi *KNMP DJPT KKP*:\n📱 *WA Official KNMP:* +62 822-9936-9004\n☎️ *Call Center:* 1500587\n📧 *Email:* korwil@merahputih.kop.id\n📸 *Instagram:* @knmp_indonesia\n\nUntuk pengaduan operasional sarana KNMP atau kemitraan, silakan hubungi kontak resmi di atas. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nPengumuman hasil seleksi rekrutmen SDM pengelola Kampung Nelayan Merah Putih (KNMP) mengikuti jadwal resmi yang ditetapkan panitia. Seluruh pembaruan diumumkan melalui Instagram resmi di https://www.instagram.com/knmp_indonesia/\n\nUntuk kendala sistem (unggah berkas, tes kompetensi, atau aktivasi akun), silakan menghubungi nomor kontak yang tertera pada pengumuman/infografis rekrutmen KNMP.\n\nSalam hormat."
   },
   {
     "keywords": [
@@ -385,9 +388,18 @@
       "izin ruang laut",
       "pemanfaatan ruang laut",
       "pulau kecil",
-      "izin pulau"
+      "pulau-pulau kecil",
+      "izin pulau",
+      "penggunaan pulau",
+      "pemanfaatan pulau",
+      "investasi pulau",
+      "sewa pulau",
+      "jual beli pulau",
+      "lapor pulau",
+      "pengendalian ruang laut",
+      "prl"
     ],
-    "answer": "Halo #SahabatBahari,\n\nUntuk perizinan Persetujuan Kesesuaian Kegiatan Pemanfaatan Ruang Laut (PKKPRL) termasuk pulau-pulau kecil, silakan hubungi:\n\n📱 *Hotline Perizinan Ruang Laut:* +62 877-6225-0001\n\nUntuk konsultasi regulasi/surat resmi, dapat diajukan ke Ditjen Pengelolaan Kelautan melalui email humas.kkp@kkp.go.id. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nUntuk perizinan Persetujuan Kesesuaian Kegiatan Pemanfaatan Ruang Laut (PKKPRL) serta pemanfaatan/penggunaan pulau-pulau kecil, silakan hubungi saluran resmi Ditjen Pengelolaan Kelautan dan Ruang Laut (Ditjen PKRL):\n• *Hotline Perizinan Ruang Laut / PKKPRL:* +62 877-6225-0001\n• *Hotline Pengendalian Ruang Laut:* +62 811-1012-0010\n• *Pengawasan PSDKP:* +62 811-947-141\n\nUntuk konsultasi regulasi atau pengajuan surat resmi, dapat disampaikan ke loket Gedung Mina Bahari (GMB) IV Lantai 1 atau melalui portal https://ppid.kkp.go.id . Salam hormat."
   },
   {
     "keywords": [
@@ -508,7 +520,7 @@
       "bpjs ketenagakerjaan nelayan",
       "asuransi nelayan"
     ],
-    "answer": "Halo #SahabatBahari,\n\nKebijakan dan syarat kepesertaan BPJS Ketenagakerjaan bagi nelayan, termasuk batasan usia, merupakan kewenangan penuh pihak *BPJS Ketenagakerjaan*.\n\nSilakan berkonsultasi via webchat resmi: https://www.bpjsketenagakerjaan.go.id/. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nKebijakan dan syarat kepesertaan BPJS Ketenagakerjaan bagi nelayan, termasuk batasan usia, merupakan kewenangan penuh pihak *BPJS Ketenagakerjaan*.\n\nSilakan berkonsultasi via webchat resmi: https://www.bpjsketenagakerjaan.go.id/ . Salam hormat."
   },
   {
     "keywords": [
@@ -589,20 +601,42 @@
       "pppk",
       "honorer kkp",
       "mutasi pegawai kkp",
-      "ropeg"
+      "ropeg",
+      "sdmao",
+      "biro sdm",
+      "kontak sdmao",
+      "nomor sdmao",
+      "kepegawaian kkp",
+      "sdm kkp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nInformasi seleksi CPNS/PPPK resmi diumumkan melalui https://sdmao.kkp.go.id/ dan Instagram @rosdmaokkp.\n\nUntuk konsultasi mutasi atau kepegawaian internal, hubungi Biro SDM Aparatur dan Organisasi di 021-3519070 ext. 2524 / email ropeg@kkp.go.id. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nInformasi lowongan, formasi, dan rekrutmen CPNS/PPPK KKP resmi diumumkan melalui portal:\n🌐 https://sdmao.kkp.go.id/\n📸 Instagram: @rosdmaokkp\n\nUntuk konsultasi kepegawaian internal, mutasi, atau helpdesk SDM Aparatur dan Organisasi (SDMAO), silakan hubungi:\n📱 *WhatsApp SDMAO:* 0851-5889-8203\n☎️ *Telepon:* (021) 3519070 ext. 2524\n📧 *Email:* ropeg@kkp.go.id\n\nSalam hormat."
   },
   {
     "keywords": [
       "daftar akp",
       "rekrutmen akp",
       "elaut akp",
+      "e-laut akp",
+      "elaut",
       "syarat akp",
+      "syarat jadi awak kapal perikanan",
+      "syarat awak kapal perikanan",
+      "syarat awak kapal",
+      "syarat abk",
+      "syarat jadi abk",
+      "pengumuman akp",
+      "info akp",
+      "informasi akp",
+      "bursa kerja akp",
+      "lowongan akp",
+      "lowongan abk",
+      "loker akp",
+      "rekrutmen awak kapal perikanan",
+      "pendaftaran awak kapal perikanan",
       "kontak akp",
       "call center akp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nPendaftaran dan informasi Awak Kapal Perikanan (AKP) dapat diakses melalui portal resmi:\n🔗 https://elaut-bppsdm.kkp.go.id/akp/\n\nSyarat wajib meliputi sertifikat keselamatan BST-F Tingkat II aktif. Untuk kendala teknis pendaftaran, hubungi:\n📱 *Contact Person AKP:* 0819-9247-4154\n\nSalam hormat."
+    "answer": "Halo #SahabatBahari,\n\nPendaftaran, persyaratan, dan pengumuman Awak Kapal Perikanan (AKP) dapat diakses melalui portal resmi E-LAUT:\n🔗 https://elaut-bppsdm.kkp.go.id/akp/\nPengumuman resmi: https://elaut-bppsdm.kkp.go.id/akp/pengumuman\n\nSyarat wajib meliputi sertifikat keselamatan BST-F Tingkat II aktif. Untuk informasi lebih lanjut dan kendala teknis pendaftaran, hubungi:\n📱 *Contact Person AKP:* 0819-9247-4154\n\nSalam hormat."
   },
   {
     "keywords": [
@@ -694,16 +728,19 @@
       "status tiket ppid",
       "progres data"
     ],
-    "answer": "Halo #SahabatBahari,\n\nUntuk memeriksa status permohonan data PPID yang sudah diajukan, silakan ketik nomor tiket Anda (atau pilih menu *2* di WhatsApp ini), atau hubungi layanan PPID di:\n📱 *Hotline PPID:* +62 811-1112-9996\n\nSalam hormat."
+    "answer": "Halo #SahabatBahari,\n\nUntuk memeriksa status permohonan data PPID yang sudah diajukan, silakan ketik nomor tiket Anda (atau balas angka *2* pada Menu Utama), atau hubungi langsung Petugas Layanan PPID kami di ruang chat ini.\n\nSalam hormat."
   },
   {
     "keywords": [
       "portal data",
       "portaldata",
       "helpdesk portal data",
-      "data kkp"
+      "data kkp",
+      "satu data",
+      "satudata",
+      "satudata kkp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nUntuk integrasi satu data dan kendala portal data KKP, silakan hubungi:\n📱 *Helpdesk Portal Data KKP:* 0811-8722-009\n\nSalam hormat."
+    "answer": "Halo #SahabatBahari,\n\nSeluruh permohonan data statistik, data agregat, dan informasi publik kelautan perikanan dikelola secara resmi melalui Layanan Informasi Publik PPID KKP (https://ppid.kkp.go.id atau ketik *DAFTAR* di sini).\n\nPortal satudata.kkp.go.id saat ini tidak aktif/tidak tersedia untuk publik. Untuk kebutuhan data atau analisis khusus, pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat diverifikasi lebih lanjut. Salam hormat."
   },
   {
     "keywords": [
@@ -712,9 +749,15 @@
       "undangan acara",
       "audiensi",
       "proposal kerjasama",
-      "sponsorship"
+      "sponsorship",
+      "kunjungan",
+      "ingin berkunjung",
+      "kunjungan kerja",
+      "kunjungan dinas",
+      "studi banding",
+      "kunjungan kkp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nSurat resmi, undangan audiensi, narasumber, atau sponsorship dapat dikirimkan dalam format PDF ke:\n📧 *Email:* humas.kkp@kkp.go.id\n🏢 Atau hardcopy ke Bagian Persuratan Gedung Mina Bahari IV KKP, Jakarta Pusat.\n\nSalam hormat."
+    "answer": "Halo #SahabatBahari,\n\nUntuk permohonan audiensi, kunjungan kerja, studi banding, undangan narasumber, atau sponsorship, permohonan diajukan melalui surat resmi:\n📧 *Email Resmi:* humas.kkp@kkp.go.id / ppidkkp@kkp.go.id\n🏢 *Loket Bagian Persuratan (Hardcopy):* Gedung Mina Bahari (GMB) IV Lantai 1, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat (Senin - Kamis pukul 08.00 - 15.30 WIB).\n\nSalam hormat."
   },
   {
     "keywords": [
@@ -777,7 +820,7 @@
       "jabatan penata",
       "jabatan fungsional kkp"
     ],
-    "answer": "Halo #SahabatBahari,\n\nInformasi terkait Jabatan Penata Kelola Kelautan dan Perikanan dapat diakses pada dokumentasi resmi kepegawaian KKP di portal https://sdmao.kkp.go.id. Salam hormat."
+    "answer": "Halo #SahabatBahari,\n\nInformasi terkait Jabatan Penata Kelola Kelautan dan Perikanan dapat diakses pada dokumentasi resmi kepegawaian KKP di portal https://sdmao.kkp.go.id . Salam hormat."
   },
   {
     "keywords": [
@@ -805,5 +848,314 @@
       "vaksin"
     ],
     "answer": "Halo #SahabatBahari,\n\nSaat ini Sahabat terhubung dengan PPID KKP. Hal tersebut di luar kewenangan KKP:\n• Kepemilikan tanah/lahan: hubungi Kantor Pertanahan (BPN)\n• Pajak/NPWP: hubungi KPP atau DJP Online\n• Vaksin/Kesehatan: hubungi kanal Kementerian Kesehatan\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "batas usia",
+      "kenapa maksimal 35 tahun",
+      "syarat memberatkan",
+      "usia akp",
+      "batasan umur rekrutmen",
+      "protes syarat umur"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nKetentuan persyaratan pendaftaran (seperti batasan usia, kualifikasi fisik, atau ijazah) merupakan regulasi yang ditetapkan berdasarkan kajian teknis keselamatan operasional di laut bersama para pemangku kepentingan.\n\nSeluruh persyaratan sah mengacu pada rincian yang tertera dalam pengumuman dan infografis resmi program. Apabila terdapat pertanyaan administratif teknis, silakan menghubungi narahubung yang tercantum pada pengumuman tersebut.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "magang di upt",
+      "magang bppp",
+      "magang balai",
+      "magang di bppmhkp",
+      "pkl di balai uji",
+      "magang bpiu2k",
+      "pkl di balai kkp",
+      "magang daerah"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nSetiap Unit Pelaksana Teknis (UPT) atau Balai KKP memiliki kebijakan dan kuota magang mandiri:\n• *Balai Uji Standar KIPM Jakarta (Laboratorium/Mikrobiologi):* Telepon (021) 8448506, email buskipm@gmail.com\n• *Balai Riset & Budi Daya (BPIU2K):* Pendaftaran via https://layanan.bpiu2k.online/magang-dan-pelatihan/pendaftaran atau DM Instagram @bpiu2k\n• *BPPMHKP Pusat:* PKL/magang terisi penuh hingga Desember 2026\n• *UPT Lainnya (BPPP/Balai Budidaya):* Pengajuan tetap mengikuti mekanisme izin melalui PPID KKP di https://ppid.kkp.go.id\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "saran untuk kkp",
+      "kritik kkp",
+      "masukan kkp",
+      "aspirasi nelayan",
+      "harga pakan naik",
+      "keluhan umum sektor perikanan",
+      "suara nelayan"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nTerima kasih banyak atas saran, kritik, dan aspirasi yang Anda sampaikan. Masukan berharga Anda telah kami catat dan akan kami teruskan kepada pimpinan serta unit kerja pembina terkait sebagai bahan evaluasi perbaikan kebijakan ke depan.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "izin penelitian",
+      "skripsi",
+      "tugas akhir",
+      "riset",
+      "wawancara pegawai",
+      "kunjungan studi",
+      "izin riset kkp",
+      "surat izin skripsi kkp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nUntuk permohonan izin penelitian, pengambilan data skripsi/tesis, wawancara narasumber pegawai KKP, atau kunjungan studi mahasiswa, silakan diajukan secara resmi melalui PPID KKP:\n1. Buka portal di https://ppid.kkp.go.id/layanan-informasi/pemohonan-informasi/\n2. Registrasi akun dan pilih menu *Permohonan Informasi*\n3. Lampirkan berkas persyaratan: *Surat Pengantar Kampus*, *Proposal Riset / Daftar Pertanyaan*, dan *Fotokopi KTP*\n\nJika riset melibatkan unit kerja spesifik, permohonan akan diteruskan kepada pimpinan unit bersangkutan untuk konfirmasi ketersediaan waktu narasumber.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "salinan peraturan",
+      "perdirjen",
+      "minta dokumen unit",
+      "kepmen",
+      "ppid direktorat",
+      "dokumen ditjen",
+      "minta file peraturan",
+      "salinan permen kp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nSetiap unit kerja eselon I KKP memiliki sub-kanal PPID pelaksana resmi. Sebagai contoh untuk dokumen Direktorat Jenderal Pengelolaan Kelautan di https://ppid.kkp.go.id/upp/direktorat-jenderal-pengelolaan-kelautan/layanan-informasi/pemohonan-informasi/\n\nRegulasi publik (Permen KP, Kepmen KP, dan Perdirjen) dapat diunduh bebas melalui JDIH KKP di https://jdih.kkp.go.id . Jika membutuhkan salinan naskah asli, mohon sebutkan nomor dan judul peraturan yang Anda butuhkan.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "banyak pertanyaan sekaligus",
+      "daftar pertanyaan panjang",
+      "pertanyaan beberapa unit",
+      "survei dengan banyak pertanyaan",
+      "kuesioner lintas ditjen"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nKarena informasi yang Anda butuhkan mencakup kewenangan dari beberapa unit kerja eselon I yang berbeda, mohon kirimkan daftar seluruh pertanyaan atau kuesioner Anda secara terstruktur.\n\nTim layanan PPID kami akan membantu memetakan dan meneruskan butir-butir pertanyaan tersebut ke Direktorat Jenderal yang membidangi (seperti Ditjen Perikanan Tangkap, Budi Daya, PSDKP, Pengelolaan Kelautan, atau Penguatan Daya Saing) agar mendapatkan jawaban yang komprehensif.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "sudah dibalas belum",
+      "kapan dibalas",
+      "status surat saya",
+      "belum ada respon",
+      "tindak lanjut",
+      "menunggu balasan",
+      "menagih surat",
+      "balasan surat belum keluar"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nTerima kasih atas konfirmasi Anda. Mohon informasikan nama instansi pengirim, tanggal pengiriman, perihal surat, serta nomor surat/nomor resi pengirimannya di obrolan ini.\n\nKami akan segera mengoordinasikannya kembali dengan bagian persuratan unit organisasi terkait untuk menindaklanjuti proses disposisinya.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "sebarkan undangan",
+      "tolong teruskan undangan",
+      "undangan ke satker",
+      "kirim undangan ke unit",
+      "disebarkan ke satuan kerja"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nBisa. Silakan kirimkan surat undangan resmi dalam format PDF melalui obrolan WhatsApp ini atau melalui email *humas.kkp@kkp.go.id*.\n\nSurat akan kami agendakan dan teruskan kepada satuan kerja (satker) atau unit eselon I terkait. Keputusan kehadiran merupakan wewenang masing-masing pimpinan unit.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "penawaran produk",
+      "tawarkan jasa",
+      "company profile",
+      "vendor",
+      "kami dari pt",
+      "penawaran kerja sama produk",
+      "proposal penawaran barang"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nTerima kasih atas penawaran yang disampaikan. Agar dapat diteruskan dan ditelaah oleh unit kerja terkait, mohon kirimkan surat penawaran resmi beserta company profile atau flyer produk dalam format PDF ke email *humas.kkp@kkp.go.id* atau kirimkan file dokumen melalui obrolan ini.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "apakah ini bot",
+      "ini bot",
+      "kamu bot",
+      "apakah kamu bot",
+      "bot",
+      "robot",
+      "kamu siapa",
+      "ini ai",
+      "apakah ini robot",
+      "ini bot ya",
+      "apakah kamu robot"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nYa, saya adalah *Asisten Virtual AI resmi dari PPID Kementerian Kelautan dan Perikanan (KKP)* yang siap membantu memberikan informasi layanan publik sektor kelautan dan perikanan secara cepat dan otomatis 24 jam.\n\nJika Anda membutuhkan bantuan langsung dari petugas manusia, silakan ketik *BANTUAN* atau angka *1* kapan saja untuk kami hubungkan ke Petugas Layanan PPID KKP.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "penempatan magang",
+      "penempatan pkl",
+      "lokasi magang",
+      "unit magang",
+      "dimana ditempatkan magang",
+      "alokasi magang",
+      "jurusan magang kkp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nPenempatan magang atau Praktik Kerja Lapangan (PKL) mahasiswa di lingkungan Kementerian Kelautan dan Perikanan (KKP) disesuaikan dengan:\n1. *Kesesuaian Program Studi / Jurusan* pemohon dengan bidang tugas unit kerja eselon I KKP terkait.\n2. *Ketersediaan Kuota Bimbingan* pada masing-masing unit kerja (seperti Ditjen Perikanan Tangkap, Ditjen Perikanan Budi Daya, Ditjen PSDKP, Ditjen PRL, BPPMHKP, atau BPPSDMKP) maupun UPT di daerah.\n\nSaat mengajukan surat permohonan melalui portal PPID KKP (https://ppid.kkp.go.id ), mohon cantumkan program studi, unit kerja penempatan yang dituju, serta durasi pelaksanaan magang.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "pentaru",
+      "pentaru kkp",
+      "pendaftaran pentaru",
+      "penerimaan taruna baru kkp",
+      "poltek kp",
+      "supm kkp",
+      "pendaftaran sekolah kkp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, informasi mengenai jadwal dan persyaratan pendaftaran Penerimaan Taruna Baru (Pentaru) KKP belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "kuliah gratis",
+      "pendaftaran kuliah gratis",
+      "kuliah gratis kkp",
+      "beasiswa anak nelayan kkp",
+      "beasiswa poltek kp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, informasi mengenai kuota dan pendaftaran kuliah gratis bagi anak pelaku usaha kelautan dan perikanan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "biaya buku pelaut",
+      "perpanjang buku pelaut",
+      "biaya sebenarnya buku pelaut",
+      "buku pelaut berapa harganya",
+      "buku pelaut perikanan"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, informasi mengenai rincian biaya resmi dan mekanisme perpanjangan buku pelaut perikanan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "ankapin",
+      "ankapin 2",
+      "ankapin 1",
+      "upgrade ankapin",
+      "ijazah ankapin",
+      "sertifikat ankapin"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, informasi teknis persyaratan peningkatan sertifikasi Ahli Nautika Kapal Penangkap Ikan (ANKAPIN) belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "riwayat bantuan nelayan",
+      "cek nama penerima bantuan",
+      "apakah pernah tercatat menerima bantuan",
+      "cek bantuan perorangan"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, pengecekan data riwayat penerimaan bantuan perorangan memerlukan verifikasi identitas resmi dan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "sk manajer knmp",
+      "penempatan manajer knmp",
+      "sk knmp kapan turun",
+      "pengangkatan manajer knmp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, informasi penerbitan Surat Keputusan (SK) penempatan manajer KNMP merupakan informasi internal dan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "kerjasama internasional",
+      "kerja sama luar negeri kkp",
+      "direktorat kerjasama internasional",
+      "mou luar negeri kkp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, pemetaan teknis kerja sama internasional antar negara belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "eu number",
+      "ekspor eropa",
+      "izin ekspor eu",
+      "seafood eropa",
+      "nomor registrasi eu"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, detail prosedur pengurusan EU Approval Number untuk ekspor produk perikanan ke Uni Eropa belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "izin konservasi",
+      "perizinan konservasi",
+      "izin masuk kawasan konservasi",
+      "izin penelitian konservasi laut"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, ketentuan perizinan spesifik di kawasan konservasi perairan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "sppbj asli",
+      "apakah sppbj ini asli",
+      "surat pesanan barang kkp",
+      "verifikasi sppbj kkp"
+    ],
+    "answer": "Halo #SahabatBahari,\n\nMohon maaf, verifikasi keabsahan dokumen pengadaan (SPPBJ / Surat Pesanan) memerlukan pemeriksaan register resmi dan belum bisa kami jawab melalui sistem layanan otomatis kami. Pesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat ditindaklanjuti secara langsung.\n\nSalam hormat."
+  },
+  {
+    "keywords": [
+      "english",
+      "speak english",
+      "do you speak english",
+      "can i speak english",
+      "hello kkp",
+      "hi admin",
+      "information in english",
+      "help in english"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nThank you for contacting the Ministry of Marine Affairs and Fisheries of the Republic of Indonesia (KKP).\n\n• *Official Public Information & Research Requests:* Please submit an official request through our PPID portal at https://ppid.kkp.go.id (attach an official cover letter, list of questions, and copy of passport/ID).\n• *Licensing, Permits, and Trade (Export/Import):* Please contact PTSA KKP via WhatsApp at *+62 811-8430-610* or email *ptsp@kkp.go.id*.\n\nHow may we assist you today?\n\nBest regards."
+  },
+  {
+    "keywords": [
+      "fishing permit",
+      "fishing license",
+      "foreign fishing vessel",
+      "sipi permit",
+      "fishing license indonesia",
+      "vessel license indonesia"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nAll fishing and marine licensing in Indonesian waters must comply with national regulations through the OSS (Online Single Submission) and KKP systems.\n\nFor licensing consultation, foreign trade requirements, and verification:\n• *WhatsApp PTSA KKP:* +62 811-8430-610\n• *Email:* ptsp@kkp.go.id\n• *Licensing Portal:* https://perizinan.kkp.go.id\n\nBest regards."
+  },
+  {
+    "keywords": [
+      "marine research permit",
+      "foreign research clearance",
+      "research in indonesia waters",
+      "scientific marine research"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nForeign researchers wishing to conduct marine scientific research in Indonesian waters must obtain official Foreign Research Clearance (FRC) coordinated by BRIN (National Research and Innovation Agency) and the Ministry of Marine Affairs and Fisheries.\n\nFor institutional inquiries, please contact our Information Officer via *ppidkkp@kkp.go.id* or submit a request at https://ppid.kkp.go.id .\n\nBest regards."
+  },
+  {
+    "keywords": [
+      "public information foreigner",
+      "request information foreigner",
+      "ppid english",
+      "apply information foreign",
+      "how to request public information"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nUnder Indonesian Freedom of Public Information Law (Law No. 14/2008), public information requests submitted by foreign nationals or international organizations must be submitted through an Indonesian-registered legal entity or represented by an Indonesian citizen with a valid power of attorney:\n• *Official PPID Portal:* https://ppid.kkp.go.id\n• *Official Email:* ppidkkp@kkp.go.id\n• *Public Desk:* Gedung Mina Bahari I, Jl. Medan Merdeka Timur No. 16, Central Jakarta.\n\nBest regards, PPID MMAF RI."
+  },
+  {
+    "keywords": [
+      "contact kkp",
+      "contact mmaf",
+      "ministry marine affairs contact",
+      "call center kkp english",
+      "contact ministry of marine affairs"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nOfficial Contact Channels of the *Ministry of Marine Affairs and Fisheries (KKP/MMAF) Republic of Indonesia*:\n• *Public Information Service (PPID):* Available directly in this chat or via email *ppidkkp@kkp.go.id*\n• *Integrated Licensing Service (PTSA):* +62 811-8430-610 | ptsp@kkp.go.id\n• *Fisheries Crew Protection (AKP):* 0811-251-744\n• *Surveillance (PSDKP):* +62 811-947-141\n• *Official Website:* https://kkp.go.id\n• *Address:* Gedung Mina Bahari I-IV, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat 10110.\n\nBest regards, PPID MMAF RI."
+  },
+  {
+    "keywords": [
+      "blue economy kkp",
+      "blue economy policy",
+      "5 pillars blue economy",
+      "what is blue economy"
+    ],
+    "answer": "Hello #SahabatBahari,\n\nThe Ministry of Marine Affairs and Fisheries (KKP/MMAF) implements *5 Blue Economy Priority Policies* for ocean sustainability and community prosperity:\n1. Expanding Marine Protected Areas (target: 30% by 2045)\n2. Quota-Based Measured Fishing (PIT) across Indonesian Fisheries Management Areas (WPPNRI)\n3. Sustainable Marine, Coastal, and Inland Aquaculture Development\n4. Surveillance and Sustainable Management of Coastal Areas and Small Islands (PKKPRL)\n5. Marine Plastic Debris Clean-Up (Love the Ocean Month / Bulan Cinta Laut)\n\nBest regards, PPID MMAF RI."
+  },
+  {
+    "keywords": [
+      "kontak satgas pembangunan knmp",
+      "kontak satgas knmp",
+      "satgas pembangunan knmp",
+      "satgas knmp",
+      "kontak knmp",
+      "nomor satgas knmp",
+      "satgas kalimantan",
+      "fakhri knmp",
+      "satgas knmp kalimantan"
+    ],
+    "answer": "Halo, Sahabat Bahari, berikut informasi yang kita dapatkan mengenai kontak satgas pembangunan knmp ada pada link di bawah sesuai kebutuhan sahabat:\n\nhttps://www.instagram.com/p/DeB4FFpmnJg/?utm_source=ig_web_copy_link&gwpx=NTc4MTIwNjQ2YQ==\n\n*Koreksi:*\nRegional Kalimantan - Fakhri (0852-8734-7969)\n\nSalam hormat."
   }
 ]

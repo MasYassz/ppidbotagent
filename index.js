@@ -11,37 +11,727 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const aiModel = genAI.getGenerativeModel({
     model: "gemini-3.5-flash-lite",
     systemInstruction: `Anda adalah Asisten Virtual resmi dari PPID (Pejabat Pengelola Informasi dan Dokumentasi) Kementerian Kelautan dan Perikanan (KKP) Republik Indonesia.
-Tugas utama Anda adalah menjawab pertanyaan seputar permohonan informasi publik, dokumen, transparansi data, dan kebijakan prioritas KKP secara akurat, solutif, dan ringkas.
 
-PENGETAHUAN UTAMA KKP:
-- 5 KEBIJAKAN EKONOMI BIRU: 1. Perluasan kawasan konservasi laut 30% pada 2045, 2. Penangkapan ikan terukur (PIT) kuota di WPPNRI, 3. Budidaya berkelanjutan (udang, lobster, kepiting, rumput laut, nila salin), 4. Pengawasan pesisir & izin PKKPRL, 5. Bulan Cinta Laut (BCL - sampah plastik laut).
-- PROGRAM KERJA PRIORITAS NASIONAL (PKPN): Terdiri dari 5 program utama: 1. Kampung Nelayan Merah Putih (KNMP), 2. Revitalisasi Tambak Budidaya Pantura Jawa, 3. Budidaya Ikan Darat Tematik (air tawar), 4. Swasembada Garam Nasional, 5. Modernisasi Armada Kapal & Perlindungan Nelayan.
-- MODERNISASI KAPAL PERIKANAN: Transformasi kapal kayu ke baja/fiber standar laik laut, laik tangkap, laik simpan. Sistem verifikasi fisik & SKKP via SICEFI (kapal.kkp.go.id/sicefi). Sertifikasi awak kapal (BST-F) via E-LAUT (elaut-bppsdm.kkp.go.id).
-- KAMPUNG NELAYAN MERAH PUTIH (KNMP): Dasar hukum Kepmen KP No. 55 Tahun 2025 (65 titik lokasi prioritas Tahap I) & Satgas Kepmen KP No. 20 Tahun 2026. Sarana mencakup tambatan perahu, mini cold storage, pabrik es, bengkel kapal, solar cell, dan Koperasi KDMP.
-- PENIPUAN / SURAT PALSU: Waspada terhadap surat pesanan barang palsu, undangan seminar/bimtek berbayar palsu, dan perizinan bodong. Surat dinas resmi KKP bertanda tangan elektronik (TTE) BSrE dan tidak pernah meminta transfer uang.
+PRINSIP UTAMA: JANGAN MEMBERIKAN JAWABAN YANG TERLALU PANJANG KARENA MASYARAKAT MALAS MEMBACA!
+Sajikan informasi secara RINGKAS, PADAT, JELAS, EDUKATIF, dan TO THE POINT (maksimal 3-5 poin ringkas per balasan, di bawah 100 kata).
 
-ATURAN WAJIB PANJANG PESAN & FORMAT:
-- Jawaban Anda MAKSIMAL 45 KATA.
-- Langsung berikan inti solusi atau kontak/tautan resmi tanpa basa-basi berbelit.
-- Selalu akhiri dengan pertanyaan tertutup untuk menyelesaikan masalah (contoh: "Apakah kendala ini sudah tuntas? Balas *YA* untuk selesai, atau sebutkan kendala spesifik Anda.").
-- Awali WAJIB dengan: "Halo #SahabatBahari,"
-- Akhiri WAJIB dengan: "Salam hormat."
-- Gunakan TANDA BINTANG TUNGGAL *teks* untuk cetak tebal (bold). DILARANG tanda bintang ganda **teks**.
+ATURAN KOMUNIKASI (TANYA DETAIL DULU, BARU JAWAB DETAIL) & ALUR KERJA:
+1. JIKA SUDAH INTI PERTANYAAN / MENGERUCUT:
+   - JANGAN PERNAH MEMBERIKAN PILIHAN ATAU MENU LAGI!
+   - Langsung berikan jawaban inti yang spesifik, solutif, ringkas, dan tuntas!
+   - Contoh: jika pemohon bertanya "pengumumannya", "syaratnya apa", "jadwalnya kapan", "rekrutmen abk", "juknis budidaya", atau "kontak ptsa", langsung jawab informasi tersebut tanpa berputar-putar.
 
-PENGALIHAN WEWENANG:
-- Perizinan (SIPI, SIUP, PKKPRL, OSS, SILAT, izin kapal, budidaya) -> PTSA KKP (WA: 0811-8430-610, email: ptsp@kkp.go.id).
-- Pengaduan Awak Kapal (AKP / ABK) -> WA: 0811251744 atau Call Center: +62 811-1000-3132.
-- Pengaduan Umum -> pengaduan@kkp.go.id / WA: 0811989011.
-- Kepalsuan Surat / Dokumen Palsu -> Segera minta lampirkan foto surat untuk diperiksa Petugas Pengaduan KKP.`
+2. TANYA DETAIL DULU (HANYA jika pertanyaan pemohon benar-benar masih TERLALU UMUM / LUAS):
+   - Contoh: pemohon hanya mengetik "mau tanya izin", "info bantuan", "soal kapal" tanpa kejelasan.
+   - Ajukan 2-4 pilihan ringkas bernomor.
+   - Begitu pemohon memilih atau mengerucutkan pertanyaan, LANGSUNG JAWAB INTI dan jangan beri pilihan berulang.
+
+3. MEMORI PERCAKAPAN (MULTI-TURN CONTEXT):
+   - Selalu sambungkan jawaban Anda dengan konteks pertanyaan dan jawaban sebelumnya.
+   - Jika pemohon bertanya hal lanjutan (seperti "pengumumannya", "jadwalnya", "syaratnya"), pahami bahwa itu merujuk pada topik yang sedang dibahas sebelumnya.
+
+4. INFO LOKER & REKRUTMEN ABK:
+   - Pegawai Umum / ASN: Melalui seleksi resmi nasional (https://sdmao.kkp.go.id / IG: @rosdmaokkp).
+   - Awak Kapal Perikanan (AKP / ABK): Pendaftaran pencari kerja & sertifikasi kompetensi dikelola via Portal E-LAUT KKP (https://elaut-bppsdm.kkp.go.id/akp/).
+   - Syarat Utama: Sertifikat keselamatan BST-F Tingkat II, Buku Pelaut Perikanan, dan terdaftar di e-KUSUKA. Penyaluran resmi wajib melalui agen berizin SIUPPAK resmi. Waspada calo & penipuan.
+   - Kontak AKP: 0819-9247-4154 / WA Aduan AKP: 0811-251-744.
+
+5. BANTUAN USAHA BUDIDAYA & JUKNIS:
+   - Jika ada permohonan bantuan usaha budidaya (benih, bibit, pakan mandiri, bioflok, tambak), WAJIB cantumkan:
+     • Tautan Unduh Juknis Budidaya: https://ppid.kkp.go.id/upp/direktorat-jenderal-perikanan-budi-daya/regulasi/petunjuk-teknis/
+     • Syarat kelompok Pokdakan ber-e-KUSUKA aktif terdaftar di Dinas Perikanan Kabupaten/Kota.
+     • Pengajuan proposal melalui dinas perikanan daerah untuk diverifikasi ke Ditjen Perikanan Budi Daya (DJPB).
+     • Alternatif modal usaha bunga 3% via BLU LPMUKP (0811-9877-676).
+
+6. FORMATTING WHATSAPP:
+   - Awali WAJIB dengan: "Halo #SahabatBahari," (atau "Hello #SahabatBahari," jika berbahasa Inggris)
+   - Akhiri WAJIB dengan: "Salam hormat." (atau "Best regards, PPID MMAF / KKP RI." jika berbahasa Inggris)
+   - Gunakan TANDA BINTANG TUNGGAL *teks* untuk cetak tebal (bold). DILARANG tanda bintang ganda **teks**.
+
+7. DUKUNGAN BAHASA INGGRIS (BILINGUAL SUPPORT - ENGLISH):
+   - Jika pemohon bertanya atau menyapa dalam BAHASA INGGRIS (English):
+     • Berikan SELURUH respon dalam BAHASA INGGRIS yang fasih, sopan, formal, dan akurat.
+     • Format pembuka WAJIB: "Hello #SahabatBahari,"
+     • Format penutup WAJIB: "Best regards, PPID MMAF / KKP RI."
+     • Gunakan format WhatsApp rapi (*bold* tunggal, tanpa **).
+     • Jelaskan regulasi resmi Kementerian Kelautan dan Perikanan (MMAF/KKP).
+
+8. ANALISIS INTI PERTANYAAN LONGTEXT:
+   - Jika pemohon mengirimkan pesan yang panjang (berupa paragraf, cerita, kronologi kasus, atau gabungan beberapa kalimat/pertanyaan):
+     1. Bedah dan identifikasi DENGAN CERMAT MASALAH INTI / PERTANYAAN UTAMA pemohon.
+     2. JANGAN mengulang-ulang cerita atau latar belakang pemohon.
+     3. Langsung jawab INTI MASALAH / SOLUSI KONKRETNYA secara terstruktur (maksimal 3-5 poin ringkas):
+        • Solusi Utama (to the point)
+        • Langkah / Syarat Konkret
+        • Kanal Layanan Resmi terkait
+     4. Jika terdapat lebih dari satu pertanyaan, jawab masing-masing poin secara ringkas dan lugas tanpa bertele-tele.
+
+9. ISU SENSITIF PIHAK EKSTERNAL:
+   - Jika ada pemohon yang menanyakan isu sensitif, polemik, sengketa, atau tudingan yang melibatkan pihak eksternal/pihak ketiga/LSM/kementerian lain/luar negeri:
+     • TEGASKAN secara sopan bahwa hal tersebut merupakan *perihal dan ranah kebijakan internal Kementerian Kelautan dan Perikanan (KKP)*.
+     • Arahkan bahwa informasi publik resmi KKP hanya diterbitkan melalui saluran resmi Humas KKP dan portal ppid.kkp.go.id.
+
+10. DAFTAR RESMI KONTAK LAYANAN & PENGADUAN KKP (PATEN & WAJIB DIGUNAKAN):
+   - Call Center Terpadu KKP: 141 (Satu-satunya nomor Call Center resmi KKP. DILARANG KERAS menyebut 196, 159, atau nomor lain).
+   - WhatsApp Pengaduan Umum, PSDKP & Satwa Dilindungi (Penyu, Bom Ikan, dsb): 0811-9890-11 (Email: pengaduan@kkp.go.id / Portal: https://lapor.go.id).
+   - WhatsApp Pelayanan Terpadu Satu Atap (PTSA / Perizinan Berusaha): 0811-8430-610 (Email: ptsp@kkp.go.id).
+   - Layanan PPID KKP (Informasi Publik): Pemohon sudah berada di ruang WhatsApp resmi PPID KKP (Portal: https://ppid.kkp.go.id, Email: ppidkkp@kkp.go.id). DILARANG MEMBERIKAN NOMOR PPID LAGI! Jika ada pertanyaan atau kebutuhan yang mengharuskan kontak PPID, langsung alihkan/hubungkan ke Petugas Layanan PPID KKP.
+   - Pengaduan Awak Kapal Perikanan (AKP / ABK): WA 0811-251-744 / Call Center: +62 811-1000-3132.
+   - Pinjaman Modal Usaha BLU LPMUKP (Bunga Rendah 3%): WA 0811-9877-676 / 0856-2009-163.
+   - Satgas Kampung Nelayan Merah Putih (KNMP): WA +62 822-9936-9004 / Email: korwil@merahputih.kop.id.
+   - Ditjen Perikanan Budi Daya (DJPB): WA 0822-6150-5727.
+   ATURAN MUTLAK NOMOR KONTAK (ANTI-HALUSINASI):
+   DILARANG KERAS MENGARANG ATAU MENYEBUTKAN NOMOR SELAIN DAFTAR RESMI DI ATAS! Dilarang mengarang nomor telepon atau WhatsApp fiktif!
+
+11. PENEMPATAN MAGANG & PKL MAHASISWA (JANGAN DIKASIH PENGADUAN):
+   - Jika pemohon bertanya mengenai magang, PKL (Praktik Kerja Lapangan), atau penempatan magang, DILARANG KERAS memberikan informasi/kanal pengaduan atau kontak aduan AKP/ABK!
+   - Jelaskan bahwa penempatan peserta magang disesuaikan dengan program studi dan kebutuhan kuota unit kerja KKP melalui surat pengantar resmi universitas/sekolah.
+
+12. INGIN NGOBROL DENGAN SUATU BAGIAN LANGSUNG:
+   - Jika pemohon ingin berbicara, berdiskusi, berkonsultasi langsung, atau ngobrol dengan suatu bagian/unit kerja di KKP:
+   - JANGAN LANGSUNG MEMBERIKAN NOMOR PTSA ATAU KONTAK TEKNIS UNIT LAIN!
+   - Berikan arahan untuk menyampaikan permohonan melalui surat resmi/audiensi terlebih dahulu (surat diajukan via portal ppid.kkp.go.id, email ppidkkp@kkp.go.id, atau loket persuratan Gedung Mina Bahari I).
+
+13. JIKA INFORMASI TIDAK TERSEDIA / TIDAK DIKETAHUI / TIDAK ADA DALAM DATABASE:
+   - Jika informasi tidak ada di database atau tidak diketahui: DILARANG mengarang jawaban!
+   - CUKUP JAWAB DENGAN: "Halo #SahabatBahari,\n\nMohon maaf, informasi tersebut belum bisa kami jawab melalui sistem layanan otomatis kami.\n\nPesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat dibantu lebih lanjut secara resmi. Mohon ditunggu ya, petugas kami akan segera membalas pesan Anda. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_"
+
+14. ATURAN PENGGUNAAN KONTAK PTSA & ANALISIS KESOPANAN:
+   - DILARANG KERAS memberikan nomor WhatsApp PTSA (0811-8430-610) kecuali pertanyaan pemohon secara spesifik menanyakan perizinan berusaha penangkapan kapal/usaha perikanan di PTSA!
+   - Kata pembuka seperti "mohon izin bertanya...", "izin tanya...", "izin min..." adalah tata krama/kesopanan berbicara khas masyarakat Indonesia, BUKAN pertanyaan perizinan kapal. Analisislah inti pertanyaan sesungguhnya di balik kalimat tersebut.
+   - Berbicaralah selayaknya manusia yang ramah, hangat, empatik, cerdas, dan to the point, bukan seperti bot penjawab kaku.
+
+15. ATURAN SATU DATA & PERMOHONAN DATA KKP:
+   - Portal satudata.kkp.go.id TIDAK AKTIF / TIDAK ADA. DILARANG KERAS memberikan tautan satudata.kkp.go.id!
+   - Seluruh data statistik, agregat, dan dokumen kelautan perikanan masuk ke dalam ranah *Permohonan Informasi Publik PPID KKP* (https://ppid.kkp.go.id).
+   - Jika pemohon menanyakan Satu Data KKP atau memerlukan data statistik/analisis yang tidak ada di database: JANGAN MENGARANG! Arahkan ke PPID dan alihkan langsung ke Petugas Layanan PPID KKP agar dibantu secara resmi.`
 });
 
-// Menyimpan status obrolan pengguna ('MENU', 'AI_MODE', 'CS_MODE', 'CHECK_TICKET', 'REG_NAME', 'REG_NIK', 'REG_INFO', 'REG_PURPOSE', 'AWAITING_IKM', 'TROUBLESHOOT_KAPAL', 'TROUBLESHOOT_KNMP', 'TROUBLESHOOT_PKPN', 'TROUBLESHOOT_EKONOMI_BIRU', 'UNCLEAR_PROMPT')
+// Menyimpan status obrolan pengguna ('MENU', 'AI_MODE', 'CS_MODE', 'CHECK_TICKET', 'CHECK_SUBMITTED_LETTER', 'REG_NAME', 'REG_NIK', 'REG_INFO', 'REG_PURPOSE', 'AWAITING_IKM', 'TROUBLESHOOT_KAPAL', 'TROUBLESHOOT_KNMP', 'TROUBLESHOOT_PKPN', 'TROUBLESHOOT_EKONOMI_BIRU', 'UNCLEAR_PROMPT', 'SELECT_KONTAK', 'SELECT_LAPORAN')
 const userState = {};
 // Menyimpan jumlah interaksi tanya-jawab (AI/FAQ) pengguna untuk eskalasi cerdas
 const userAiChatCount = {};
 // Penyimpanan data formulir digital sementara & target survei IKM (Tahap 2)
 const regData = {};
 const pendingIkmTarget = {};
+
+// ==========================================
+// 👤 PENGINGAT IDENTITAS / NAMA PEMOHON
+// ==========================================
+const userKnownName = {}; // senderPhone / sender -> string
+
+function extractSelfIntroName(text) {
+    if (!text || typeof text !== 'string') return null;
+    const t = text.trim();
+    // contoh: "nama saya Budi Santoso", "namaku Siti", "nama saya: Ahmad dari Tegal", "perkenalkan nama saya Rizki", "panggil saya Joko"
+    const match = t.match(/(?:nama saya|nama ku|namaku|nama\s*:|perkenalkan nama saya|perkenalkan saya|panggil saya(?: saja)?)\s+([A-Za-z\u00C0-\u017F]+(?:\s+[A-Za-z\u00C0-\u017F]+)?)/i);
+    if (match && match[1]) {
+        let candidate = match[1].trim();
+        // Hentikan jika kata kedua adalah preposisi/kata hubung (misal 'dari', 'asal', 'mau', 'ingin', 'di')
+        const parts = candidate.split(/\s+/);
+        const stopWords = ['dari', 'asal', 'mau', 'ingin', 'di', 'yang', 'akan', 'sudah', 'adalah', 'tinggal', 'bisa', 'tolong'];
+        if (parts.length > 1 && stopWords.includes(parts[1].toLowerCase())) {
+            candidate = parts[0];
+        }
+        const blackList = ['mau', 'ingin', 'bisa', 'tolong', 'mohon', 'dari', 'akan', 'sudah', 'adalah', 'admin', 'petugas', 'sahabat', 'bahari', 'kak', 'pak', 'ibu', 'mas', 'mbak'];
+        if (!blackList.includes(candidate.toLowerCase()) && candidate.length >= 2 && candidate.length <= 35) {
+            return candidate;
+        }
+    }
+    return null;
+}
+
+// ==========================================
+// 🧠 MEMORI PERCAKAPAN & KONTEKS MULTI-TURN (10 OBROLAN TERAKHIR)
+// ==========================================
+const userChatHistory = {}; // senderPhone -> array of { role: 'user'|'model', text: string, timestamp: number }
+const userActiveTopic = {}; // senderPhone -> { topic: string, name: string, updatedAt: number }
+
+function addChatHistory(phone, role, text) {
+    if (!phone) return;
+    if (!userChatHistory[phone]) userChatHistory[phone] = [];
+    userChatHistory[phone].push({
+        role: role === 'user' ? 'user' : 'model',
+        text: (text || '').trim(),
+        timestamp: Date.now()
+    });
+    // Simpan hingga 20 entri (10 obrolan tanya-jawab pemohon & bot terakhir)
+    if (userChatHistory[phone].length > 20) {
+        userChatHistory[phone] = userChatHistory[phone].slice(-20);
+    }
+}
+
+function getChatHistoryContext(phone, limit = 10) {
+    if (!phone || !userChatHistory[phone] || userChatHistory[phone].length === 0) return '';
+    // Ambil hingga 20 entri pesan (10 obrolan pemohon & bot terakhir)
+    const recent = userChatHistory[phone].slice(-20);
+    return recent.map((msg, idx) => `[Obrolan #${Math.floor(idx / 2) + 1} - ${msg.role === 'user' ? 'Pemohon' : 'Asisten PPID'}]: ${msg.text}`).join('\n');
+}
+
+function clearChatHistory(phone) {
+    if (!phone) return;
+    delete userChatHistory[phone];
+    delete userActiveTopic[phone];
+    // userKnownName sengaja tidak dihapus agar nama pemohon tetap diingat
+}
+
+// ==========================================
+// 🕒 JAM OPERASIONAL KHUSUS CHAT PETUGAS PPID
+// (Mode Testing: Diatur 24 Jam Nonstop)
+// ==========================================
+const OPERATIONAL_HOURS_24_HOURS_TESTING = true; // Set true untuk mematikan batasan jam operasional saat pengujian/testing
+
+function getPetugasOperationalInfo() {
+    // Mode testing: Layanan petugas diset aktif 24 jam penuh (tanpa batasan jam kerja / jam istirahat)
+    if (OPERATIONAL_HOURS_24_HOURS_TESTING) {
+        return {
+            isOpen: true,
+            isBreak: false,
+            isWeekend: false,
+            isOutsideHours: false,
+            hour: 10,
+            minute: 0
+        };
+    }
+
+    const dateOptions = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', weekday: 'short', hourCycle: 'h23' };
+    const formatter = new Intl.DateTimeFormat('en-GB', dateOptions);
+    const parts = formatter.formatToParts(new Date());
+    const hour = parseInt(parts.find(p => p.type === 'hour').value, 10);
+    const minute = parseInt(parts.find(p => p.type === 'minute').value, 10);
+    const weekday = parts.find(p => p.type === 'weekday').value; // 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+
+    const currentTimeInMinutes = hour * 60 + minute;
+    const isWeekend = weekday === 'Sat' || weekday === 'Sun';
+
+    // Jam istirahat: 11:40 - 13:00 WIB
+    const isBreak = currentTimeInMinutes >= (11 * 60 + 40) && currentTimeInMinutes < (13 * 60);
+
+    // Jam kerja resmi:
+    // Senin - Kamis: 08:00 - 15:00 WIB
+    // Jumat: 08:00 - 15:30 WIB
+    let isWorkingHours = false;
+    if (!isWeekend) {
+        if (weekday === 'Fri') {
+            isWorkingHours = currentTimeInMinutes >= (8 * 60) && currentTimeInMinutes < (15 * 60 + 30);
+        } else {
+            isWorkingHours = currentTimeInMinutes >= (8 * 60) && currentTimeInMinutes < (15 * 60);
+        }
+    }
+
+    const isOpen = isWorkingHours && !isBreak;
+    return {
+        isOpen,
+        isBreak,
+        isWeekend,
+        isOutsideHours: !isWorkingHours && !isWeekend,
+        hour,
+        minute
+    };
+}
+
+// ==========================================
+// 🎯 DETEKSI PERTANYAAN INTI / MENGERUCUT
+// ==========================================
+function isSpecificQuestion(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    if (t.includes('?')) return true;
+
+    const specificIndicators = [
+        'bagaimana', 'gimana', 'apa', 'apakah', 'kapan', 'dimana', 'di mana', 'berapa',
+        'siapa', 'mengapa', 'kenapa', 'syarat', 'cara', 'prosedur', 'tata cara', 'alur',
+        'jadwal', 'waktu', 'tanggal', 'pengumuman', 'pengumumannya', 'info pengumuman',
+        'hasil', 'daftar', 'lokasi', 'tempat', 'biaya', 'tarif', 'kontak', 'nomor',
+        'call center', 'email', 'website', 'link', 'portal', 'juknis', 'panduan', 'loker',
+        'lowongan', 'rekrutmen', 'tender', 'lelang', 'penerima', 'pengadaan', 'gaji', 'upah',
+        'bantuan', 'hibah', 'modal', 'pinjaman', 'formulir', 'form', 'unduh', 'download',
+        'lpse', 'aturan', 'regulasi', 'permen', 'data', 'jumlah', 'dokumen', 'surat',
+        'kendala', 'masalah', 'error', 'gagal', 'bisa tidak', 'bisa gak', 'status',
+        'tanya', 'bertanya', 'konsultasi', 'solusi', 'rekomendasi', 'minta info', 'minta data'
+    ];
+    if (specificIndicators.some(w => t.includes(w))) return true;
+
+    const words = t.split(/\s+/).filter(w => w.length > 1);
+    if (words.length >= 5) return true;
+
+    return false;
+}
+
+// ==========================================
+// 🔍 PENCARIAN FAQ DENGAN PRINSIP BEST MATCH & RAG GROUNDING
+// ==========================================
+let cachedFaqData = null;
+function getFaqData() {
+    if (!cachedFaqData) {
+        try {
+            cachedFaqData = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
+        } catch (err) {
+            console.error("Gagal membaca faq.json:", err);
+            cachedFaqData = [];
+        }
+    }
+    return cachedFaqData;
+}
+
+function findBestFaqMatch(text) {
+    if (!text || typeof text !== 'string') return null;
+    const t = text.toLowerCase().trim();
+    try {
+        const faqData = getFaqData();
+        let bestMatch = null;
+        let longestKeywordLength = 0;
+
+        for (const item of faqData) {
+            if (!item.keywords || !Array.isArray(item.keywords)) continue;
+            for (const keyword of item.keywords) {
+                const kw = keyword.toLowerCase().trim();
+                if (kw.length >= 3 && t.includes(kw) && kw.length > longestKeywordLength) {
+                    longestKeywordLength = kw.length;
+                    bestMatch = item;
+                }
+            }
+        }
+        return bestMatch ? tracker.cleanWhatsAppFormatting(bestMatch.answer) : null;
+    } catch (err) {
+        console.error("Gagal membaca atau mencocokkan faq.json:", err);
+        return null;
+    }
+}
+
+function getRelevantFaqContext(queryText, limit = 5) {
+    if (!queryText || typeof queryText !== 'string') return '';
+    try {
+        const faqData = getFaqData();
+        const cleanQuery = queryText.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+        const queryTokens = cleanQuery.split(/\s+/).filter(w => w.length > 2);
+
+        // Stopwords Bahasa Indonesia & Inggris yang diabaikan dalam pembobotan
+        const stopWords = new Set([
+            'saya', 'kami', 'anda', 'kamu', 'ingin', 'mau', 'bisa', 'tolong', 'mohon',
+            'tanya', 'bertanya', 'bagaimana', 'gimana', 'cara', 'caranya', 'apakah', 'apa',
+            'kenapa', 'mengapa', 'kapan', 'dimana', 'mana', 'berapa', 'yang', 'dan', 'atau',
+            'dengan', 'untuk', 'pada', 'dari', 'ke', 'di', 'ini', 'itu', 'ada', 'adalah',
+            'akan', 'sudah', 'telah', 'bisa', 'dapat', 'halo', 'selamat', 'pagi', 'siang',
+            'sore', 'malam', 'admin', 'petugas', 'pak', 'bu', 'bapak', 'ibu', 'mas', 'mba',
+            'the', 'and', 'for', 'with', 'about', 'how', 'what', 'when', 'where', 'who', 'why'
+        ]);
+
+        const scoredItems = [];
+        for (const item of faqData) {
+            let score = 0;
+            const keywords = Array.isArray(item.keywords) ? item.keywords : [];
+            const answer = (item.answer || '').toLowerCase();
+
+            // 1. Cek kecocokan frasa keyword lengkap
+            for (const kw of keywords) {
+                const kwLower = kw.toLowerCase().trim();
+                if (cleanQuery.includes(kwLower)) {
+                    score += 15 + kwLower.length;
+                }
+            }
+
+            // 2. Cek token overlap dengan keywords
+            for (const token of queryTokens) {
+                if (stopWords.has(token)) continue;
+                for (const kw of keywords) {
+                    const kwTokens = kw.toLowerCase().split(/\s+/);
+                    if (kwTokens.includes(token)) score += 5;
+                }
+                // 3. Cek kemunculan di teks jawaban
+                if (answer.includes(token)) score += 1;
+            }
+
+            if (score > 0) scoredItems.push({ item, score });
+        }
+
+        scoredItems.sort((a, b) => b.score - a.score);
+        const topMatches = scoredItems.slice(0, limit);
+        if (topMatches.length === 0) return '';
+
+        return topMatches.map((m, idx) => {
+            const kwList = m.item.keywords.slice(0, 5).join(', ');
+            return `[REFERENSI FAQ RESMI #${idx + 1} (Topik: ${kwList})]:\n${m.item.answer}`;
+        }).join('\n\n');
+    } catch (err) {
+        console.error("Gagal mengambil konteks FAQ relevan:", err);
+        return '';
+    }
+}
+
+// ==========================================
+// 🤖 GENERATOR RESPON AI TERGROUNDING (STRICT FAQ & DATABASE GROUNDED)
+// ==========================================
+async function generateGroundedAiResponse({
+    sender,
+    senderPhone,
+    messageBody,
+    text,
+    topicContext = '',
+    isMultiChat = false,
+    multiChatCount = 1,
+    isLongText = false
+}) {
+    const senderName = userKnownName[senderPhone] || userKnownName[sender] || '';
+    const historyCtx = getChatHistoryContext(senderPhone);
+    const isEnglish = isEnglishQuery(text);
+    const faqContext = getRelevantFaqContext(messageBody, 5);
+
+    let systemAdditions = '';
+    if (senderName) {
+        systemAdditions += `\n[NAMA PENGIRIM / PEMOHON]: Nama pemohon adalah "${senderName}". Sapa pemohon secara ramah, sopan, dan hangat di awal pesan dengan format: "Halo #SahabatBahari Kak ${senderName}," (atau sesuaikan bila bahasa Inggris: "Hello #SahabatBahari Mr./Ms. ${senderName},").`;
+    } else {
+        systemAdditions += `\n[SAPAAN PEMOHON]: Jika nama pemohon belum diketahui, gunakan sapaan ramah standar: "Halo #SahabatBahari,".`;
+    }
+
+    if (historyCtx) {
+        systemAdditions += `\n[PENGINGAT KONTEKS 10 OBROLAN TERAKHIR]: Sistem merekam hingga 10 obrolan terakhir. Hubungkan konteks pertanyaan terkini pemohon dengan riwayat obrolan sebelumnya secara koheren, nyambung, dan konsisten. Jika pemohon merujuk pada hal yang telah dibahas sebelumnya (misalnya 'syaratnya apa saja?', 'bagaimana cara daftarnya?', 'bisa diulang?'), Anda WAJIB menjawab tuntas sesuai konteks yang sedang dibahas tanpa meminta pemohon mengulang penjelasannya.`;
+    }
+    systemAdditions += `\n[ATURAN KONTAK RESMI KKP]: Jika menyebutkan kontak atau saluran pelaporan, HANYA gunakan nomor resmi KKP: Call Center 141, WA Pengaduan/PSDKP 0811-9890-11, WA PTSA 0811-8430-610, WA Perlindungan Awak Kapal (AKP) 0811-251-744, WA Ditjen Budi Daya (DJPB) 0822-6150-5727, WA Pinjaman BLU LPMUKP 0811-9877-676, WA Biro SDMAO (Kepegawaian/CPNS/PPPK) 0851-5889-8203, WA Satgas KNMP +62 822-9936-9004. DILARANG KERAS MENGARANG nomor lain seperti 196, 159, atau nomor WhatsApp fiktif!`;
+    systemAdditions += `\n[ATURAN PENGGUNAAN KONTAK PTSA]: DILARANG KERAS memberikan nomor WhatsApp PTSA (0811-8430-610) kecuali pertanyaan pemohon secara spesifik menanyakan perizinan berusaha penangkapan kapal/usaha perikanan di PTSA! Jika pertanyaan mengenai topik lain (misal izin riset/penelitian, magang, bantuan benih, modal usaha, surat audiensi, atau aduan), HANYA berikan kontak resmi sesuai database KKP di atas, BUKAN nomor PTSA!`;
+    systemAdditions += `\n[ANALISIS BAHASA DAN KESOPANAN]: Frasa pembuka seperti "mohon izin bertanya...", "izin tanya...", "izin min...", "saya mau nanya..." adalah bentuk kesopanan bertutur kata khas Indonesia, BUKAN pertanyaan perizinan kapal/berusaha. Analisislah dan jawablah inti pertanyaan pemohon yang ada di balik kata pembuka tersebut secara cerdas, tepat sasaran, dan akurat.`;
+    systemAdditions += `\n[GAYA PERCAKAPAN NATURAL & MANUSIAWI]: Berbicaralah selayaknya petugas customer service profesional PPID KKP yang ramah, hangat, empatik, cerdas, solutif, dan to the point. Jawablah langsung inti masalah dengan bahasa yang mengalir alami dan bersahabat. Hindari gaya bahasa yang kaku seperti robot, mesin penjawab, atau template otomatis.`;
+    systemAdditions += `\n[ATURAN NOMOR PPID]: DILARANG KERAS memberikan nomor WhatsApp atau nomor telepon PPID kepada pemohon karena pemohon sudah berada di ruang WhatsApp resmi PPID KKP! Jika pemohon menanyakan kontak PPID atau memerlukan penanganan PPID langsung, arahkan bahwa pemohon sudah berada di layanan resmi PPID dan langsung hubungkan ke petugas.`;
+    systemAdditions += `\n[ATURAN PENEMPATAN MAGANG & PKL]: Jika pertanyaan terkait magang, PKL (Praktik Kerja Lapangan), atau penempatan magang mahasiswa/siswa, DILARANG KERAS memberikan saluran/kontak pengaduan atau hotline aduan AKP/ABK! Magang/PKL adalah perihal akademik kedinasan, bukan aduan ketenagakerjaan kapal. Jelaskan penempatan magang disesuaikan dengan program studi dan kuota unit kerja KKP melalui surat pengantar resmi kampus/sekolah.`;
+    systemAdditions += `\n[ATURAN INGIN NGOBROL DENGAN SUATU BAGIAN LANGSUNG & KUNJUNGAN]: Jika pemohon ingin berbicara, berdiskusi, beraudiensi, berkunjung, atau ngobrol langsung dengan suatu bagian/direktorat/unit di KKP, JANGAN langsung memberikan nomor PTSA atau nomor telepon unit teknis! Berikan arahan untuk menyampaikan permohonan melalui surat resmi terlebih dahulu melalui email humas.kkp@kkp.go.id / portal PPID https://ppid.kkp.go.id, atau jika menyerahkan berkas langsung (hardcopy) bisa ke loket Bagian Persuratan di Gedung Mina Bahari (GMB) IV Lantai 1 (Senin-Kamis pukul 08.00-15.30 WIB).`;
+    systemAdditions += `\n[ATURAN PENANGANAN LAPORAN]: Jika pemohon baru menyampaikan pernyataan awal ingin melapor (seperti "ingin laporan", "mau lapor"), sistem memberikan pilihan 3 kategori laporan: (1) Pengaduan Umum & Pelanggaran Perikanan/PSDKP/WBS, (2) Pengawasan & Pengendalian Ruang Laut (PRL) / Pemanfaatan Pulau-Pulau Kecil, (3) Pengaduan Awak Kapal Perikanan (AKP/ABK). Namun jika pemohon SUDAH langsung menyebutkan inti/tujuan laporannya (contoh: melihat penangkapan penyu, perburuan satwa dilindungi, bom ikan, atau pertanyaan pemanfaatan/penggunaan pulau), LANGSUNG identifikasi dan berikan informasi kanal laporan tersebut tanpa memberikan menu pilihan berulang!`;
+    systemAdditions += `\n[ATURAN KONTAK SATGAS PEMBANGUNAN KNMP]: Jika pemohon menanyakan kontak Satgas Pembangunan KNMP, berikan tautan resmi Instagram: https://www.instagram.com/p/DeB4FFpmnJg/?utm_source=ig_web_copy_link&gwpx=NTc4MTIwNjQ2YQ== beserta kontak koreksi Regional Kalimantan: Fakhri (0852-8734-7969).`;
+    systemAdditions += `\n[ATURAN JIKA INFORMASI TIDAK TERSEDIA / TIDAK ADA DALAM DATABASE]: Jika informasi yang ditanyakan pemohon TIDAK ADA dalam database resmi atau tidak diketahui jawabannya: DILARANG MENGARANG! CUKUP JAWAB DENGAN: "Halo #SahabatBahari,\n\nMohon maaf, informasi tersebut belum bisa kami jawab melalui sistem layanan otomatis kami.\n\nPesan Anda kami alihkan kepada Petugas Layanan PPID KKP agar dapat dibantu lebih lanjut secara resmi. Mohon ditunggu ya, petugas kami akan segera membalas pesan Anda. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_"`;
+    systemAdditions += `\n[ATURAN PORTAL SATU DATA]: Portal web satudata.kkp.go.id TIDAK AKTIF / TIDAK ADA. DILARANG KERAS memberikan tautan satudata.kkp.go.id! Seluruh permohonan data statistik dan informasi publik perikanan secara resmi berada di bawah mekanisme PPID KKP (https://ppid.kkp.go.id). Jika pemohon menanyakan portal Satu Data atau membutuhkan data statistik/analisis yang tidak ada di database, arahkan ke PPID dan alihkan permohonan ke Petugas Layanan PPID KKP.`;
+
+    if (isMultiChat) {
+        systemAdditions += `\n[INSTRUKSI MULTI-CHAT (${multiChatCount} PESAN BERUNTUN)]: Pemohon mengirimkan beberapa pesan chat berurutan. Anda WAJIB merespons layaknya petugas customer service manusia yang ramah, empatik, responsif, dan profesional (JANGAN TERLALU KAKU/ROBOT):\n1. Awali dengan merumuskan SATU kesimpulan kalimat inti kebutuhan pemohon di awal jawaban (contoh: "Halo #SahabatBahari,\\n\\nTerima kasih atas pesan yang Anda sampaikan. Dari rangkaian pesan yang Bapak/Ibu kirimkan, kami simpulkan bahwa Anda membutuhkan informasi/panduan terkait [inti kebutuhan pemohon]...").\n2. Berikan HANYA 1 RESPON TUNGGAL terpadu yang komprehensif, padat, dan menjawab tuntas seluruh pertanyaan/kendala pemohon dalam rangkaian pesan tersebut.\n3. Jangan memecah balasan atau memberikan menu berulang.`;
+    }
+
+    if (isLongText) {
+        systemAdditions += `\n[INSTRUCTION - ANALISIS LONGTEXT]: Pesan pemohon memuat kronologi/teks panjang. Bedah dan tangkap INTI PERTANYAAN / MASALAH UTAMA. Jangan mengulang cerita/kronologi pemohon. Berikan jawaban langsung, terstruktur, ringkas (maksimal 3-5 poin solusi), dan to the point.`;
+    }
+
+    if (isEnglish) {
+        systemAdditions += `\n[INSTRUCTION: The applicant is communicating in English. You MUST respond completely and fluently in English. Use official MMAF / KKP terminology (e.g. 'Ministry of Marine Affairs and Fisheries', 'Blue Economy', 'PPID MMAF'). Greeting: 'Hello #SahabatBahari,'. Closing: 'Best regards, PPID MMAF / KKP RI.']`;
+    }
+
+    let contextualPrompt = `[INSTRUKSI SISTEM TAMBAHAN]:${systemAdditions}\n\n`;
+    if (topicContext) {
+        contextualPrompt += `[KONTEKS MENU / TOPIK AKTIF]:\n${topicContext}\n\n`;
+    }
+    if (faqContext) {
+        contextualPrompt += `[DATABASE RESMI KKP & FAQ TERVERIFIKASI]:\n${faqContext}\n\n`;
+    }
+    if (historyCtx) {
+        contextualPrompt += `[RIWAYAT 10 OBROLAN TERAKHIR DENGAN PEMOHON]:\n${historyCtx}\n\n`;
+    }
+    contextualPrompt += `[PESAN PEMOHON]:\n${messageBody}\n\n`;
+    contextualPrompt += isEnglish
+        ? `Please provide a clear, direct, and concise solution in English. Do not show repetitive menus if there is already a specific question. Ensure all contact numbers strictly match the official KKP database above.`
+        : `Jawablah pertanyaan pemohon secara ringkas, to the point, ramah dan manusiawi, serta pastikan seluruh nomor kontak dan prosedur 100% akurat sesuai Database KKP di atas. Jangan memberikan menu berulang jika sudah ada pertanyaan spesifik.`;
+
+    const result = await aiModel.generateContent(contextualPrompt);
+    return tracker.cleanWhatsAppFormatting(result.response.text());
+}
+
+// ==========================================
+// 📞 PEMETAAN SALURAN KONTAK RESMI KKP
+// ==========================================
+const CONTACT_MENU_TEXT =
+    `Halo #SahabatBahari,\n\n` +
+    `Berikut pemetaan saluran kontak resmi layanan Kementerian Kelautan dan Perikanan (KKP):\n\n` +
+    `*1* 🏢 *Layanan Informasi Publik & PPID KKP* (Informasi data, berkas publik, tatap muka)\n` +
+    `*2* 📑 *Pelayanan Terpadu Satu Atap (PTSA)* (Perizinan berusaha, SIPI, SIUP, PKKPRL, OSS)\n` +
+    `*3* 👨‍✈️ *Pengaduan & Perlindungan Awak Kapal (AKP / ABK)* (Darurat laut, gaji, E-LAUT)\n` +
+    `*4* 🏘️ *Satgas Kampung Nelayan Merah Putih (KNMP)* (Program sarana nelayan & Koperasi KDMP)\n` +
+    `*5* 🐟 *Ditjen Perikanan Budi Daya (DJPB)* (Konsultasi tambak, benih ikan & Juknis)\n` +
+    `*6* 💰 *Permodalan Usaha Nelayan (BLU LPMUKP)* (Pinjaman modal usaha bunga rendah 3%)\n` +
+    `*7* 🚨 *Pengaduan Umum, Saber Pungli & WBS Itjen* (Laporan pelanggaran & penipuan)\n` +
+    `*8* 👥 *Biro SDM Aparatur dan Organisasi (SDMAO)* (Kepegawaian, CPNS, PPPK, mutasi)\n` +
+    `*0* ↩️ *Kembali ke Menu Utama*\n\n` +
+    `_Silakan balas dengan angka *1* sampai *8* untuk rincian kontak yang Anda butuhkan._\n\n` +
+    `Salam hormat.`;
+
+const CONTACT_DETAILS = {
+    '1': `🏢 *LAYANAN INFORMASI PUBLIK & PPID KKP*\n\n` +
+        `Anda saat ini sudah terhubung di ruang WhatsApp resmi PPID Kementerian Kelautan dan Perikanan.\n` +
+        `• *Layanan Chat:* Ruang WhatsApp ini (langsung terhubung dengan Petugas PPID)\n` +
+        `• *Email Resmi:* ppidkkp@kkp.go.id\n` +
+        `• *Portal Web:* https://ppid.kkp.go.id\n` +
+        `• *Desk Layanan:* Gedung Mina Bahari I Lantai 1, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat\n` +
+        `• *Jam Pelayanan:* Senin - Kamis (08.00 - 15.00 WIB), Jumat (08.00 - 15.30 WIB)`,
+
+    '2': `📑 *KONTAK RESMI PTSA KKP (PELAYANAN PERIZINAN TERPADU)*\n\n` +
+        `• *WhatsApp Helpdesk PTSA:* 0811-8430-610\n` +
+        `• *Email:* ptsp@kkp.go.id\n` +
+        `• *Portal Perizinan Kapal (SILAT):* https://perizinan.kkp.go.id\n` +
+        `• *Portal Izin Berusaha (OSS RBA):* https://oss.go.id\n` +
+        `• *Portal Cek Fisik Kapal (SICEFI):* https://kapal.kkp.go.id/sicefi`,
+
+    '3': `👨‍✈️ *KONTAK RESMI PENGADUAN & PERLINDUNGAN AWAK KAPAL (AKP / ABK)*\n\n` +
+        `• *WhatsApp Pengaduan AKP:* 0811-251-744\n` +
+        `• *Call Center Darurat Pelaut:* +62 811-1000-3132\n` +
+        `• *Helpdesk E-LAUT (Sertifikasi BST-F):* 0819-9247-4154\n` +
+        `• *Portal Sertifikasi & Bursa Kerja:* https://elaut-bppsdm.kkp.go.id/akp/`,
+
+    '4': `🏘️ *KONTAK RESMI SATGAS PEMBANGUNAN & OPERASIONALISASI KNMP*\n\n` +
+        `Berikut informasi mengenai kontak Satgas Pembangunan KNMP sesuai kebutuhan Sahabat:\n` +
+        `🔗 https://www.instagram.com/p/DeB4FFpmnJg/?utm_source=ig_web_copy_link&gwpx=NTc4MTIwNjQ2YQ==\n\n` +
+        `*Koreksi Kontak Regional:*\n` +
+        `• *Regional Kalimantan:* Fakhri (0852-8734-7969)\n\n` +
+        `• *WhatsApp Official KNMP:* +62 822-9936-9004\n` +
+        `• *Call Center:* 1500587\n` +
+        `• *Email:* korwil@merahputih.kop.id\n` +
+        `• *Instagram Official:* @knmp_indonesia\n` +
+        `• *Sekretariat:* Gedung Mina Bahari II Lantai 10, Kantor Pusat KKP Jakarta`,
+
+    '5': `🐟 *KONTAK RESMI DITJEN PERIKANAN BUDI DAYA (DJPB KKP)*\n\n` +
+        `• *WhatsApp Layanan DJPB:* +62 822-6150-5727\n` +
+        `• *Portal Web Resmi:* https://djpb.kkp.go.id\n` +
+        `• *Unduh Juknis Bantuan Budidaya:* https://ppid.kkp.go.id/upp/direktorat-jenderal-perikanan-budi-daya/regulasi/petunjuk-teknis/\n` +
+        `• *Email:* setditjen.pb@kkp.go.id / djpb@kkp.go.id\n` +
+        `• *Call Center KKP:* 141`,
+
+    '6': `💰 *KONTAK RESMI PERMODALAN NELAYAN (BLU LPMUKP KKP)*\n\n` +
+        `• *WhatsApp Pengajuan Pinjaman (Bunga 3%):* 0811-9877-676 / 0856-2009-163\n` +
+        `• *Call Center:* (021) 3864448 / 1550 480\n` +
+        `• *Portal Resmi:* https://lpmukp.kkp.go.id\n` +
+        `• *Email:* info@lpmukp.kkp.go.id\n` +
+        `• *Alamat:* Gedung Mina Bahari IV Lt. 3, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat`,
+
+    '7': `🚨 *KONTAK RESMI PENGADUAN UMUM, SABER PUNGLI & WBS ITJEN KKP*\n\n` +
+        `• *WhatsApp Pengaduan KKP:* 0811-9890-11\n` +
+        `• *Email Pengaduan:* pengaduan@kkp.go.id\n` +
+        `• *Portal Whistleblowing System (WBS):* https://wbs.kkp.go.id\n` +
+        `• *Call Center KKP:* 141`,
+
+    '8': `👥 *KONTAK RESMI BIRO SDM APARATUR & ORGANISASI (SDMAO KKP)*\n\n` +
+        `• *WhatsApp SDMAO:* 0851-5889-8203\n` +
+        `• *Portal Kepegawaian:* https://sdmao.kkp.go.id\n` +
+        `• *Instagram Official:* @rosdmaokkp\n` +
+        `• *Email:* ropeg@kkp.go.id\n` +
+        `• *Telepon:* (021) 3519070 ext. 2524\n` +
+        `• *Alamat:* Gedung Mina Bahari IV Lantai 3, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat`
+};
+
+function isGeneralContactQuery(text) {
+    const t = (text || '').toLowerCase().trim();
+    const contactWords = ['kontak', 'hubungi', 'call center', 'callcenter', 'hotline', 'nomor wa', 'wa kkp', 'telepon', 'telp', 'email kkp'];
+    const hasContactWord = contactWords.some(w => t.includes(w));
+    if (!hasContactWord) return false;
+
+    // Jika pemohon sudah spesifik menanyakan unit tertentu, biarkan ditangani handler spesifik
+    const specificUnits = ['ppid', 'ptsa', 'perizinan', 'sipi', 'siup', 'akp', 'abk', 'knmp', 'kdmp', 'budidaya', 'djpb', 'lpmukp', 'modal', 'pungli', 'wbs'];
+    if (specificUnits.some(u => t.includes(u))) {
+        return false;
+    }
+    return true;
+}
+
+// ==========================================
+// ⏱️ BUFFER PENGGABUNGAN CHAT BERUNTUN (DEBOUNCE AGGREGATION)
+// ==========================================
+const userMessageBuffer = {}; // sender -> { messages: [], senderDetails: null, timer: null }
+const MESSAGE_BUFFER_DELAY_MS = 2000; // 2 detik jeda agregasi chat susulan
+
+// ==========================================
+// 🌐 DUKUNGAN BAHASA INGGRIS (BILINGUAL SUPPORT)
+// ==========================================
+function isEnglishQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const englishGreetings = [
+        'hello', 'hi', 'good morning', 'good afternoon', 'good evening',
+        'dear sir', 'dear madam', 'excuse me'
+    ];
+    if (englishGreetings.some(g => t.startsWith(g) || t === g)) return true;
+
+    const englishWords = [
+        'what', 'how', 'when', 'where', 'who', 'why', 'which', 'can i', 'could i',
+        'please', 'help me', 'permit', 'license', 'licensing', 'fishing', 'vessel',
+        'ship', 'boat', 'information', 'ministry', 'marine', 'fisheries', 'regulation',
+        'contact', 'foreigner', 'foreign', 'tourist', 'research', 'document', 'letter',
+        'requirement', 'application', 'apply', 'procedure', 'office', 'service', 'public',
+        'policy', 'indonesia', 'waters', 'ocean', 'blue economy', 'aquaculture', 'clearance'
+    ];
+    const tokens = t.split(/[^a-zA-Z]+/);
+    let matchCount = 0;
+    for (const token of tokens) {
+        if (englishWords.includes(token)) matchCount++;
+    }
+    return matchCount >= 2;
+}
+
+// ==========================================
+// 🚨 DETEKSI ANCAMAN / INTIMIDASI
+// ==========================================
+function isThreatQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const threatKeywords = [
+        'ancam', 'mengancam', 'kubunuh', 'hajar', 'serang', 'santet', 'mati kau',
+        'awas kalian', 'awas kamu', 'awas lo', 'saya laporkan polisi', 'lapor polisi',
+        'saya gugat', 'gugat kkp', 'somasi', 'bakar', 'demo', 'rusak', 'viralkan',
+        'saya viralkan', 'tak viralkan', 'awas kalau tidak', 'tak laporkan', 'tuntut',
+        'saya tuntut', 'penjarakan'
+    ];
+    return threatKeywords.some(k => t.includes(k));
+}
+
+// ==========================================
+// 🔒 DETEKSI USAHA MENGETAHUI IDENTITAS / INFORMASI SENSITIF INTERNAL
+// ==========================================
+function isSensitiveInfoProbingQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+
+    // Pola kombinasi rumah/kediaman/keluarga pejabat
+    const isPrivateResidenceOrFamily = (t.includes('rumah') || t.includes('kediaman') || t.includes('keluarga') || t.includes('istri') || t.includes('suami') || t.includes('anak') || t.includes('mobil pribadi') || t.includes('mobil dinas')) &&
+        (t.includes('menteri') || t.includes('pejabat') || t.includes('dirjen') || t.includes('sekjen') || t.includes('irjen'));
+    if (isPrivateResidenceOrFamily) return true;
+
+    // Pola kontak/rekening/gaji pribadi pejabat
+    const isPrivateContactOrFinance = (t.includes('nomor pribadi') || t.includes('hp pribadi') || t.includes('wa pribadi') || t.includes('kontak pribadi') || t.includes('rekening') || t.includes('gaji') || t.includes('penghasilan') || t.includes('nik')) &&
+        (t.includes('menteri') || t.includes('pejabat') || t.includes('dirjen') || t.includes('pegawai') || t.includes('pemeriksa'));
+    if (isPrivateContactOrFinance) return true;
+
+    const sensitiveProbingKeywords = [
+        'nomor pribadi menteri', 'hp menteri', 'wa menteri', 'nomor pribadi pejabat',
+        'rumah menteri', 'alamat menteri', 'rumah pejabat', 'alamat rumah pejabat',
+        'nik menteri', 'nik pejabat', 'gaji menteri', 'gaji pejabat', 'rekening menteri',
+        'rekening pejabat', 'nomor rekening dinas', 'password', 'kata sandi', 'login admin',
+        'database kkp', 'server kkp', 'dokumen rahasia', 'data rahasia', 'intelijen kkp',
+        'vms rahasia', 'radar rahasia', 'koordinat kapal rahasia', 'bocoran internal',
+        'data pribadi pegawai', 'kontak pribadi pegawai', 'identitas pemeriksa', 'mobil dinas menteri'
+    ];
+    return sensitiveProbingKeywords.some(k => t.includes(k));
+}
+
+// ==========================================
+// 🔄 DETEKSI KENDALA BERULANG / FRUSTRASI "TIDAK BISA"
+// ==========================================
+function isFrustratedOrCannotQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const cannotPhrases = [
+        'tetap tidak bisa', 'masih tidak bisa', 'masih gak bisa', 'masih ga bisa',
+        'selalu gagal', 'gagal terus', 'error terus',
+        'tidak membantu', 'ga membantu', 'gak ada gunanya', 'jawaban berulang',
+        'jangan muter muter', 'muter muter terus', 'jawabannya sama terus'
+    ];
+    return cannotPhrases.some(p => t.includes(p));
+}
+
+// ==========================================
+// 🏛️ DETEKSI ISU SENSITIF PIHAK EKSTERNAL (PERIHAL INTERNAL)
+// ==========================================
+function isSensitiveExternalIssueQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const sensitiveExternalKeywords = [
+        'isu sensitif', 'pihak eksternal', 'pihak ketiga', 'sengketa pihak luar',
+        'polemik eksternal', 'polemik menteri', 'tudingan lsm', 'tuduhan lsm',
+        'konflik dengan kementerian', 'konflik pemda', 'isu ekspor benih lobster',
+        'polemik benih lobster', 'kasus bbl luar negeri', 'sengketa swasta',
+        'tudingan korupsi luar', 'isu politik luar', 'investigasi asing',
+        'intervensi asing', 'masalah dengan negara tetangga'
+    ];
+    return sensitiveExternalKeywords.some(k => t.includes(k));
+}
+
+const SENSITIVE_EXTERNAL_ISSUE_REPLY =
+    `Halo #SahabatBahari,\n\n` +
+    `Terkait pertanyaan atau informasi mengenai isu yang melibatkan pihak eksternal tersebut, hal tersebut merupakan *perihal dan ranah kebijakan internal Kementerian Kelautan dan Perikanan (KKP)* yang dikaji serta ditangani sesuai ketentuan kedinasan dan peraturan perundang-undangan yang berlaku.\n\n` +
+    `Informasi resmi KKP kepada masyarakat hanya dipublikasikan secara resmi melalui Biro Humas dan Kerja Sama Luar Negeri KKP atau permohonan informasi publik resmi melalui portal https://ppid.kkp.go.id.\n\n` +
+    `Apakah ada informasi publik resmi lainnya yang dapat kami bantu?\n\n` +
+    `Salam hormat.`;
+
+// ==========================================
+// 📨 DETEKSI MENERUSKAN SURAT (FORWARDING LETTER)
+// ==========================================
+function isForwardingLetterQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const forwardKeywords = [
+        'meneruskan surat', 'teruskan surat', 'mau teruskan surat', 'ingin meneruskan surat',
+        'forward surat', 'titip surat', 'kirimkan surat ini', 'sampaikan surat ini',
+        'menyerahkan surat', 'kirim surat dinas', 'teruskan dokumen', 'meneruskan berkas',
+        'teruskan ke menteri', 'teruskan ke pejabat', 'sampaikan ke menteri',
+        'surat untuk menteri', 'surat untuk dirjen', 'kirim surat ke kkp'
+    ];
+    return forwardKeywords.some(k => t.includes(k));
+}
+
+const FORWARDING_LETTER_CONFIRMATION =
+    `Halo #SahabatBahari,\n\n` +
+    `Pesan dan surat/dokumen yang Anda sampaikan telah berhasil *DISIMPAN* dalam sistem layanan Kementerian Kelautan dan Perikanan (KKP).\n\n` +
+    `Petugas kami akan segera menelaah isi surat tersebut dan Anda akan *DIHUBUNGI KEMBALI OLEH PETUGAS KAMI* melalui nomor kontak/WhatsApp ini.\n\n` +
+    `Mohon pastikan nomor telepon Anda selalu aktif. Terima kasih atas kerja sama dan kepercayaannya kepada KKP. 🙏\n\n` +
+    `Salam hormat.`;
+
+// ==========================================
+// 🔍 DETEKSI MENANYAKAN SURAT YANG SUDAH DIKIRIMKAN (TRACKING SUBMITTED LETTER)
+// ==========================================
+function isTrackingSubmittedLetterQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    const submittedLetterKeywords = [
+        'surat yang sudah dikirim', 'surat yang saya kirim', 'surat sudah dikirim',
+        'surat yang sudah kami kirim', 'status surat saya', 'cek surat saya',
+        'surat permohonan saya', 'tindak lanjut surat saya', 'bagaimana surat saya',
+        'apakah surat saya sudah diterima', 'surat saya sudah sampai mana',
+        'konfirmasi surat masuk', 'cek status surat', 'surat dinas saya',
+        'berkas yang saya kirim', 'berkas yang sudah dikirim', 'follow up surat'
+    ];
+    return submittedLetterKeywords.some(k => t.includes(k));
+}
+
+const TRACKING_SUBMITTED_LETTER_MENU =
+    `Halo #SahabatBahari,\n\n` +
+    `Untuk memeriksa tindak lanjut atau status surat/dokumen yang telah Anda kirimkan ke Kementerian Kelautan dan Perikanan (KKP), silakan pilih saluran pengiriman surat Anda:\n\n` +
+    `*1* 📱 *Kirim melalui WhatsApp ini*\n` +
+    `Silakan tunggu respons dari Petugas Layanan kami. Petugas kami sedang/akan memverifikasi dokumen Anda dan membalas langsung di ruang obrolan WhatsApp ini.\n\n` +
+    `*2* 🌐 *Kirim melalui Portal Resmi PPID KKP*\n` +
+    `Silakan lacak status permohonan surat informasi Anda secara berkala melalui tautan Pelacakan Tiket resmi kami:\n` +
+    `🔗 https://ppid.kkp.go.id/layanan-informasi/tracking-tiket/\n` +
+    `(Atau balas angka *2* untuk melacak nomor tiket Anda langsung di sini) dan tunggu konfirmasi hasil verifikasi dari Petugas PPID.\n\n` +
+    `_Silakan balas angka *1* atau *2* sesuai jalur pengiriman surat Anda, atau ketik *0* untuk kembali ke Menu Utama._\n\n` +
+    `Salam hormat.`;
+
+// ==========================================
+// 🙋 DETEKSI PEMBUKA CHAT / INGIN BERTANYA / PERKENALAN DIRI
+// ==========================================
+function isIntroductoryOrAskQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+
+    // Sapaan / niat ingin bertanya belaka (tanpa pertanyaan substantif lanjutan)
+    const askIntents = [
+        'saya ingin bertanya', 'ingin bertanya', 'mau bertanya', 'saya mau bertanya',
+        'mau tanya', 'saya mau tanya', 'mau nanya', 'saya mau nanya',
+        'bisa tanya', 'bisa bertanya', 'ada yang mau saya tanyakan', 'ada yang ingin saya tanyakan',
+        'mau konsultasi', 'saya mau konsultasi', 'ingin konsultasi', 'saya ingin konsultasi'
+    ];
+
+    for (const intent of askIntents) {
+        if (t === intent) return true;
+        if (t.startsWith(intent)) {
+            const remainder = t.slice(intent.length).replace(/[^a-z0-9]/g, ' ').trim();
+            const trivialWords = new Set(['', 'min', 'admin', 'dong', 'ya', 'kak', 'pak', 'bu', 'mas', 'mba', 'kkp', 'nih']);
+            const words = remainder.split(/\s+/).filter(w => w.length > 0);
+            if (words.every(w => trivialWords.has(w))) {
+                return true;
+            }
+        }
+    }
+
+    // Perkenalan diri nama ("saya indah", "nama saya budi", "halo saya indah")
+    const introMatch = t.match(/^(?:halo\s+|hai\s+|assalamualaikum\s+|selamat\s+(?:pagi|siang|sore|malam)\s+)?(?:saya|nama\s+saya|namaku)\s+([a-zA-Z\s]{2,20})$/i);
+    if (introMatch && !/petugas|admin|cs|operator/i.test(t)) {
+        const namePart = introMatch[1].trim().toLowerCase();
+        if (!['mau', 'ingin', 'bisa', 'akan', 'ada', 'punya', 'butuh'].some(w => namePart.startsWith(w))) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 // Variabel Anti-Spam
 const userLastMessageTime = {};
@@ -107,26 +797,78 @@ function isKepalsuanSuratQuery(text) {
 // ==========================================
 // 🔒 DETEKSI PERIZINAN → REDIRECT KE PTSA
 // ==========================================
+// 🔒 DETEKSI PERIZINAN BERUSAHA (PTSA KKP)
+// ==========================================
 const PERIZINAN_KEYWORDS = [
-    'perizinan', 'izin', 'sipi', 'siup', 'surat izin', 'lisensi', 'permit',
-    'oss', 'silat', 'pkkprl', 'izin usaha', 'izin kapal', 'izin penangkapan',
-    'izin budidaya', 'izin berlayar', 'izin operasi', 'izin perikanan',
-    'licensing', 'permohonan izin', 'perijinan', 'ijin', 'izin tangkap',
-    'izin pemanfaatan', 'sertifikat kelayakan', 'skp perizinan'
+    'perizinan berusaha', 'izin berusaha', 'izin kapal', 'izin penangkapan',
+    'izin tangkap', 'perizinan kapal', 'perizinan penangkapan', 'izin berlayar',
+    'izin operasi kapal', 'izin perikanan', 'perizinan perikanan', 'perizinan kkp',
+    'konsultasi perizinan', 'layanan perizinan', 'pengurusan perizinan',
+    'izin usaha perikanan', 'ptsa kkp', 'layanan ptsa', 'wa ptsa', 'kontak ptsa',
+    'loket ptsa', 'helpdesk ptsa', 'kantor ptsa', 'perizinan sipi', 'perizinan siup',
+    'perizinan pkkprl', 'perizinan silat', 'perizinan oss'
 ];
 
 function isPerizinanQuery(text) {
-    const t = (text || '').toLowerCase();
-    return PERIZINAN_KEYWORDS.some(k => t.includes(k));
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+
+    // 1. Abaikan kalimat sapaan/kesopanan seperti "izin bertanya", "mohon izin", "izin tanya", "izin min", "izin mau tanya"
+    const isPolitePrefix = /(mohon\s+)?(izin|ijin)\b/i.test(t) &&
+        /(tanya|nanya|bertanya|minta|bicara|ngobrol|masuk|gabung|konsultasi|konfirmasi|menyampaikan|min|admin|pak|bu|kak)/i.test(t);
+    if (isPolitePrefix && !t.includes('perizinan berusaha') && !t.includes('ptsa') && !t.includes('sipi') && !t.includes('siup') && !t.includes('izin kapal')) {
+        return false;
+    }
+
+    // 2. Abaikan jika terkait izin non-PTSA (penelitian, riset, skripsi, magang, pkl, obat ikan, data)
+    if (t.includes('penelitian') || t.includes('riset') || t.includes('skripsi') || t.includes('magang') || t.includes('pkl') || t.includes('obat ikan')) {
+        return false;
+    }
+
+    // 3. Cek kata kunci spesifik perizinan berusaha / PTSA
+    const hasPerizinanKw = PERIZINAN_KEYWORDS.some(k => t.includes(k));
+    const isExactWord = (t === 'ptsa' || t === 'perizinan' || t === 'izin usaha' || t === 'perijinan' || t === 'konsultasi perizinan');
+
+    return hasPerizinanKw || isExactWord;
+}
+
+// Format Standar Pertanyaan Tertutup Penyelesaian Masalah (Standar PKPN)
+const CLOSED_RESOLUTION_FOOTER =
+    `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `💡 *Apakah penjelasan di atas sudah menyelesaikan kebutuhan Anda?*\n` +
+    `• Balas *YA* jika kendala sudah tuntas / selesai.\n` +
+    `• Balas *BANTUAN* jika ingin terhubung langsung ke Petugas PPID.\n` +
+    `• Ketik *0* untuk kembali ke Menu Utama.`;
+
+const ENGLISH_CLOSED_RESOLUTION_FOOTER =
+    `\n\n───────────────────────────\n` +
+    `💡 *Has this information resolved your inquiry?*\n` +
+    `• Reply *YES* if resolved.\n` +
+    `• Or submit further specific questions.\n` +
+    `• Type *0* to return to Main Menu.`;
+
+// Footer pertanyaan tertutup dinonaktifkan (dihapus) sesuai permintaan agar pesan lebih ringkas dan bersih di bawah Salam Hormat
+function getResolutionFooter(text) {
+    return '';
 }
 
 const PTSA_REDIRECT_MESSAGE =
     `Halo #SahabatBahari,\n\n` +
-    `Terkait permohonan *perizinan*, silakan langsung berkonsultasi dengan *PTSA (Pelayanan Terpadu Satu Atap)* KKP:\n\n` +
-    `📱 *WhatsApp PTSA:* 0811-8430-610\n` +
-    `📧 *Email:* ptsp@kkp.go.id\n` +
-    `☎️ *Telepon:* 021-3519070 ext. 2826\n` +
-    `🏢 *Layanan Tatap Muka:* Gedung Mina Bahari IV Lt. 1, Gambir, Jakarta Pusat (Senin–Kamis 08.00–15.30 WIB)\n\n` +
+    `📋 *PANDUAN PERIZINAN BERUSAHA SEKTOR KELAUTAN & PERIKANAN (PTSA KKP)*\n\n` +
+    `Seluruh pelayanan perizinan berusaha penangkapan ikan, pengangkutan, budidaya, dan pemanfaatan ruang laut dikelola secara terpadu melalui *PTSA (Pelayanan Terpadu Satu Atap) KKP* berbasis digital:\n\n` +
+    `1. *Kanal Pendaftaran Mandiri (Online):*\n` +
+    `   • Portal OSS RBA (Penerbitan NIB & Standar Usaha): https://oss.go.id\n` +
+    `   • Portal SILAT KKP (SIPI / SIUP / SIKPI Kapal Perikanan): https://perizinan.kkp.go.id\n` +
+    `   • Portal SICEFI (Verifikasi Fisik & SKKP Kapal): https://kapal.kkp.go.id/sicefi\n\n` +
+    `2. *Alur & Persyaratan Permohonan:*\n` +
+    `   • Pastikan telah memiliki Nomor Induk Berusaha (NIB) subsektor perikanan aktif dari portal OSS.\n` +
+    `   • Siapkan dokumen teknis kapal (Buku Kapal, Berita Acara Cek Fisik SKKP, Surat Ukur Kemenhub, spesifikasi alat tangkap ramah lingkungan).\n` +
+    `   • Pembayaran PNBP resmi disetor via kode billing Simponi/Kemenkeu (KKP tidak pernah meminta transfer ke rekening pribadi).\n\n` +
+    `3. *Kontak Asistensi & Konsultasi Langsung:*\n` +
+    `   📱 *WhatsApp PTSA:* 0811-8430-610\n` +
+    `   📧 *Email:* ptsp@kkp.go.id\n` +
+    `   ☎️ *Telepon:* 021-3519070 ext. 2826\n` +
+    `   🏢 *Layanan Tatap Muka:* Gedung Mina Bahari IV Lt. 1, Gambir, Jakarta Pusat (Senin–Kamis 08.00–15.30 WIB, Jumat 08.00–16.00 WIB)\n\n` +
     `Salam hormat.`;
 
 // ==========================================
@@ -134,19 +876,44 @@ const PTSA_REDIRECT_MESSAGE =
 // ==========================================
 function isPengaduanAkpQuery(text) {
     const t = (text || '').toLowerCase();
+    // Jika pertanyaan tentang magang/siswa/mahasiswa, JANGAN masukkan ke pengaduan AKP (Request 2)
+    if (t.includes('magang') || t.includes('kerja praktik') || (t.includes('pkl') && !t.includes('perjanjian kerja laut') && !t.includes('kapal') && !t.includes('abk') && !t.includes('akp'))) {
+        return false;
+    }
+    // Jika pertanyaan tentang pendaftaran, persyaratan, pengumuman, loker, portal e-laut, dll -> BUKAN pengaduan AKP
+    const nonPengaduanTerms = [
+        'syarat', 'persyaratan', 'daftar', 'pendaftaran', 'rekrutmen', 'lowongan', 'loker',
+        'pengumuman', 'jadwal', 'e-laut', 'elaut', 'portal', 'bursa kerja', 'skck',
+        'bst-f', 'sertifikat bst', 'biaya', 'cara jadi', 'gimana jadi', 'jadi awak kapal', 'jadi abk'
+    ];
+    if (nonPengaduanTerms.some(term => t.includes(term))) {
+        return false;
+    }
     const hasAkpAbk = /\b(akp|abk|awak kapal|pelaut|pelaut perikanan)\b/.test(t);
-    const hasPengaduan = /\b(pengaduan|aduan|lapor|laporkan|keluhan|gaji|kecelakaan|ditahan|masalah|kasus|korban)\b/.test(t);
+    const hasPengaduan = /\b(pengaduan|aduan|lapor|laporkan|keluhan|gaji|kecelakaan|ditahan|disiksa|terlantar|masalah|kasus|korban|hak|upah)\b/.test(t);
     const specificKeywords = [
         'pengaduan akp', 'pengaduan abk', 'lapor akp', 'lapor abk',
         'gaji abk', 'gaji akp', 'abk ditahan', 'abk disiksa', 'abk terlantar',
         'kecelakaan kapal abk', 'kecelakaan akp', 'masalah abk', 'masalah akp',
-        'gangguan operasional akp', 'aduan akp', 'aduan abk'
+        'gangguan operasional akp', 'aduan akp', 'aduan abk', 'pengaduan awak kapal', 'lapor awak kapal'
     ];
     return specificKeywords.some(k => t.includes(k)) || (hasAkpAbk && hasPengaduan);
 }
 
 function isPengaduanQuery(text) {
     const t = (text || '').toLowerCase();
+    // Jika pertanyaan tentang magang/siswa/mahasiswa, JANGAN masukkan ke pengaduan (Request 2)
+    if (t.includes('magang') || t.includes('kerja praktik') || (t.includes('pkl') && !t.includes('perjanjian kerja laut') && !t.includes('kapal') && !t.includes('abk') && !t.includes('akp'))) {
+        return false;
+    }
+    // Abaikan jika konteksnya adalah laporan data publik / statistik / keuangan / tahunan
+    if (t.includes('laporan tahunan') || t.includes('laporan keuangan') || t.includes('laporan kinerja') || t.includes('laporan data')) {
+        return false;
+    }
+    // Abaikan jika pertanyaan tentang syarat/daftar/informasi
+    if (t.includes('syarat') || t.includes('daftar') || t.includes('pengumuman') || t.includes('jadwal')) {
+        return false;
+    }
     const keywords = [
         'pengaduan', 'lapor', 'laporkan', 'aduan', 'melaporkan', 'keluhan',
         'pungli', 'whistleblower', 'wbs', 'pelanggaran perikanan', 'lapor.go.id'
@@ -154,19 +921,145 @@ function isPengaduanQuery(text) {
     return keywords.some(k => t.includes(k));
 }
 
+// ==========================================
+// 📢 DETEKSI PERMINTAAN INGIN LAPORAN UMUM (PILIHAN 3 KATEGORI: UMUM, PRL, AKP)
+// ==========================================
+function isGenericReportInquiry(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+
+    // Jika mengandung kata-kata spesifik perihal laporan (penyu, pulau, bom, kapal, gaji, pungli, dll), JANGAN tampilkan menu pilihan laporan
+    const specificSubstanceTerms = [
+        'penyu', 'hiu', 'paus', 'lumba', 'karang', 'terumbu', 'biota', 'satwa', 'mangrove',
+        'pulau', 'ruang laut', 'pkkprl', 'reklamasi', 'pasir laut', 'sedimentasi', 'pesisir',
+        'bom', 'dinamit', 'racun', 'potas', 'setrum', 'trawl', 'pukat', 'cantrang', 'alat tangkap',
+        'kapal asing', 'illegal fishing', 'pencurian ikan', 'limbah', 'pencemaran',
+        'abk', 'akp', 'gaji', 'upah', 'perjanjian kerja laut', 'pkl', 'buku pelaut', 'kecelakaan kapal',
+        'surat palsu', 'dokumen palsu', 'bodong', 'penipuan', 'fiktif', 'pungli', 'suap', 'gratifikasi',
+        'izin', 'sipi', 'siup', 'sicefi', 'skkp', 'magang'
+    ];
+    if (specificSubstanceTerms.some(term => t.includes(term))) {
+        return false;
+    }
+
+    // Pola frasa umum ingin laporan
+    const genericReportPatterns = [
+        /^(saya\s+)?(ingin|mau|bisa|ada\s+mau|akan|pengen)\s+(bikin\s+|buat\s+|mengajukan\s+|menyampaikan\s+)?(laporan|lapor|pengaduan|aduan|melapor|melaporkan)(\s+dong|\s+min|\s+kak|\s+admin|\s+pak|\s+bu)?$/i,
+        /^(lapor|laporan|pengaduan|aduan|melapor|melaporkan)(\s+dong|\s+min|\s+kak|\s+admin|\s+pak|\s+bu)?$/i,
+        /^(bagaimana\s+|gimana\s+|tata\s+)?cara\s+(lapor|laporan|pengaduan|aduan|melapor|melaporkan)$/i,
+        /^(layanan\s+|kanal\s+|menu\s+)?(laporan|pengaduan)$/i
+    ];
+
+    return genericReportPatterns.some(pattern => pattern.test(t));
+}
+
+const PILIHAN_LAPORAN_MENU_TEXT =
+    `Halo #SahabatBahari,\n\n` +
+    `Untuk memproses dan mengarahkan laporan/pengaduan Anda ke unit penanganan yang tepat dan cepat, silakan pilih kategori laporan berikut:\n\n` +
+    `*1* 🚨 *Pengaduan Umum & Pelanggaran Perikanan (Ditjen PSDKP)*\n` +
+    `   Laporan penangkapan ikan ilegal (*destructive fishing*, bom ikan, alat tangkap dilarang), kapal asing/tanpa izin, pencemaran laut, serta saluran WBS/pungli.\n\n` +
+    `*2* 🏝️ *Pengawasan Ruang Laut & Pemanfaatan Pulau-Pulau Kecil (Ditjen PRL)*\n` +
+    `   Laporan perusakan ekosistem pesisir, reklamasi tanpa izin, pelanggaran izin PKKPRL, pemanfaatan/penggunaan pulau-pulau kecil ilegal, dan biota/satwa laut dilindungi (penyu, hiu, paus).\n\n` +
+    `*3* ⚓ *Pengaduan Awak Kapal Perikanan (AKP / ABK)*\n` +
+    `   Laporan kendala ketenagakerjaan pelaut perikanan: gaji/upah tidak dibayar, penelantaran, kecelakaan kerja saat melaut, atau pelanggaran Perjanjian Kerja Laut (PKL).\n\n` +
+    `_Balas dengan angka (*1*, *2*, atau *3*) sesuai kebutuhan laporan Anda, atau ketik langsung kronologi/kejadian spesifik Anda._\n\n` +
+    `_(Ketik *0* untuk kembali ke Menu Utama)_`;
+
+// ==========================================
+// 🏢 DETEKSI INGIN NGOBROL DENGAN SUATU BAGIAN LANGSUNG (Request 3)
+// ==========================================
+function isInginNgobrolBagianQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+
+    const talkWords = ['ngobrol', 'bicara', 'ngomong', 'diskusi', 'konsultasi langsung', 'audiensi', 'ketemu', 'menghubungi', 'hubungi'];
+    const partWords = ['bagian', 'unit', 'direktorat', 'ditjen', 'biro', 'divisi', 'bidang', 'staf', 'pejabat', 'seksi', 'balai', 'ptsa'];
+
+    const hasTalk = talkWords.some(w => t.includes(w));
+    const hasPart = partWords.some(w => t.includes(w));
+    if (hasTalk && hasPart) return true;
+
+    const explicitPatterns = [
+        /ngobrol\s+dengan\s+suatu\s+bagian/i,
+        /ngobrol\s+(langsung\s+)?(dengan|sama|ke)?\s*(bagian|direktorat|ditjen|biro|unit|ptsa)/i,
+        /bicara\s+(langsung\s+)?(dengan|sama|ke)?\s*(bagian|direktorat|ditjen|biro|unit|ptsa)/i,
+        /hubungi\s+(langsung\s+)?(dengan|sama|ke)?\s*(bagian|direktorat|ditjen|biro|unit|ptsa)/i,
+        /kontak\s+(langsung\s+)?(bagian|direktorat|ditjen|biro|unit|ptsa)/i,
+        /audiensi\s+(dengan|sama|ke)?\s*(bagian|direktorat|ditjen|biro|unit|ptsa)/i
+    ];
+
+    return explicitPatterns.some(p => p.test(t));
+}
+
+const ARAHAN_PENGAJUAN_SURAT_BAGIAN_MESSAGE =
+    `Halo #SahabatBahari,\n\n` +
+    `Untuk berkomunikasi, berkoordinasi, berkonsultasi langsung, atau beraudiensi dengan suatu bagian/unit kerja di lingkungan Kementerian Kelautan dan Perikanan (KKP), prosedurnya adalah dengan *menyampaikan permohonan melalui pengajuan surat resmi terlebih dahulu* (tidak langsung melalui sambungan telepon/kontak teknis).\n\n` +
+    `📄 *Tata Cara Pengajuan Surat:*\n` +
+    `1. *Siapkan Surat Resmi/Kedinasan:*\n` +
+    `   Cantumkan kop surat (bagi lembaga/organisasi/perusahaan) atau surat perorangan, nomor kontak aktif, perihal, serta maksud dan tujuan koordinasi/audiensi secara jelas.\n` +
+    `2. *Tujukan Kepada Pimpinan Terkait:*\n` +
+    `   Tujukan surat kepada Menteri Kelautan dan Perikanan atau pimpinan unit kerja/bagian yang dituju (seperti Ditjen, Biro, atau Balai terkait).\n` +
+    `3. *Saluran Pengiriman Surat Resmi:*\n` +
+    `   • 🌐 *Portal Resmi PPID KKP:* https://ppid.kkp.go.id/layanan-informasi/pemohonan-informasi/\n` +
+    `   • 📧 *Email Resmi:* ppidkkp@kkp.go.id\n` +
+    `   • 🏢 *Loket Persuratan & TU:* Gedung Mina Bahari (GMB) IV Lantai 1, Jl. Medan Merdeka Timur No. 16, Gambir, Jakarta Pusat (Senin–Kamis pukul 08.00–15.30 WIB).\n\n` +
+    `Setelah surat resmi diterima dan didisposisi oleh pimpinan unit kerja, pihak bagian yang bersangkutan akan menghubungi Anda kembali untuk tindak lanjut.\n\n` +
+    `Salam hormat.`;
+
+// ==========================================
+// 📞 DETEKSI PERMINTAAN KONTAK PPID LANGSUNG (Request 1)
+// ==========================================
+function isPpidContactQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    return /\b(kontak\s+ppid|nomor\s+ppid|no\s+ppid|wa\s+ppid|whatsapp\s+ppid|telepon\s+ppid|telp\s+ppid|hubungi\s+ppid|call\s+center\s+ppid|kontak\s+wa\s+ppid)\b/i.test(t);
+}
+
+// ==========================================
+// 📊 DETEKSI PERTANYAAN SATU DATA / PORTAL DATA KKP
+// ==========================================
+function isSatuDataQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().trim();
+    return /\b(satu\s*data|satudata(\.kkp\.go\.id)?)\b/i.test(t);
+}
+
 const AKP_PENGADUAN_MESSAGE =
     `Halo #SahabatBahari,\n\n` +
-    `Terkait laporan atau pengaduan mengenai *Awak Kapal Perikanan (AKP / ABK)* (gaji, kecelakaan, atau kendala di kapal), silakan dapat langsung disampaikan melalui:\n\n` +
-    `📱 *Pengaduan AKP:* 0811251744 atau ke https://lapor.go.id\n` +
-    `📞 *Call Center Gangguan Operasional (Pengaduan AKP):* +62 811-1000-3132\n\n` +
+    `🛡️ *PANDUAN PERLINDUNGAN & PENGADUAN AWAK KAPAL PERIKANAN (AKP / ABK)*\n\n` +
+    `Kementerian Kelautan dan Perikanan (KKP) menjamin perlindungan hak-hak ketenagakerjaan dan keselamatan kerja bagi awak kapal perikanan, baik di dalam negeri maupun luar negeri:\n\n` +
+    `1. *Ruang Lingkup Pengaduan:*\n` +
+    `   • Hak upah/gaji yang tidak dibayarkan, terlambat, atau dipotong sepihak oleh pemilik/agen kapal.\n` +
+    `   • Kecelakaan kerja saat melaut, sakit, penelantaran, atau pemulangan (repatriasi) darurat.\n` +
+    `   • Pelanggaran Perjanjian Kerja Laut (PKL) dan jaminan asuransi sosial ketenagakerjaan.\n\n` +
+    `2. *Dokumen & Informasi yang Perlu Disiapkan:*\n` +
+    `   • Identitas pelapor/korban (Nama lengkap, NIK, No. HP keluarga/kontak aktif).\n` +
+    `   • Identitas kapal (Nama Kapal, Tanda Selar/GT, Nama Nakhoda/Pemilik/Perusahaan Keagenan).\n` +
+    `   • Salinan PKL (Perjanjian Kerja Laut), Buku Pelaut, dan kronologi kejadian secara terperinci.\n\n` +
+    `3. *Kanal Layanan & Hotline Pengaduan Resmi:*\n` +
+    `   📱 *WhatsApp Hotline Pengaduan AKP:* 0811-251-744\n` +
+    `   📞 *Call Center Gangguan Operasional AKP:* +62 811-1000-3132\n` +
+    `   🌐 *Portal Nasional SP4N-LAPOR!:* https://lapor.go.id\n\n` +
     `Salam hormat.`;
 
 const PENGADUAN_UMUM_MESSAGE =
     `Halo #SahabatBahari,\n\n` +
-    `Baik Sahabat, saat ini kami sudah mendata mengenai laporannya. Boleh juga Sahabat bantu untuk melaporkannya melalui informasi ini ya:\n\n` +
-    `📧 *Email:* pengaduan@kkp.go.id\n` +
-    `📱 *WhatsApp:* 0811989011\n` +
-    `🌐 *Website:* https://lapor.go.id\n\n` +
+    `📢 *PANDUAN LAYANAN PENGADUAN MASYARAKAT KKP*\n\n` +
+    `Kementerian Kelautan dan Perikanan (KKP) menyediakan kanal pengaduan resmi yang terintegrasi, transparan, dan terjamin kerahasiaan identitas pelapornya:\n\n` +
+    `1. *Kategori Pengaduan yang Dapat Disampaikan:*\n` +
+    `   • Keluhan pelayanan publik dan perizinan kelautan perikanan.\n` +
+    `   • Dugaan pungutan liar (pungli), gratifikasi, atau pelanggaran disiplin ASN KKP (via Whistleblowing System / WBS).\n` +
+    `   • Laporan tindak pidana perikanan (*destructive fishing*, penangkapan ikan ilegal/bom/racun).\n\n` +
+    `2. *Tata Cara Penyusunan Laporan Efektif (Prinsip 4W + 1H):*\n` +
+    `   • *Apa* kejadian atau pelanggaran yang diadukan?\n` +
+    `   • *Siapa* pihak/oknum yang dilaporkan?\n` +
+    `   • *Kapan* dan *Di mana* peristiwa tersebut terjadi?\n` +
+    `   • *Bagaimana* kronologi kejadian serta lampirkan bukti pendukung (foto/video/dokumen surat).\n\n` +
+    `3. *Kanal Resmi Pengaduan KKP:*\n` +
+    `   📱 *WhatsApp Pengaduan KKP:* 0811-989-011\n` +
+    `   📧 *Email:* pengaduan@kkp.go.id\n` +
+    `   🌐 *Portal SP4N-LAPOR!:* https://lapor.go.id\n` +
+    `   🔒 *Whistleblowing System (WBS Itjen):* https://wbs.kkp.go.id\n\n` +
     `Salam hormat.`;
 
 // ==========================================
@@ -298,7 +1191,13 @@ function isRelevantKKPQuery(text) {
         'kepiting', 'rumput laut', 'nila', 'lele', 'patin', 'bubu', 'jaring', 'alat tangkap',
         'izin', 'sipi', 'siup', 'pkkprl', 'surat', 'sertifikat', 'kelaikan', 'skkp', 'vms',
         'ppid', 'kkp', 'kementerian', 'magang', 'pkl', 'lpse', 'lelang', 'dokumen',
-        'lpmukp', 'knmp', 'kdmp', 'pkpn', 'ekonomi biru', 'pengaduan', 'akp', 'abk', 'bst'
+        'lpmukp', 'knmp', 'kdmp', 'pkpn', 'ekonomi biru', 'pengaduan', 'akp', 'abk', 'bst',
+        'konservasi', 'mangrove', 'terumbu karang', 'penyu', 'hiu', 'paus', 'biota', 'satwa',
+        'pentaru', 'taruna', 'politeknik', 'aup', 'beasiswa', 'sekolah', 'pendidikan', 'pelatihan',
+        'cpns', 'pppk', 'sdmao', 'kepegawaian', 'rekrutmen', 'loker', 'asn',
+        'pelabuhan', 'dermaga', 'pendaratan ikan', 'tpi',
+        'silat', 'oss', 'sicefi', 'elaut', 'kusuka', 'e-kusuka',
+        'permen', 'kepmen', 'regulasi', 'peraturan', 'kebijakan', 'informasi', 'data'
     ];
     return relevantDomainKeywords.some(k => {
         if (k.length <= 4) {
@@ -331,23 +1230,29 @@ function isEscalationQuery(text) {
         return false;
     }
 
-    // Perintah tunggal atau kata kunci pasti untuk minta bantuan manusia / CS
+    // Perintah tunggal atau kata kunci pasti untuk minta bantuan manusia / CS (termasuk variasi typo umum)
     const exactCommands = [
-        'bantuan', 'help', 'cs', 'petugas', 'admin', 'operator', 'manusia',
+        'bantuan', 'help', 'cs', 'petugas', 'petugs', 'petgas', 'ptugas', 'petugasnya',
+        'admin', 'min', 'adm', 'operator', 'manusia', 'orang',
         'live chat', 'livechat', 'hubungi petugas', 'hubungi admin',
         'hubungi cs', 'bicara dengan petugas', 'bicara dengan manusia',
         'chat petugas', 'chat admin', 'chat cs', 'minta bantuan',
         'butuh bantuan', 'sambungkan ke petugas', 'terhubung ke petugas',
-        'petugas ppid', 'operator ppid'
+        'petugas ppid', 'operator ppid', 'ngobrol', 'bicara', 'ngomong',
+        'mau ngobrol', 'mau bicara', 'mau ngomong', 'tanya langsung',
+        'chat langsung', 'ngobrol langsung'
     ];
     if (exactCommands.includes(t)) return true;
 
-    // 4. Pola frasa eksplisit ingin terhubung ke petugas / CS manusia
+    // Pola frasa fleksibel ingin terhubung atau berbicara dengan petugas / CS manusia
     const escalationPatterns = [
-        /\b(hubungi|bicara|sambung(kan)?|terhubung|kontak|pindah(kan)?)\s+(dengan\s+|ke\s+)?(petugas|cs|customer service|admin|operator|manusia)\b/i,
-        /\b(mau|ingin|bisa)\s+(bicara|ngobrol|chat|konsultasi)\s+(sama\s+|dengan\s+)?(petugas|cs|admin|manusia|orang)\b/i,
-        /\b(minta|butuh|tolong)\s+(bantuan\s+)?(petugas|cs|admin|manusia)\b/i,
-        /\b(petugas|cs|admin)\s+(asli|manusia|helpdesk|pelayanan)\b/i,
+        /\b(hubungi|bicara|sambung(kan)?|terhubung|kontak|pindah(kan)?)\s+(dengan\s+|ke\s+)?(petug[a-z]*|cs|customer service|admin|operator|manusia|orang)\b/i,
+        /\b(mau|ingin|bisa|tolong|minta|butuh|pengen|mo)\s+(bicara|ngobrol|ngomong|chat|diskusi|konsultasi|tanya)\s*(sama\s+|dengan\s+|ke\s+)(petug[a-z]*|cs|admin|operator|manusia|orang)\b/i,
+        /\b(mau|ingin|bisa)\s+(ngobrol|bicara\s+langsung|ngomong\s+langsung)\b/i,
+        /\b(minta|butuh|tolong)\s+(bantuan\s+)?(petug[a-z]*|cs|admin|operator|manusia|orang)\b/i,
+        /\b(petug[a-z]*|cs|admin|operator)\s+(asli|manusia|helpdesk|pelayanan|ppid)\b/i,
+        /\b(chat|ngobrol|bicara|ngomong|tanya)\s+(sama|dengan|ke)\s+(petug[a-z]*|admin|cs|operator|manusia|orang)\b/i,
+        /\b(ada\s+orang|ada\s+manusia|ngomong\s+sama\s+orang|ngobrol\s+sama\s+orang)\b/i,
         /\b(live\s*chat|livechat)\b/i
     ];
 
@@ -355,19 +1260,82 @@ function isEscalationQuery(text) {
         return true;
     }
 
-    // 5. Kalimat sangat pendek (<= 3 kata) yang spesifik mengandung kata kunci eskalasi
+    // Kalimat pendek (<= 4 kata) yang mengandung kata kunci eskalasi/petugas (termasuk typo)
     const words = t.split(/\s+/);
-    if (words.length <= 3) {
-        if (words.includes('petugas') || words.includes('cs') || words.includes('admin') || words.includes('operator')) {
+    if (words.length <= 4) {
+        if (words.some(w => /^petug[a-z]*$/.test(w) || w === 'cs' || w === 'admin' || w === 'operator')) {
             return true;
         }
         if (words.includes('bantuan') && (words.includes('butuh') || words.includes('minta') || words.includes('tolong') || words.includes('dong') || words.includes('min') || words.includes('kak'))) {
+            return true;
+        }
+        if (words.includes('ngobrol') || words.includes('bicara') || words.includes('ngomong')) {
             return true;
         }
     }
 
     return false;
 }
+
+// ==========================================
+// 😡 DETEKSI CHAT DENGAN NADA MARAH / KECEWA / KOMPLAIN KERAS
+// ==========================================
+const ANGRY_KEYWORDS = [
+    'kecewa', 'marah', 'kesal', 'jengkel', 'geram', 'emosi', 'parah',
+    'payah', 'lelet', 'lambat banget', 'lama banget', 'lama amat', 'gak becus',
+    'nggak becus', 'tidak becus', 'bobrok', 'kapok', 'brengsek', 'bajingan',
+    'anjing', 'babi', 'bangsat', 'sialan', 'goblok', 'tolol', 'bego',
+    'penipu', 'nipu', 'pemeras', 'pemerasan', 'dipalak', 'minta duit',
+    'lapor polisi', 'somasi', 'tuntut', 'pelayanan buruk', 'pelayanan jelek',
+    'pelayanan lambat', 'ribet banget', 'ribet amat', 'dipersulit',
+    'berbelit-belit', 'bot bodoh', 'bot gak guna', 'gak guna', 'merugikan'
+];
+
+function isAngryQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!t) return false;
+
+    // 1. Cek kata kunci kemarahan / komplain keras
+    if (ANGRY_KEYWORDS.some(k => new RegExp('\\b' + k + '\\b', 'i').test(t))) {
+        return true;
+    }
+
+    // 2. Pola kombinasi emosi negatif
+    if (/(kecewa|marah|kesal|lelet|lama)\s+(banget|sekali|amat|parah)/i.test(t)) return true;
+    if (/(tidak|nggak|gak)\s+(ada\s+tanggapan|direspon|dibalas|bisa\s+dipercaya)/i.test(t)) return true;
+    if (/(mau|akan)\s+(lapor|viralkan|tuntut)/i.test(t)) return true;
+
+    return false;
+}
+
+// ==========================================
+// 📢 DETEKSI CHAT PELAPORAN KHUSUS / ANALISIS RUMIT / SENGKETA / TINDAK PIDANA
+// ==========================================
+const PELAPORAN_KEYWORDS = [
+    'bom ikan', 'ngebom ikan', 'pengeboman ikan', 'potas', 'racun ikan',
+    'meracun ikan', 'pukat harimau', 'trawl', 'cantrang ilegal', 'destructive fishing',
+    'setrum ikan', 'penyetruman', 'kapal asing', 'kapal vietnam', 'kapal malaysia',
+    'mencuri ikan', 'illegal fishing', 'iuu fishing', 'pungli', 'pungutan liar',
+    'suap', 'gratifikasi', 'pemerasan oknum', 'korupsi', 'oknum kkp', 'oknum petugas',
+    'sengketa', 'konflik nelayan', 'tabrakan kapal', 'abk disiksa', 'abk dianiaya',
+    'abk meninggal', 'abk tewas', 'abk hilang', 'penelantaran abk', 'tumpahan minyak',
+    'limbah beracun', 'pencemaran laut'
+];
+
+function isComplexPelaporanQuery(text) {
+    if (!text || typeof text !== 'string') return false;
+    const t = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!t) return false;
+
+    // Kecualikan kueri informasional umum (e.g. cara lapor / info lapor)
+    if (/^(bagaimana|apa|cara|syarat|info)\s+.*(lapor|pengaduan)/i.test(t)) {
+        return false;
+    }
+
+    return PELAPORAN_KEYWORDS.some(k => new RegExp('\\b' + k + '\\b', 'i').test(t));
+}
+
 // Helper normalisasi nomor telepon ke format 628...
 function normalizePhone(num) {
     if (!num) return '';
@@ -427,6 +1395,11 @@ async function getSenderDetails(message) {
 
     let phone = '';
     let lid = '';
+    let name = '';
+
+    if (message._data && message._data.notifyName) {
+        name = message._data.notifyName;
+    }
 
     if (rawSender.endsWith('@c.us')) {
         phone = normalizePhone(rawSender.split('@')[0].split(':')[0]);
@@ -451,15 +1424,20 @@ async function getSenderDetails(message) {
         // Fallback jika pemanggilan fungsi internal gagal
     }
 
-    // Jika belum dapat phone dan ini adalah @lid, coba getContact
-    if (!phone) {
+    // Jika belum dapat phone atau name, coba getContact
+    if (!phone || !name) {
         try {
             const contact = await message.getContact();
             if (contact) {
-                if (contact.number) {
-                    phone = normalizePhone(contact.number);
-                } else if (contact.id && contact.id.server === 'c.us') {
-                    phone = normalizePhone(contact.id.user);
+                if (!name) {
+                    name = contact.pushname || contact.name || contact.shortName || '';
+                }
+                if (!phone) {
+                    if (contact.number) {
+                        phone = normalizePhone(contact.number);
+                    } else if (contact.id && contact.id.server === 'c.us') {
+                        phone = normalizePhone(contact.id.user);
+                    }
                 }
             }
         } catch (err) { }
@@ -471,12 +1449,18 @@ async function getSenderDetails(message) {
     }
 
     const details = {
+        name,
         phone,
         lid,
         rawSender,
         from: rawFrom,
         author: rawAuthor
     };
+
+    if (name) {
+        if (phone) userKnownName[phone] = name;
+        if (rawSender) userKnownName[rawSender] = name;
+    }
 
     if (phone || lid) {
         jidToPhoneCache.set(rawSender, details);
@@ -559,8 +1543,21 @@ function formatReply(text) {
     if (!text || typeof text !== 'string') return text;
     let cleaned = tracker.cleanWhatsAppFormatting(text.trim());
 
-    // Cek jika sudah diawali variasi "Halo Sahabat Bahari", "#SahabatBahari", dsb
-    const regex = /^(\*|_)*(halo\s+)?#?sahabat\s*bahari(\*|_)*[!,:-]?\s*/i;
+    // Bersihkan footer '💡 Apakah...' jika masih terbawa
+    cleaned = cleaned.replace(/\n*━━━━━━━━━━━━━━━━━━━━━━━━━\n*💡\s*\*?Apakah[\s\S]*$/i, '').trim();
+    cleaned = cleaned.replace(/\n*───────────────────────────\n*💡\s*\*?Has this information[\s\S]*$/i, '').trim();
+    cleaned = cleaned.replace(/\n+💡\s*\*?Apakah[\s\S]*$/i, '').trim();
+
+    // Cek jika sudah diawali variasi sapaan dengan nama "Halo #SahabatBahari Kak [Nama]," (baik satu baris maupun terpisah)
+    const regexWithName = /^(\*|_)*(?:halo\s+)?#?sahabat\s*bahari(\*|_)*[!,:-]?\s*(?:\n+)?\s*(kak\s+[^\n,]+)[!,:-]?\s*(?:\n+)*/i;
+    const matchName = cleaned.match(regexWithName);
+    if (matchName) {
+        cleaned = cleaned.replace(regexWithName, `Halo #SahabatBahari ${matchName[3].trim()},\n\n`);
+        return cleaned;
+    }
+
+    // Cek jika sudah diawali variasi standar "Halo Sahabat Bahari", "#SahabatBahari", dsb
+    const regex = /^(\*|_)*(?:halo\s+)?#?sahabat\s*bahari(\*|_)*[!,:-]?\s*(?:\n+)*/i;
     if (regex.test(cleaned)) {
         cleaned = cleaned.replace(regex, 'Halo #SahabatBahari,\n\n');
     } else {
@@ -571,16 +1568,129 @@ function formatReply(text) {
 }
 
 async function sendUserMessage(recipient, content, options = {}) {
+    let resultMsg;
+    let textToRecord = '';
+
     if (typeof content === 'string') {
-        return await client.sendMessage(recipient, formatReply(content), options);
+        textToRecord = content;
+        resultMsg = await client.sendMessage(recipient, formatReply(content), options);
     } else if (content && typeof content === 'object') {
         const opt = { ...options };
         if (opt.caption) {
+            textToRecord = opt.caption;
             opt.caption = formatReply(opt.caption);
         }
-        return await client.sendMessage(recipient, content, opt);
+        resultMsg = await client.sendMessage(recipient, content, opt);
+    } else {
+        resultMsg = await client.sendMessage(recipient, content, options);
     }
-    return await client.sendMessage(recipient, content, options);
+
+    // Catat pesan balasan bot ke riwayat percakapan memori pemohon
+    if (recipient && typeof recipient === 'string' && textToRecord) {
+        let phone = '';
+        if (recipient.endsWith('@c.us')) {
+            phone = recipient.split('@')[0].split(':')[0].replace(/\D/g, '');
+        } else if (recipient.endsWith('@lid')) {
+            const lidUser = recipient.split('@')[0].split(':')[0];
+            phone = lidToPhoneMap.get(lidUser) || (jidToPhoneCache.get(recipient) ? jidToPhoneCache.get(recipient).phone : '');
+        } else {
+            phone = phoneToOriginalJid.get(recipient) || recipient.replace(/\D/g, '');
+        }
+        if (phone) {
+            addChatHistory(phone, 'model', textToRecord);
+        }
+    }
+
+    return resultMsg;
+}
+
+// ==========================================
+// 👨‍💻 HELPER PENGALIHAN LANGSUNG KE PETUGAS PPID
+// ==========================================
+async function connectUserToPetugas({ sender, senderDetails, text, userReply, adminAlertTitle, statusKategori = 'PENDING' }) {
+    const pemohonPhone = senderDetails.phone || (sender.endsWith('@c.us') ? sender.split('@')[0].split(':')[0].replace(/\D/g, '') : '');
+    const directWaLink = pemohonPhone ? `https://wa.me/${pemohonPhone}` : '';
+
+    userState[sender] = 'CS_MODE';
+    lastCsUserJid = sender;
+    lastCsUserPhone = pemohonPhone;
+    if (pemohonPhone) {
+        phoneToOriginalJid.set(pemohonPhone, sender);
+        if (senderDetails.lid) lidToPhoneMap.set(senderDetails.lid, pemohonPhone);
+        if (sender.endsWith('@lid')) {
+            const lidUser = sender.split('@')[0].split(':')[0];
+            lidToPhoneMap.set(lidUser, pemohonPhone);
+        }
+    }
+    for (const admPhone of ADMIN_PHONES) {
+        activeAdminTarget[admPhone] = sender;
+        activeAdminTargetPhone[admPhone] = pemohonPhone;
+    }
+    for (const admLid of ADMIN_LIDS) {
+        activeAdminTarget[admLid] = sender;
+        activeAdminTargetPhone[admLid] = pemohonPhone;
+    }
+    activeAdminTarget['LAST_ACTIVE'] = sender;
+    activeAdminTargetPhone['LAST_ACTIVE'] = pemohonPhone;
+
+    // 🕒 Cek jam operasional KHUSUS layanan petugas manusia (08.00 - 15.30 WIB, istirahat 11.40 - 13.00 WIB)
+    const op = getPetugasOperationalInfo();
+    let finalUserReply = userReply;
+    let finalAdminAlertTitle = adminAlertTitle;
+
+    if (!op.isOpen) {
+        finalAdminAlertTitle = `${adminAlertTitle} ⚠️ [DILUAR JAM OPERASIONAL PETUGAS]`;
+        if (op.isBreak) {
+            finalUserReply =
+                `☕ *PETUGAS SEDANG JAM ISTIRAHAT (11.40 - 13.00 WIB)*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Saat ini Petugas Layanan Informasi PPID KKP sedang dalam jam istirahat dinas.\n\n` +
+                `Pesan Anda telah kami catat dalam antrean dan akan direspons petugas setelah pukul 13.00 WIB. 🙏\n` +
+                `Anda tetap dapat bertanya jawab seputar informasi KKP secara otomatis dengan Asisten AI kami 24/7 di sini.\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`;
+        } else {
+            finalUserReply =
+                `🌙 *DI LUAR JAM OPERASIONAL PETUGAS PPID*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Layanan konsultasi langsung Petugas PPID KKP saat ini sedang *OFFLINE* (di luar jam kerja).\n\n` +
+                `🕰️ *Jadwal Kerja Petugas PPID:*\n` +
+                `• *Senin - Kamis:* 08.00 - 15.00 WIB\n` +
+                `• *Jumat:* 08.00 - 15.30 WIB\n` +
+                `• *Jam Istirahat:* 11.40 - 13.00 WIB\n` +
+                `• *Sabtu, Minggu & Libur Nasional:* Tutup\n\n` +
+                `Pesan Anda telah kami catat dalam antrean sistem dan akan dibalas petugas pada hari kerja berikutnya.\n\n` +
+                `💡 *Layanan 24 Jam:* Anda tetap dapat mengakses informasi publik, unduh regulasi, atau bertanya dengan Asisten AI kami kapan saja.\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`;
+        }
+    }
+
+    await sendUserMessage(sender, finalUserReply);
+
+    const alertAdmin =
+        `${finalAdminAlertTitle}\n\n` +
+        `👤 *Dari Nomor Pemohon:* +${pemohonPhone}\n` +
+        `💬 *Pesan Pemohon:* "${text || '[Pesan/Lampiran]'}"\n\n` +
+        `-----------------------------------------\n` +
+        `💡 *Cara Membalas:* Swipe / Balas Kutipan pesan ini, ATAU langsung ketik balasan di chat ini.\n` +
+        `• Ketik */selesai* jika konsultasi sudah tuntas.\n` +
+        `👉 *Chat Pemohon:* ${directWaLink}`;
+
+    for (const admPhone of ADMIN_PHONES) {
+        try {
+            await client.sendMessage(`${admPhone}@c.us`, alertAdmin);
+        } catch (e) {
+            console.error(`Gagal mengirim alert ke admin ${admPhone}:`, e);
+        }
+    }
+
+    tracker.recordConversation({
+        phone: pemohonPhone,
+        text: text,
+        answer: `Dialihkan ke Petugas PPID (${finalAdminAlertTitle.replace(/[\*\r\n]/g, '')})`,
+        source: 'BOT',
+        aiModel,
+        status: statusKategori
+    });
 }
 
 // Event saat menerima pesan (HANYA PESAN MASUK dari orang lain)
@@ -997,10 +2107,10 @@ client.on('message', async (message) => {
                 if (message.hasMedia) {
                     const media = await message.downloadMedia();
                     await client.sendMessage(targetUserJid, media, {
-                        caption: formatReply("👨‍💻 *Balasan Petugas PPID:*" + (message.body ? "\n\n" + message.body : ""))
+                        caption: message.body ? formatReply(message.body) : undefined
                     });
                 } else {
-                    await sendUserMessage(targetUserJid, "👨‍💻 *Balasan Petugas PPID:*\n\n" + message.body);
+                    await sendUserMessage(targetUserJid, message.body);
                 }
 
                 // Catat ke rekapan: jawaban petugas manusia menggantikan jawaban bot ("kalau ada manusia input yang manusia nya aja")
@@ -1042,62 +2152,122 @@ client.on('message', async (message) => {
     }
 
     // ==========================================
-    // 🛡️ FITUR ANTI-SPAM (RATE LIMITING)
+    // ⏱️ BUFFER PENGGABUNGAN CHAT BERUNTUN (DEBOUNCE AGGREGATION - REQUEST 4)
     // ==========================================
+    // Mengumpulkan rangkaian chat pemohon dalam jeda 2 detik sebelum dianalisis secara menyeluruh
+    const bufKey = sender;
+    if (!userMessageBuffer[bufKey]) {
+        userMessageBuffer[bufKey] = {
+            messages: [],
+            senderDetails,
+            timer: null
+        };
+    }
+
+    userMessageBuffer[bufKey].messages.push(message);
+    userMessageBuffer[bufKey].senderDetails = senderDetails;
+
+    // Reset timer jika pemohon mengirim chat susulan dalam jendela 2 detik
+    if (userMessageBuffer[bufKey].timer) {
+        clearTimeout(userMessageBuffer[bufKey].timer);
+    }
+
+    userMessageBuffer[bufKey].timer = setTimeout(async () => {
+        const buffered = userMessageBuffer[bufKey];
+        delete userMessageBuffer[bufKey];
+        if (!buffered || buffered.messages.length === 0) return;
+
+        try {
+            await handleIncomingUserMessage(buffered.messages, buffered.senderDetails);
+        } catch (handlerErr) {
+            console.error("Error saat memproses rangkaian pesan pemohon:", handlerErr);
+        }
+    }, MESSAGE_BUFFER_DELAY_MS);
+});
+
+// ==========================================
+// 📥 PENANGANAN PESAN PEMOHON (SETELAH DEBOUNCE AGREGASI)
+// ==========================================
+async function handleIncomingUserMessage(bufferedMessages, senderDetails) {
+    if (!bufferedMessages || bufferedMessages.length === 0) return;
+
+    // Ambil pesan utama (pesan terakhir dalam buffer untuk referensi sender & konteks)
+    const primaryMsg = bufferedMessages[bufferedMessages.length - 1];
+    const sender = primaryMsg.from;
+    const senderPhone = senderDetails.phone;
+
+    // Gabungkan seluruh teks chat dari rangkaian pesan (analisis keseluruhan chat - Request 4)
+    const aggregatedText = bufferedMessages
+        .map(m => (m.body || '').trim())
+        .filter(b => b.length > 0)
+        .join('\n');
+
+    const effectiveBody = aggregatedText || primaryMsg.body || '';
+    const text = effectiveBody.trim().toLowerCase();
+
+    const isMultiChat = Boolean(bufferedMessages && bufferedMessages.length > 1);
+    const multiChatCount = bufferedMessages ? bufferedMessages.length : 1;
+    const isLongText = effectiveBody.length > 150 || (effectiveBody.includes('\n') && effectiveBody.split('\n').filter(l => l.trim().length > 0).length > 2);
+
+    // Buat objek synthesizedMessage agar kompatibel dengan seluruh fungsi downstream
+    const message = Object.assign(Object.create(Object.getPrototypeOf(primaryMsg)), primaryMsg, {
+        body: effectiveBody,
+        originalMessages: bufferedMessages,
+        isMultiChat,
+        multiChatCount,
+        isLongText
+    });
+
+    // Jika salah satu dari kumpulan pesan memiliki media, teruskan kapabilitas media
+    const mediaMsg = bufferedMessages.find(m => m.hasMedia);
+    if (mediaMsg) {
+        message.hasMedia = true;
+        message.downloadMedia = () => mediaMsg.downloadMedia();
+    }
+
     const now = Date.now();
-    if (!message.hasMedia && userLastMessageTime[sender] && (now - userLastMessageTime[sender] < SPAM_COOLDOWN_MS)) {
-        // Jika jeda chat kurang dari 2 detik, pesan akan diabaikan
-        console.log(`Pesan dari ${sender} diabaikan (Spam Terdeteksi).`);
-        return;
-    }
     userLastMessageTime[sender] = now;
-    // ==========================================
 
     // ==========================================
-    // 🕒 JAM OPERASIONAL & JAM ISTIRAHAT (WIB)
+    // 🧠 CATAT PESAN PEMOHON KE MEMORI PERCAKAPAN & DETEKSI NAMA
     // ==========================================
-    const dateOptions = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
-    const [hourStr, minuteStr] = new Intl.DateTimeFormat('en-GB', dateOptions).format(new Date()).split(':');
-    const currentHourWIB = parseInt(hourStr, 10);
-    const currentMinuteWIB = parseInt(minuteStr, 10);
-    const currentTimeInMinutes = currentHourWIB * 60 + currentMinuteWIB;
-
-    // 1. Cek Jam Istirahat (11:40 - 13:00 WIB)
-    // 11:40 = 700 menit, 13:00 = 780 menit
-    const isBreakTime = currentTimeInMinutes >= (11 * 60 + 40) && currentTimeInMinutes < (13 * 60);
-
-    if (isBreakTime) {
-        // Beri peringatan maksimal 1 kali per 30 menit selama jam istirahat agar tidak spam
-        if (!userLastBreakWarningTime[sender] || (now - userLastBreakWarningTime[sender] > 1800000)) {
-            await sendUserMessage(sender, "☕ *Layanan Sedang Istirahat*\n\nMaaf, saat ini layanan PPID KKP sedang dalam jam istirahat (11.40 - 13.00 WIB).\n\nSilahkan menghubungi kami kembali setelah jam istirahat selesai (pukul 13.00 WIB).\nHarap ditunggu ya! 🙏");
-            userLastBreakWarningTime[sender] = now;
-        }
-        return; // Hentikan eksekusi secara total selama jam istirahat
+    if (senderPhone && effectiveBody) {
+        addChatHistory(senderPhone, 'user', effectiveBody);
     }
-
-    // 2. Cek Jam Kerja Operasional (08:00 - 15:30 WIB)
-    // Di luar jam 08:00 - 15:30 WIB
-    const isOutsideOperational = currentTimeInMinutes < (8 * 60) || currentTimeInMinutes >= (15 * 60 + 30);
-
-    if (isOutsideOperational) {
-        // Cek agar bot tidak spam membalas berkali-kali jika user mengirim banyak chat di malam hari
-        if (!userLastWarningTime[sender] || (now - userLastWarningTime[sender] > 3600000)) {
-            // Hanya beri peringatan 1 kali per jam
-            await sendUserMessage(sender, "🌙 *Layanan Sedang Offline*\n\nMaaf, Anda menghubungi kami di luar jam operasional PPID KKP (08.00 - 15.30 WIB).\n\nPesan Anda telah kami terima dan akan segera kami proses pada jam kerja berikutnya.\nHarap ditunggu ya! 🙏");
-            userLastWarningTime[sender] = now;
-        }
-        return; // Hentikan eksekusi secara total di luar jam kerja
+    const introName = extractSelfIntroName(effectiveBody);
+    if (introName) {
+        if (senderPhone) userKnownName[senderPhone] = introName;
+        userKnownName[sender] = introName;
+    } else if (senderDetails && senderDetails.name) {
+        if (senderPhone && !userKnownName[senderPhone]) userKnownName[senderPhone] = senderDetails.name;
+        if (!userKnownName[sender]) userKnownName[sender] = senderDetails.name;
     }
     // ==========================================
 
-    // Fitur Mengakhiri Percakapan (Bisa dipanggil kapan saja)
-    if (text === '5' || text === 'selesai' || text === 'akhiri' || ((text === 'ya' || text === 'sudah' || text === 'cukup') && (!userState[sender] || userState[sender] === 'MENU'))) {
+    // Fitur Mengakhiri Percakapan (Jawaban Tertutup Penyelesaian Masalah & English)
+    const isRegistering = userState[sender] && userState[sender].startsWith('REG_');
+    const isSurvey = userState[sender] === 'AWAITING_IKM';
+    const isResolutionAnswer = [
+        '5', 'selesai', 'akhiri', 'ya', 'sudah', 'cukup', 'terima kasih', 'makasih',
+        'cukup terima kasih', 'sudah cukup', 'sudah jelas', 'sudah tuntas', 'tuntas',
+        'ok terima kasih', 'oke terima kasih', 'siap terima kasih', 'ok', 'oke', 'siap',
+        'yes', 'done', 'resolved', 'thank you', 'thanks', 'all good', 'ok thank you', 'okay thank you'
+    ].includes(text);
+
+    if (!isRegistering && !isSurvey && isResolutionAnswer) {
         userState[sender] = null; // Reset state pengguna
         userAiChatCount[sender] = 0; // Reset hitungan interaksi
         delete regData[sender];
         delete pendingIkmTarget[sender];
         tracker.closeUserSession(senderPhone);
-        await sendUserMessage(sender, "Terima kasih telah menggunakan layanan WhatsApp Resmi *PPID Kementerian Kelautan dan Perikanan RI*. \n\nMari bersama-sama menjaga kelestarian laut kita! 🌊🇮🇩\n\nSemoga sehat selalu dan selamat beraktivitas kembali. 🙏");
+        clearChatHistory(senderPhone); // Bersihkan memori percakapan saat sesi tuntas
+
+        const isEnglish = isEnglishQuery(text) || ['yes', 'done', 'resolved', 'thank you', 'thanks', 'all good', 'ok thank you', 'okay thank you'].includes(text);
+        if (isEnglish) {
+            await sendUserMessage(sender, "Thank you for contacting the Official WhatsApp Service of *PPID Ministry of Marine Affairs and Fisheries (KKP RI)*.\n\nLet's preserve our marine ecosystem together! 🌊🇮🇩\n\nBest regards, PPID MMAF / KKP RI. 🙏");
+        } else {
+            await sendUserMessage(sender, "Terima kasih telah menggunakan layanan WhatsApp Resmi *PPID Kementerian Kelautan dan Perikanan RI*. \n\nMari bersama-sama menjaga kelestarian laut kita! 🌊🇮🇩\n\nSemoga sehat selalu dan selamat beraktivitas kembali. 🙏");
+        }
         return;
     }
 
@@ -1174,6 +2344,68 @@ client.on('message', async (message) => {
             );
         }
         return;
+    }
+
+    // ==========================================
+    // 📨 PILIHAN JALUR CEK STATUS SURAT (REQUEST 7)
+    // ==========================================
+    if (userState[sender] === 'CHECK_SUBMITTED_LETTER') {
+        if (text === '0' || text === 'kembali' || text === 'batal' || text === 'menu') {
+            userState[sender] = 'MENU';
+            await sendUserMessage(sender, "Anda telah kembali ke Menu Utama.\n\nKetik *Menu* untuk menampilkan daftar layanan.");
+            return;
+        }
+
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /wa|whatsapp|chat/i.test(text)) {
+            userState[sender] = 'CS_MODE';
+            lastCsUserJid = sender;
+            lastCsUserPhone = senderPhone;
+            for (const admPhone of ADMIN_PHONES) {
+                activeAdminTarget[admPhone] = sender;
+                activeAdminTargetPhone[admPhone] = senderPhone;
+            }
+            for (const admLid of ADMIN_LIDS) {
+                activeAdminTarget[admLid] = sender;
+                activeAdminTargetPhone[admLid] = senderPhone;
+            }
+            activeAdminTarget['LAST_ACTIVE'] = sender;
+            activeAdminTargetPhone['LAST_ACTIVE'] = senderPhone;
+
+            await sendUserMessage(sender,
+                `📱 *PENGIRIMAN SURAT MELALUI WHATSAPP*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Jika surat/dokumen telah Anda kirimkan melalui ruang obrolan WhatsApp ini, silakan *TUNGGU RESPONS DARI PETUGAS KAMI* di chat ini.\n\n` +
+                `Petugas Layanan PPID KKP sedang/akan memverifikasi dokumen Anda dan membalas langsung di sini.\n\n` +
+                `Silakan ketikkan perihal atau nomor surat Anda jika ingin melengkapi data. 🙏\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`
+            );
+
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Cek Surat Jalur WA: Menunggu respon petugas di ruang chat',
+                source: 'BOT',
+                aiModel,
+                status: 'PENDING'
+            });
+            return;
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /ppid|portal|web|link|lacak|tiket/i.test(text)) {
+            userState[sender] = 'CHECK_TICKET';
+            await sendUserMessage(sender,
+                `🌐 *PENGIRIMAN SURAT MELALUI PORTAL PPID KKP*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Untuk surat/permohonan yang didaftarkan melalui portal resmi PPID KKP, Anda dapat melacak progresnya secara langsung melalui tautan resmi:\n` +
+                `🔗 https://ppid.kkp.go.id/layanan-informasi/tracking-tiket/\n\n` +
+                `Atau *ketikkan Nomor Tiket Permohonan Anda* langsung di sini (contoh: *PPID-2026-001*) untuk pengecekan instan:\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`
+            );
+            return;
+        } else {
+            await sendUserMessage(sender,
+                `Silakan balas dengan angka *1* (Kirim via WhatsApp) atau *2* (Kirim via Portal PPID), atau ketik *0* untuk kembali ke Menu Utama.`
+            );
+            return;
+        }
     }
 
     // ==========================================
@@ -1462,18 +2694,26 @@ client.on('message', async (message) => {
     }
 
     // ==========================================
-    // 🚨 DETEKSI CEPAT: PENGADUAN DOKUMEN / SURAT PALSU & BODONG (PRIORITAS UTAMA)
+    // 👨‍💻 1. MODE LIVE CHAT PEMOHON (SUDAH TERHUBUNG KE PETUGAS)
     // ==========================================
-    if (isKepalsuanSuratQuery(text)) {
+    if (userState[sender] === 'CS_MODE') {
+        if (text === '0' || text === 'kembali') {
+            userState[sender] = 'MENU';
+            await sendUserMessage(sender, "Sesi layanan dengan Petugas telah diakhiri.\n\nKetik *Menu* untuk menampilkan layanan kembali.");
+            return;
+        }
+
         const pemohonPhone = senderDetails.phone || (sender.endsWith('@c.us') ? sender.split('@')[0].split(':')[0].replace(/\D/g, '') : '');
         const directWaLink = pemohonPhone ? `https://wa.me/${pemohonPhone}` : '';
 
-        userState[sender] = 'CS_MODE';
+        // Simpan pemohon ini sebagai target aktif untuk admin
         lastCsUserJid = sender;
         lastCsUserPhone = pemohonPhone;
         if (pemohonPhone) {
             phoneToOriginalJid.set(pemohonPhone, sender);
-            if (senderDetails.lid) lidToPhoneMap.set(senderDetails.lid, pemohonPhone);
+            if (senderDetails.lid) {
+                lidToPhoneMap.set(senderDetails.lid, pemohonPhone);
+            }
             if (sender.endsWith('@lid')) {
                 const lidUser = sender.split('@')[0].split(':')[0];
                 lidToPhoneMap.set(lidUser, pemohonPhone);
@@ -1490,38 +2730,523 @@ client.on('message', async (message) => {
         activeAdminTarget['LAST_ACTIVE'] = sender;
         activeAdminTargetPhone['LAST_ACTIVE'] = pemohonPhone;
 
-        const replyPalsu =
-            `🚨 *PERINGATAN RESMI: DETEKSI PENGADUAN DOKUMEN / SURAT PALSU KKP*\n\n` +
-            `Halo #SahabatBahari,\n` +
-            `Kementerian Kelautan dan Perikanan (KKP) menindak tegas segala bentuk pemalsuan surat dinas, pesanan barang fiktif mengatasnamakan Sekjen/pejabat KKP, undangan seminar berbayar, atau perizinan bodong.\n\n` +
-            `Laporan Anda *TELAH KAMI DETEKSI DAN LANGSUNG DIHUBUNGKAN KE PETUGAS RESMI PPID / PENGADUAN KKP*.\n\n` +
-            `📲 *TINDAK LANJUT CEPAT:*\n` +
-            `Silakan *KIRIMKAN FOTO / DOKUMEN (PDF/JPG)* surat yang Anda terima di chat ini sekarang, beserta nomor kontak dan keterangan singkat. Petugas kami akan segera memverifikasi keabsahan surat dan nomor registrasi dinasnya.\n\n` +
-            `_(Ketik *0* untuk membatalkan dan kembali ke Menu Utama)_`;
-
-        await sendUserMessage(sender, replyPalsu);
-
-        const alertAdmin =
-            `🚨🚨 *[URGENT: LAPORAN DUGAAN SURAT PALSU / PENIPUAN KKP]* 🚨🚨\n\n` +
-            `👤 *Dari Nomor Pemohon:* +${pemohonPhone}\n` +
-            `💬 *Pesan Laporan:* "${message.body || '[Media/Lampiran]'}"\n\n` +
+        const forwardText =
+            `🚨 *PESAN MASUK (LIVE CHAT PPID)* 🚨\n\n` +
+            `👤 *Dari Nomor:* +${pemohonPhone}\n` +
+            `💬 *Pesan:*\n"${message.body || '[Media/Lampiran]'}"\n\n` +
             `-----------------------------------------\n` +
-            `Petugas dimohon bersiap memeriksa keabsahan surat/dokumen yang akan dikirimkan pemohon.\n` +
-            `👉 *Chat Pemohon:* ${directWaLink}`;
+            `💡 *Cara Membalas:*\n` +
+            `• *Swipe / Balas Kutipan* pesan ini, ATAU langsung ketik balasan Anda di sini.\n` +
+            `• Ketik */selesai* jika konsultasi sudah tuntas.\n` +
+            `👉 *Chat Pribadi Langsung:* ${directWaLink}`;
+
+        // Teruskan ke semua nomor admin terdaftar (mendukung teks dan media)
+        let forwardedCount = 0;
+        let mediaObj = null;
+        if (message.hasMedia) {
+            try {
+                mediaObj = await message.downloadMedia();
+            } catch (e) {
+                console.error("Gagal mengunduh media dari pemohon:", e);
+            }
+        }
 
         for (const admPhone of ADMIN_PHONES) {
             try {
-                await client.sendMessage(`${admPhone}@c.us`, alertAdmin);
+                if (mediaObj) {
+                    await client.sendMessage(`${admPhone}@c.us`, mediaObj, { caption: forwardText });
+                } else {
+                    await client.sendMessage(`${admPhone}@c.us`, forwardText);
+                }
+                forwardedCount++;
+            } catch (e) {
+                console.error(`Gagal meneruskan chat ke Admin ${admPhone}:`, e);
+            }
+        }
+
+        if (forwardedCount === 0) {
+            console.error("Gagal mem-forward pesan. Nomor Admin belum disetting dengan benar di .env");
+        }
+
+        tracker.recordConversation({
+            phone: pemohonPhone,
+            text: message.body || '[Media/Lampiran]',
+            answer: '',
+            source: 'BOT',
+            aiModel,
+            status: 'PENDING'
+        });
+
+        // Cek apakah chat masuk di luar jam operasional petugas
+        const op = getPetugasOperationalInfo();
+        if (!op.isOpen) {
+            if (!userLastWarningTime[sender] || (now - userLastWarningTime[sender] > 3600000)) {
+                userLastWarningTime[sender] = now;
+                const offlineNote = op.isBreak ?
+                    `☕ *Informasi:* Saat ini petugas sedang dalam jam istirahat dinas (11.40 - 13.00 WIB). Pesan Anda tetap diteruskan ke antrean dan akan dibalas setelah jam istirahat. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_` :
+                    `🌙 *Informasi:* Pesan Anda telah diteruskan ke antrean petugas. Saat ini layanan live chat sedang di luar jam kerja (08.00 - 15.30 WIB) dan akan dibalas pada hari kerja berikutnya. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_`;
+                await sendUserMessage(sender, offlineNote);
+            } else {
+                await sendUserMessage(sender, "✅ Pesan Anda telah diteruskan ke antrean Petugas Layanan PPID KKP. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
+            }
+        } else {
+            await sendUserMessage(sender, "✅ Pesan Anda telah diteruskan ke Petugas Layanan PPID KKP. Mohon ditunggu ya, petugas kami akan segera membalasnya. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
+        }
+        return;
+    }
+
+    // ==========================================
+    // 🚨 2. DETEKSI CEPAT: PENGADUAN SURAT PALSU / BODONG (PRIORITAS 1)
+    // ==========================================
+    if (isKepalsuanSuratQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `🚨 *PERINGATAN RESMI: DETEKSI PENGADUAN DOKUMEN / SURAT PALSU KKP*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Kementerian Kelautan dan Perikanan (KKP) menindak tegas segala bentuk pemalsuan surat dinas, pesanan barang fiktif mengatasnamakan pejabat KKP, atau perizinan bodong.\n\n` +
+                `Laporan Anda *TELAH KAMI DETEKSI DAN LANGSUNG DIHUBUNGKAN KE PETUGAS RESMI PPID / PENGADUAN KKP*.\n\n` +
+                `📲 *TINDAK LANJUT CEPAT:*\n` +
+                `Silakan *KIRIMKAN FOTO / DOKUMEN (PDF/JPG)* surat yang Anda terima di chat ini sekarang. Petugas kami akan segera memverifikasi keabsahan surat dan nomor registrasi dinasnya.\n\n` +
+                `_(Ketik *0* untuk membatalkan dan kembali ke Menu Utama)_`,
+            adminAlertTitle: `🚨🚨 *[URGENT: LAPORAN DUGAAN SURAT PALSU / PENIPUAN KKP]* 🚨🚨`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 🚨 2b. DETEKSI ANCAMAN / INTIMIDASI (PRIORITAS 1b - REQUEST 5)
+    // ==========================================
+    if (isThreatQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `Halo #SahabatBahari,\n\n` +
+                `Pesan Anda mengandung indikasi ancaman atau intimidasi yang tidak diperkenankan dalam etika layanan publik Kementerian Kelautan dan Perikanan (KKP).\n\n` +
+                `*Sesi percakapan ini langsung kami alihkan ke Petugas Resmi PPID KKP* untuk pencatatan dan penanganan kedinasan lebih lanjut sesuai prosedur hukum yang berlaku.\n\n` +
+                `Mohon tetap menjaga ketertiban dan etika berkomunikasi.\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+            adminAlertTitle: `🚨🚨 *[URGENT: DETEKSI ANCAMAN / INTIMIDASI PEMOHON]* 🚨🚨`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 🔒 2c. DETEKSI USAHA MENGETAHUI IDENTITAS / DATA SENSITIF KKP (PRIORITAS 1c - REQUEST 5)
+    // ==========================================
+    if (isSensitiveInfoProbingQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `Halo #SahabatBahari,\n\n` +
+                `Pesan Anda langsung kami alihkan dan hubungkan ke *Petugas Layanan PPID KKP* agar dapat dibantu lebih lanjut secara resmi. Mohon ditunggu ya, petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+            adminAlertTitle: `🔒🚨 *[PERINGATAN: PERMINTAAN INFORMASI SENSITIF / DATA INTERNAL]* 🚨🔒`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 😡 3. DETEKSI CEPAT: NADA MARAH / KECEWA / KOMPLAIN KERAS (PRIORITAS 2)
+    // ==========================================
+    if (isAngryQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `Halo #SahabatBahari,\n\n` +
+                `Kami memohon maaf yang sebesar-besarnya atas ketidaknyamanan atau kendala yang Anda alami. KKP sangat menghargai setiap masukan dan berkomitmen memberikan pelayanan terbaik.\n\n` +
+                `Untuk memberikan penanganan yang cepat dan solutif, *chat Anda saat ini langsung kami alihkan ke Petugas PPID KKP* agar dapat ditangani secara personal.\n\n` +
+                `Silakan sampaikan rincian permasalahan, nomor tiket/berkas, atau kendala spesifik yang dihadapi. Petugas kami akan segera merespons chat Anda. 🙏\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+            adminAlertTitle: `🚨🚨 *[PRIORITAS: KELUHAN / NADA MARAH PEMOHON]* 🚨🚨`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 🔄 3b. DETEKSI CEPAT: KENDALA BERULANG / "TIDAK BISA" / FRUSTRASI (PRIORITAS 2b - REQUEST 5)
+    // ==========================================
+    if (isFrustratedOrCannotQuery(text)) {
+        // Jika ada jawaban FAQ yang spesifik, berikan bantuan teknis FAQ terlebih dahulu
+        const directFaq = (!message.isMultiChat && !message.isLongText) ? findBestFaqMatch(text) : null;
+        if (!directFaq) {
+            await connectUserToPetugas({
+                sender,
+                senderDetails,
+                text: message.body,
+                userReply:
+                    `Halo #SahabatBahari,\n\n` +
+                    `Kami memahami Anda mengalami kendala berulang atau kesulitan dalam mengakses layanan / informasi yang dibutuhkan.\n\n` +
+                    `Agar kendala ini segera tertangani dengan tepat, *chat Anda saat ini langsung kami alihkan ke Petugas Layanan PPID KKP* untuk dibantu secara langsung oleh petugas kami.\n\n` +
+                    `Silakan jelaskan detail kendala teknis atau masalah yang Anda hadapi di bawah ini. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                    `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                adminAlertTitle: `🔄🚨 *[KENDALA BERULANG: PEMOHON GAGAL / TIDAK BISA]* 🚨🔄`
+            });
+            return;
+        }
+    }
+
+    // ==========================================
+    // 👨‍💻 4. DETEKSI CEPAT: PERMINTAAN LANGSUNG KE PETUGAS (PRIORITAS 3)
+    // ==========================================
+    if (isEscalationQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `👨‍💻 *TERHUBUNG KE PETUGAS LAYANAN PPID KKP*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Anda telah terhubung langsung ke antrean Petugas Layanan Informasi PPID KKP.\n\n` +
+                `Silakan sampaikan pertanyaan, permohonan informasi, atau kendala Anda secara lengkap di bawah ini. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                `_(Ketik *0* jika ingin membatalkan dan kembali ke Menu Utama)_`,
+            adminAlertTitle: `👨‍💻 *[PERMINTAAN KONSULTASI LIVE CHAT PPID]*`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 📢 5. DETEKSI CEPAT: PELAPORAN KHUSUS / SENGKETA / TINDAK PIDANA (PRIORITAS 4)
+    // ==========================================
+    if (isComplexPelaporanQuery(text)) {
+        await connectUserToPetugas({
+            sender,
+            senderDetails,
+            text: message.body,
+            userReply:
+                `📢 *LAYANAN PENGADUAN & PELAPORAN KHUSUS KKP*\n\n` +
+                `Halo #SahabatBahari,\n` +
+                `Laporan / aduan Anda teridentifikasi memerlukan penelaahan dan tindak lanjut langsung oleh Petugas Resmi Pengaduan KKP.\n\n` +
+                `*Chat Anda LANGSUNG DIHUBUNGKAN KE PETUGAS PPID / PENGADUAN KKP*.\n\n` +
+                `Silakan sampaikan data laporan pendukung di chat ini:\n` +
+                `1. *Kronologi:* Waktu & lokasi kejadian secara jelas\n` +
+                `2. *Pihak Terlapor:* Nama kapal / oknum / pihak yang dilaporkan\n` +
+                `3. *Bukti Pendukung:* Foto, video, atau dokumen (jika ada)\n\n` +
+                `Petugas kami akan segera menelaah laporan Anda. Kerahasiaan pelapor dijamin. 🙏\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+            adminAlertTitle: `📢🚨 *[URGENT: PELAPORAN / ADUAN KHUSUS MASYARAKAT]* 🚨📢`
+        });
+        return;
+    }
+
+    // ==========================================
+    // 🏛️ 6. DETEKSI ISU SENSITIF PIHAK EKSTERNAL (PRIORITAS 5 - REQUEST 6)
+    // ==========================================
+    if (isSensitiveExternalIssueQuery(text)) {
+        await sendUserMessage(sender, SENSITIVE_EXTERNAL_ISSUE_REPLY);
+        tracker.recordConversation({
+            phone: senderPhone,
+            text: message.body,
+            answer: 'Tanggapan Isu Sensitif Eksternal (Perihal & Ranah Kebijakan Internal KKP)',
+            source: 'BOT',
+            aiModel,
+            status: 'DONE'
+        });
+        return;
+    }
+
+    // ==========================================
+    // 📨 7. DETEKSI MENERUSKAN SURAT (PRIORITAS 6 - REQUEST 8)
+    // ==========================================
+    if (isForwardingLetterQuery(text)) {
+        userState[sender] = 'CS_MODE';
+        lastCsUserJid = sender;
+        lastCsUserPhone = senderPhone;
+        for (const admPhone of ADMIN_PHONES) {
+            activeAdminTarget[admPhone] = sender;
+            activeAdminTargetPhone[admPhone] = senderPhone;
+        }
+        for (const admLid of ADMIN_LIDS) {
+            activeAdminTarget[admLid] = sender;
+            activeAdminTargetPhone[admLid] = senderPhone;
+        }
+        activeAdminTarget['LAST_ACTIVE'] = sender;
+        activeAdminTargetPhone['LAST_ACTIVE'] = senderPhone;
+
+        await sendUserMessage(sender, FORWARDING_LETTER_CONFIRMATION);
+
+        const adminAlert =
+            `📨 *[SURAT / PESAN DITERUSKAN PEMOHON]* 📨\n\n` +
+            `👤 *Dari Nomor:* +${senderPhone}\n` +
+            `💬 *Isi Pesan:*\n"${message.body}"\n\n` +
+            `-----------------------------------------\n` +
+            `Pesan telah disimpan dalam sistem. Pemohon telah diinfokan bahwa petugas akan menghubungi mereka.\n` +
+            `💡 *Cara Membalas:* Swipe / Balas Kutipan pesan ini, ATAU langsung ketik balasan di chat ini.`;
+        for (const admPhone of ADMIN_PHONES) {
+            try {
+                await client.sendMessage(`${admPhone}@c.us`, adminAlert);
             } catch (e) { }
         }
 
         tracker.recordConversation({
             phone: senderPhone,
             text: message.body,
-            answer: 'Terdeteksi Pengaduan Surat Palsu -> Langsung dialihkan ke CS Petugas PPID',
+            answer: 'Pesan telah disimpan dan akan dihubungi oleh petugas',
             source: 'BOT',
             aiModel,
             status: 'PENDING'
+        });
+        return;
+    }
+
+    // ==========================================
+    // 🔍 8. DETEKSI CEK STATUS SURAT YANG SUDAH DIKIRIMKAN (PRIORITAS 7 - REQUEST 7)
+    // ==========================================
+    if (isTrackingSubmittedLetterQuery(text)) {
+        userState[sender] = 'CHECK_SUBMITTED_LETTER';
+        await sendUserMessage(sender, TRACKING_SUBMITTED_LETTER_MENU);
+        tracker.recordConversation({
+            phone: senderPhone,
+            text: message.body,
+            answer: 'Menampilkan Pilihan Jalur Cek Status Surat (1. WA / 2. Portal PPID)',
+            source: 'BOT',
+            aiModel,
+            status: 'DONE'
+        });
+        return;
+    }
+
+    // ==========================================
+    // 📞 PEMILIHAN SALURAN KONTAK RESMI KKP
+    // ==========================================
+    if (userState[sender] === 'SELECT_KONTAK') {
+        if (text === '0' || text === 'kembali' || text === 'menu' || text === 'batal') {
+            userState[sender] = 'MENU';
+            await sendUserMessage(sender, "Anda telah keluar dari daftar kontak.\n\nKetik *Menu* untuk menampilkan layanan lainnya.");
+            return;
+        }
+
+        if (text === 'ya' || text === 'selesai' || text === 'sudah' || text === 'cukup') {
+            userState[sender] = null;
+            userAiChatCount[sender] = 0;
+            tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
+            await sendUserMessage(sender, "Terima kasih telah menghubungi Layanan Informasi PPID KKP. Semoga informasi kontak ini membantu Anda! 🌊🇮🇩\n\nKetik *Menu* jika membutuhkan bantuan lainnya.\n\nSalam hormat.");
+            return;
+        }
+
+        let contactKey = null;
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /ppid|informasi|dokumen/i.test(text)) {
+            // Langsung hubungkan ke petugas layanan PPID KKP (Request 1: jangan kasih nomor PPID lagi)
+            await connectUserToPetugas({
+                sender,
+                senderDetails,
+                text: message.body,
+                userReply:
+                    `Halo #SahabatBahari,\n\n` +
+                    `Anda saat ini sudah terhubung di ruang percakapan WhatsApp resmi PPID Kementerian Kelautan dan Perikanan.\n\n` +
+                    `*Pesan Anda LANGSUNG KAMI HUBUNGKAN KE PETUGAS LAYANAN PPID KKP* agar dapat dibantu secara langsung.\n\n` +
+                    `Silakan sampaikan pertanyaan atau informasi publik yang Anda butuhkan. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                    `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                adminAlertTitle: `👨‍💻 *[LAYANAN PPID: PERMINTAAN INFORMASI / PETUGAS]*`
+            });
+            return;
+        }
+        else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /\b(ptsa|sipi|siup|oss|silat|perizinan berusaha|izin kapal|izin tangkap)\b/i.test(text)) contactKey = '2';
+        else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /akp|abk|pelaut|darurat laut/i.test(text)) contactKey = '3';
+        else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /knmp|kdmp|kampung nelayan/i.test(text)) contactKey = '4';
+        else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /budidaya|djpb|tambak|juknis/i.test(text)) contactKey = '5';
+        else if (text === '6' || text.startsWith('6.') || text.startsWith('6 ') || /lpmukp|modal|pinjaman|bunga/i.test(text)) contactKey = '6';
+        else if (text === '7' || text.startsWith('7.') || text.startsWith('7 ') || /pengaduan|pungli|wbs|lapor/i.test(text)) contactKey = '7';
+        else if (text === '8' || text.startsWith('8.') || text.startsWith('8 ') || /sdmao|biro sdm|kepegawaian|casn|cpns|pppk/i.test(text)) contactKey = '8';
+
+        if (contactKey && CONTACT_DETAILS[contactKey]) {
+            await sendUserMessage(sender, CONTACT_DETAILS[contactKey] + getResolutionFooter(text));
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: `Kontak KKP Pilihan #${contactKey}`,
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        } else {
+            // Jika pemohon langsung mengetikkan pertanyaan spesifik / mengerucut
+            userState[sender] = 'AI_MODE';
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Daftar Kontak Resmi Layanan KKP',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Silakan pilih angka *1* sampai *8* untuk rincian kontak yang Anda butuhkan, atau ketik *0* untuk kembali ke Menu Utama.");
+            }
+            return;
+        }
+    }
+
+    // ==========================================
+    // 📢 SUB-MENU: PILIHAN KATEGORI LAPORAN / PENGADUAN
+    // ==========================================
+    if (userState[sender] === 'SELECT_LAPORAN') {
+        if (text === '0' || text === 'kembali' || text === 'menu') {
+            userState[sender] = 'MAIN_MENU';
+            delete userActiveTopic[senderPhone];
+            const menuText =
+                `🌊 *LAYANAN INFORMASI PUBLIK DIGITAL PPID KKP* 🌊\n` +
+                `Kementerian Kelautan dan Perikanan Republik Indonesia\n\n` +
+                `Halo #SahabatBahari! Selamat datang di Pusat Layanan Informasi Resmi KKP. Silakan pilih menu di bawah ini:\n\n` +
+                `*1* 📋 Alur & Prosedur Permohonan Informasi Publik (PPID)\n` +
+                `*2* 🎯 Kebijakan Ekonomi Biru & Program Prioritas (PKPN)\n` +
+                `*3* 📑 Regulasi, Juknis & Informasi Publik KKP\n` +
+                `*4* 💼 Pendaftaran Awak Kapal Perikanan (AKP / E-LAUT)\n` +
+                `*5* ⚖️ Pengajuan Keberatan Informasi Publik\n` +
+                `*6* 📞 Saluran Pengaduan & Layanan Terpadu KKP\n\n` +
+                `_Balas dengan mengetik angka (contoh: *1*) untuk memilih menu, atau ketik langsung pertanyaan/kendala spesifik Anda._\n\n` +
+                `_(Ketik *BANTUAN* untuk terhubung langsung dengan Petugas PPID)_`;
+            await sendUserMessage(sender, menuText);
+            return;
+        }
+
+        // Pilihan 1: Pengaduan Umum & Pelanggaran Perikanan (Ditjen PSDKP)
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /\b(psdkp|bom|cantrang|racun|pencurian ikan|wbs|pungli|destructive fishing|umum)\b/i.test(text)) {
+            userState[sender] = 'AI_MODE';
+            const answerPilihan1 =
+                `Halo #SahabatBahari,\n\n` +
+                `🚨 *LAYANAN PENGADUAN UMUM & PELANGGARAN PERIKANAN (DITJEN PSDKP)*\n\n` +
+                `Untuk menyampaikan laporan pelanggaran tindak pidana perikanan (*destructive fishing*, bom ikan, alat tangkap dilarang, kapal ikan ilegal) maupun pengaduan masyarakat umum, silakan hubungi kanal resmi berikut:\n\n` +
+                `• 📞 *Call Center Terpadu KKP:* 141\n` +
+                `• 📱 *Hotline Ditjen PSDKP:* +62 811-947-141\n` +
+                `• 📧 *Email Pengaduan KKP:* pengaduan@kkp.go.id\n` +
+                `• 🌐 *Portal SP4N-LAPOR!:* https://lapor.go.id\n` +
+                `• 🔒 *Whistleblowing System (WBS Pungli/Korupsi):* https://wbs.kkp.go.id\n\n` +
+                `Mohon sertakan kronologi kejadian, perkiraan lokasi koordinat, waktu, dan foto/video dokumentasi pendukung. Seluruh identitas pelapor dijamin kerahasiaannya.\n\n` +
+                `Salam hormat.`;
+            await sendUserMessage(sender, answerPilihan1);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Diarahkan ke Pengaduan Umum & Pelanggaran Perikanan (PSDKP / WBS)',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        // Pilihan 2: Pengawasan Ruang Laut & Pemanfaatan Pulau-Pulau Kecil (Ditjen PRL)
+        if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /\b(prl|ruang laut|pulau|pulau kecil|penyu|satwa|hiu|pkkprl|reklamasi|pesisir)\b/i.test(text)) {
+            userState[sender] = 'AI_MODE';
+            const answerPilihan2 =
+                `Halo #SahabatBahari,\n\n` +
+                `🏝️ *LAYANAN PENGAWASAN RUANG LAUT & PULAU-PULAU KECIL (DITJEN PRL)*\n\n` +
+                `Terkait laporan pelanggaran izin ruang laut, pemanfaatan pulau-pulau kecil ilegal, reklamasi, pencemaran pesisir, maupun perlindungan satwa/biota laut dilindungi (seperti penyu dan hiu), silakan sampaikan melalui:\n\n` +
+                `• 📱 *Hotline Pengendalian Ruang Laut:* +62 811-1012-0010\n` +
+                `• 📱 *Hotline Pelayanan Ruang Laut (PRL):* +62 877-6225-0001\n` +
+                `• 📞 *Call Center Terpadu KKP:* 141\n` +
+                `• 📧 *Email:* humas.prl@kkp.go.id\n\n` +
+                `Petugas pengawasan Ditjen Pengelolaan Kelautan dan Ruang Laut (PKRL) akan menindaklanjuti data lapangan dan perizinan terkait.\n\n` +
+                `Salam hormat.`;
+            await sendUserMessage(sender, answerPilihan2);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Diarahkan ke Layanan Pengawasan Ruang Laut & Pulau Kecil (Ditjen PRL)',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        // Pilihan 3: Pengaduan Awak Kapal Perikanan (AKP / ABK)
+        if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /\b(akp|abk|awak kapal|pelaut|gaji|upah|pkl|kecelakaan)\b/i.test(text)) {
+            userState[sender] = 'AI_MODE';
+            const answerPilihan3 =
+                `Halo #SahabatBahari,\n\n` +
+                `⚓ *LAYANAN PERLINDUNGAN & PENGADUAN AWAK KAPAL PERIKANAN (AKP / ABK)*\n\n` +
+                `Bagi awak kapal atau keluarga yang ingin mengadukan permasalahan ketenagakerjaan di kapal (seperti penahanan gaji, kecelakaan kerja, penelantaran, atau pelanggaran Perjanjian Kerja Laut), silakan hubungi:\n\n` +
+                `• 📱 *Hotline Pengaduan AKP:* 0811-251-744\n` +
+                `• 📞 *Call Center Gangguan Operasional AKP:* +62 811-1000-3132\n` +
+                `• 🌐 *Portal SP4N-LAPOR!:* https://lapor.go.id\n\n` +
+                `Siapkan data pendukung berupa Nama Kapal, Nama Agen/Pemilik, Salinan PKL (Perjanjian Kerja Laut), dan kronologi kejadian.\n\n` +
+                `Salam hormat.`;
+            await sendUserMessage(sender, answerPilihan3);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Diarahkan ke Layanan Perlindungan & Pengaduan AKP / ABK',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        // Jika pemohon langsung mengetikkan deskripsi laporan yang spesifik
+        userState[sender] = 'AI_MODE';
+        const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+        const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+        if (jawabanTemplate) {
+            await sendUserMessage(sender, jawabanTemplate);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: jawabanTemplate,
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        try {
+            const replyText = await generateGroundedAiResponse({
+                sender,
+                senderPhone,
+                messageBody: message.body,
+                text,
+                topicContext: 'Layanan Pengaduan & Laporan KKP (Umum, PRL, AKP)',
+                isMultiChat: message.isMultiChat,
+                multiChatCount: message.multiChatCount,
+                isLongText: message.isLongText
+            });
+            await sendUserMessage(sender, replyText);
+            return;
+        } catch (err) {
+            await sendUserMessage(sender, `Silakan pilih angka *1* (Laporan Umum/PSDKP), *2* (Ruang Laut/Pulau), atau *3* (Awak Kapal/AKP), atau ketik langsung kendala spesifik Anda.`);
+            return;
+        }
+    }
+
+    // ==========================================
+    // 📞 6. DETEKSI CEPAT: PERMINTAAN KONTAK / CALL CENTER RESMI KKP
+    // ==========================================
+    if (isGeneralContactQuery(text)) {
+        userState[sender] = 'SELECT_KONTAK';
+        userActiveTopic[senderPhone] = { topic: 'KONTAK', name: 'Saluran Kontak Resmi KKP' };
+        await sendUserMessage(sender, CONTACT_MENU_TEXT);
+        tracker.recordConversation({
+            phone: senderPhone,
+            text: message.body,
+            answer: 'Menampilkan Pemetaan Saluran Kontak Resmi KKP (Pilihan 1-7)',
+            source: 'BOT',
+            aiModel,
+            status: 'DONE'
         });
         return;
     }
@@ -1546,11 +3271,12 @@ client.on('message', async (message) => {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
             await sendUserMessage(sender, "Terima kasih! Sesi panduan Modernisasi Kapal & Perlindungan Nelayan telah tuntas diselesaikan. Semoga usaha penangkapan ikan Anda lancar dan berkah! ⛵🌊\n\nKetik *Menu* jika Anda membutuhkan layanan lainnya.\n\nSalam hormat.");
             return;
         }
 
-        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ')) {
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /dimensi|ukuran|loa|gt|sicefi|selisih/i.test(text)) {
             await sendUserMessage(sender,
                 `📏 *SOLUSI SELISIH UKURAN KAPAL (LoA / GT DI SICEFI)*\n\n` +
                 `1. Ajukan surat permohonan cek fisik / pengukuran ulang ke Kantor Pelabuhan Perikanan pangkalan atau UPT Ditjen Perikanan Tangkap terdekat.\n` +
@@ -1564,7 +3290,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ')) {
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /skkp|buku kapal|kelaikan/i.test(text)) {
             await sendUserMessage(sender,
                 `📄 *SOLUSI SERTIFIKAT KELAIKAN KAPAL (SKKP) TERTUNDA*\n\n` +
                 `1. Pastikan seluruh berkas dan dokumentasi cek fisik (konstruksi lambung, mesin penggerak, palka berinsulasi/pendingin, dan alat navigasi) telah lengkap diunggah di aplikasi SICEFI (https://kapal.kkp.go.id/sicefi/).\n` +
@@ -1592,7 +3318,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ')) {
+        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /migrasi|izin pusat|izin daerah|30 gt|12 mil/i.test(text)) {
             await sendUserMessage(sender,
                 `🔄 *PROSEDUR MIGRASI IZIN KAPAL DARI DAERAH KE PUSAT*\n\n` +
                 `Kapal berizin daerah yang beroperasi di atas 12 mil laut atau berukuran di atas 30 GT wajib bermigrasi ke izin pusat:\n` +
@@ -1608,7 +3334,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ')) {
+        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /jaminan|sehat|tanah|bpjs/i.test(text)) {
             await sendUserMessage(sender,
                 `🛡️ *JAMINAN SOSIAL & SERTIFIKASI TANAH NELAYAN (SeHAT NELAYAN & BPJS)*\n\n` +
                 `• *BPJS Ketenagakerjaan Nelayan:*\n` +
@@ -1624,7 +3350,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '6' || text.startsWith('6.') || text.startsWith('6 ')) {
+        } else if (text === '6' || text.startsWith('6.') || text.startsWith('6 ') || /tender|pengumuman|pengadaan|lpse|proyek|lelang|hibah/i.test(text)) {
             await sendUserMessage(sender,
                 `🏗️ *PENGADAAN & TENDER KAPAL PERIKANAN MODERN (LPSE KKP)*\n\n` +
                 `1. Pengadaan proyek armada kapal perikanan KKP diumumkan secara terbuka dan transparan di portal resmi *LPSE KKP*: https://spse.inaproc.id/kkp.\n` +
@@ -1640,7 +3366,30 @@ client.on('message', async (message) => {
             );
             return;
         } else {
-            await sendUserMessage(sender, KAPAL_SUBMENU_TEXT);
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Modernisasi Armada Kapal Perikanan & Perlindungan Nelayan',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -1669,7 +3418,7 @@ client.on('message', async (message) => {
             return;
         }
 
-        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ')) {
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /wilayah|sebaran|lokasi|titik|peta|kepmen 55/i.test(text)) {
             await sendUserMessage(sender,
                 `🗺️ *WILAYAH & SEBARAN 65 LOKASI KNMP TAHAP I (Kepmen KP 55/2025)*\n\n` +
                 `Pada Tahap I, KKP menetapkan 65 lokasi pesisir percontohan prioritas yang tersebar dari Sabang sampai Merauke di 37 provinsi:\n` +
@@ -1688,7 +3437,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ')) {
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /jadwal|tahapan|kapan|waktu|roadmap|surveyor/i.test(text)) {
             await sendUserMessage(sender,
                 `📅 *JADWAL & TAHAPAN PELAKSANAAN KNMP (2025 - 2029)*\n\n` +
                 `KKP menyusun jadwal dan roadmap pelaksanaan KNMP terintegrasi secara bertahap:\n` +
@@ -1710,7 +3459,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ')) {
+        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /syarat|alur|usulan|cara ajukan|pengusulan/i.test(text)) {
             await sendUserMessage(sender,
                 `📝 *SYARAT & ALUR PENGUSULAN LOKASI KNMP BARU*\n\n` +
                 `1. *Usulan Resmi Pemda:* Diajukan secara tertulis oleh Pemerintah Daerah / Dinas Kelautan dan Perikanan Kab/Kota kepada Dirjen Perikanan Tangkap (DJPT) KKP.\n` +
@@ -1726,7 +3475,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ')) {
+        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /fasilitas|sarana|kdmp|koperasi|pabrik es|cold storage/i.test(text)) {
             await sendUserMessage(sender,
                 `🏢 *FASILITAS SENTRA NELAYAN & KOPERASI DESA MERAH PUTIH (KDMP)*\n\n` +
                 `Kawasan KNMP dibangun terintegrasi dari hulu ke hilir dengan sarana:\n` +
@@ -1743,24 +3492,42 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ')) {
+        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /kontak|satgas|wa|call center|nomor/i.test(text)) {
             await sendUserMessage(sender,
-                `☎️ *KONTAK RESMI SATGAS OPERASIONALISASI KNMP (Kepmen KP 20/2026)*\n\n` +
-                `📱 *WhatsApp Official KNMP:* +62 822-9936-9004\n` +
-                `☎️ *Call Center:* 1500587\n` +
-                `📧 *Email:* korwil@merahputih.kop.id\n` +
-                `📸 *Instagram:* @knmp_indonesia\n\n` +
-                `Gunakan kontak resmi di atas untuk konsultasi teknis kawasan, pendampingan kelembagaan KDMP, atau pengaduan operasional fasilitas pabrik es dan mesin pendingin.\n\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `💡 *Apakah informasi kontak Satgas KNMP ini sudah tuntas?*\n` +
-                `• Balas *YA* jika sudah selesai.\n` +
-                `• Atau balas angka *1* - *4* untuk informasi KNMP lainnya.\n` +
-                `• Ketik *0* untuk kembali ke Menu PKPN.\n` +
-                `• Ketik *MENU* untuk kembali ke Menu Utama.`
+                `☎️ *KONTAK RESMI SATGAS OPERASIONALISASI & PEMBANGUNAN KNMP*\n\n` +
+                `Halo #SahabatBahari, berikut informasi yang kita dapatkan mengenai kontak Satgas Pembangunan KNMP sesuai kebutuhan sahabat:\n\n` +
+                `🔗 *Tautan Informasi Resmi Satgas KNMP:*\n` +
+                `https://www.instagram.com/p/DeB4FFpmnJg/?utm_source=ig_web_copy_link&gwpx=NTc4MTIwNjQ2YQ==\n\n` +
+                `*Koreksi Kontak Wilayah:*\n` +
+                `• *Regional Kalimantan:* Fakhri (0852-8734-7969)\n\n` +
+                `Salam hormat.`
             );
             return;
         } else {
-            await sendUserMessage(sender, KNMP_SUBMENU_TEXT);
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Kampung Nelayan Merah Putih (KNMP)',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -1801,10 +3568,34 @@ client.on('message', async (message) => {
             return;
         } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || text.includes('kapal') || text.includes('armada')) {
             userState[sender] = 'PKPN_KAPAL_MENU';
+            userActiveTopic[senderPhone] = { topic: 'MODERNISASI_KAPAL', name: 'Modernisasi Armada Kapal Perikanan' };
             await sendUserMessage(sender, KAPAL_SUBMENU_TEXT);
             return;
         } else {
-            await sendUserMessage(sender, PKPN_PROGRAM_MENU_TEXT);
+            // Pemohon langsung menanyakan pertanyaan spesifik tentang PKPN
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Program Kerja Prioritas Nasional (PKPN KKP)',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Silakan pilih angka *1* sampai *5* untuk program PKPN yang ingin Anda ketahui, atau ketik *0* untuk kembali ke Menu Utama.");
+            }
             return;
         }
     }
@@ -1829,11 +3620,12 @@ client.on('message', async (message) => {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
             await sendUserMessage(sender, "Terima kasih! Sesi informasi Revitalisasi Tambak Pantura telah selesai. Bersama kita wujudkan budidaya perikanan modern dan berkelanjutan! 🦐🌊\n\nKetik *Menu* jika membutuhkan layanan lainnya.\n\nSalam hormat.");
             return;
         }
 
-        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ')) {
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /wilayah|sebaran|lokasi|pantura|titik/i.test(text)) {
             await sendUserMessage(sender,
                 `🗺️ *SEBARAN WILAYAH REVITALISASI TAMBAK PANTURA JAWA*\n\n` +
                 `Program revitalisasi tambak budidaya KKP memulihkan puluhan ribu hektare lahan pesisir utara Pulau Jawa:\n` +
@@ -1849,7 +3641,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ')) {
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /irigasi|ipal|geomembran|hdpe|tahapan/i.test(text)) {
             await sendUserMessage(sender,
                 `📅 *TAHAPAN REVITALISASI IRIGASI PASOK & IPAL TERPADU*\n\n` +
                 `1. *Normalisasi Saluran Irigasi Pasok:* Pengerukan sedimentasi dan penataan pintu air primer serta sekunder agar suplai air laut bersih bebas limbah domestik dapat mengalir lancar.\n` +
@@ -1864,7 +3656,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ')) {
+        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /komoditas|udang|vaname|nila|nila salin/i.test(text)) {
             await sendUserMessage(sender,
                 `🦐 *KOMODITAS UNGGULAN: UDANG VANAME & NILA SALIN*\n\n` +
                 `• *Udang Vaname (Litopenaeus vannamei):*\n` +
@@ -1879,7 +3671,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ')) {
+        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /syarat|kemitraan|pokdakan|kusuka|cbib/i.test(text)) {
             await sendUserMessage(sender,
                 `📝 *SYARAT & SKEMA KEMITRAAN POKDAKAN BUDIDAYA TAMBAK*\n\n` +
                 `1. *Kelembagaan Pokdakan:* Terdaftar resmi di Dinas Perikanan setempat dan memiliki Nomor Induk Berusaha (NIB) subsektor budidaya air payau.\n` +
@@ -1895,13 +3687,13 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ')) {
+        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /kontak|djpb|wa|call center/i.test(text)) {
             await sendUserMessage(sender,
                 `☎️ *KONTAK LAYANAN DITJEN PERIKANAN BUDI DAYA (DJPB)*\n\n` +
                 `📱 *WhatsApp Layanan DJPB:* +62 822-6150-5727\n` +
                 `🌐 *Website:* https://djpb.kkp.go.id\n` +
                 `📧 *Email:* setditjen.pb@kkp.go.id / djpb@kkp.go.id\n` +
-                `☎️ *Call Center KKP:* 159\n\n` +
+                `☎️ *Call Center KKP:* 141\n\n` +
                 `Gunakan kontak di atas untuk konsultasi teknis budidaya air payau, normalisasi irigasi tambak, sertifikasi CBIB, atau permohonan bantuan sarana tambak.\n\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                 `💡 *Apakah informasi kontak DJPB Pantura ini sudah tuntas?*\n` +
@@ -1912,7 +3704,30 @@ client.on('message', async (message) => {
             );
             return;
         } else {
-            await sendUserMessage(sender, PANTURA_SUBMENU_TEXT);
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Revitalisasi Tambak Budidaya Pantura Jawa',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -1937,11 +3752,12 @@ client.on('message', async (message) => {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
             await sendUserMessage(sender, "Terima kasih! Sesi informasi Budidaya Ikan Darat Tematik telah selesai. Bersama kita perkuat ketahanan pangan dan gizi protein bangsa! 🐟🇮🇩\n\nKetik *Menu* jika membutuhkan layanan lainnya.\n\nSalam hormat.");
             return;
         }
 
-        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ')) {
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /target|protein|air tawar|kemandirian/i.test(text)) {
             await sendUserMessage(sender,
                 `🎯 *TARGET NASIONAL & KEMANDIRIAN PANGAN PROTEIN AIR TAWAR*\n\n` +
                 `• *Perluasan Titik Budidaya:* Menargetkan puluhan ribu titik kolam budidaya ikan darat produktif di 514 kabupaten/kota seluruh Indonesia.\n` +
@@ -1955,7 +3771,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ')) {
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /komoditas|nila|lele|patin|gurame|ikan mas/i.test(text)) {
             await sendUserMessage(sender,
                 `🐟 *RAGAM KOMODITAS BUDIDAYA IKAN DARAT UNGGULAN*\n\n` +
                 `• *Ikan Nila (Tilapia):* Pertumbuhan cepat, daya tahan lingkungan kuat, mudah dipelihara di kolam air tenang, kolam deras, maupun sistem bioflok.\n` +
@@ -1970,13 +3786,14 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ')) {
+        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /syarat|bantuan|benih|bibit|pakan|pokdakan|kusuka/i.test(text)) {
             await sendUserMessage(sender,
                 `📝 *SYARAT & ALUR BANTUAN BENIH & PAKAN POKDAKAN (e-KUSUKA)*\n\n` +
                 `1. *Kelompok Pembudidaya (Pokdakan):* Terdaftar resmi pada Dinas Perikanan Kabupaten/Kota setempat dengan susunan pengurus aktif (minimal 10 orang).\n` +
-                `2. *Kartu e-KUSUKA:* Anggota wajib memiliki kartu identitas pelaku usaha perikanan e-KUSUKA (cek status di https://satudata.kkp.go.id).\n` +
+                `2. *Kartu e-KUSUKA:* Anggota wajib terdaftar aktif memiliki kartu identitas pelaku usaha perikanan e-KUSUKA (pendaftaran/verifikasi status dikoordinasikan melalui Dinas Perikanan Kab/Kota atau Penyuluh Perikanan setempat).\n` +
                 `3. *Ketersediaan Kolam & Air:* Memiliki lahan kolam siap tebar dan ketersediaan sumber air tawar bersih sepanjang tahun.\n` +
-                `4. *Pengajuan Proposal:* Disusun bersama Penyuluh Perikanan Lapangan (PPL) dan diajukan ke Dinas Perikanan Kab/Kota untuk diteruskan ke Balai Benih KKP (BBPBAT/BPBAT).\n\n` +
+                `4. *Pengajuan Proposal:* Disusun bersama Penyuluh Perikanan Lapangan (PPL) dan diajukan ke Dinas Perikanan Kab/Kota untuk diteruskan ke Balai Benih KKP (BBPBAT/BPBAT).\n` +
+                `5. *Petunjuk Teknis (Juknis) Resmi:* https://ppid.kkp.go.id/upp/direktorat-jenderal-perikanan-budi-daya/regulasi/petunjuk-teknis/\n\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                 `💡 *Apakah informasi syarat bantuan benih ikan darat ini sudah tuntas?*\n` +
                 `• Balas *YA* jika sudah selesai.\n` +
@@ -1985,7 +3802,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ')) {
+        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /bioflok|ras|gerpari|teknologi|pakan mandiri/i.test(text)) {
             await sendUserMessage(sender,
                 `🔬 *INOVASI TEKNOLOGI BUDIDAYA: BIOFLOK, RAS & GERPARI*\n\n` +
                 `• *Sistem Bioflok:* Memanfaatkan bakteri heterotrof pembentuk flok mikrobial untuk mengubah kotoran amonia menjadi protein pakan alami. Hemat air, tidak berbau, dan menekan FCR hingga 20-30%.\n` +
@@ -1999,13 +3816,13 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ')) {
+        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /kontak|djpb|wa|call center/i.test(text)) {
             await sendUserMessage(sender,
                 `☎️ *KONTAK LAYANAN DITJEN PERIKANAN BUDI DAYA (DJPB)*\n\n` +
                 `📱 *WhatsApp Layanan DJPB:* +62 822-6150-5727\n` +
                 `🌐 *Balai Besar Budidaya Air Tawar (BBPBAT Sukabumi):* https://bbpbatsukabumi.kkp.go.id\n` +
                 `📧 *Email:* setditjen.pb@kkp.go.id\n` +
-                `☎️ *Call Center KKP:* 159\n\n` +
+                `☎️ *Call Center KKP:* 141\n\n` +
                 `Gunakan kontak resmi di atas untuk konsultasi teknis pembenihan, bantuan pakan mandiri, atau pelatihan sistem bioflok air tawar.\n\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                 `💡 *Apakah informasi kontak budidaya ikan darat ini sudah tuntas?*\n` +
@@ -2016,7 +3833,30 @@ client.on('message', async (message) => {
             );
             return;
         } else {
-            await sendUserMessage(sender, DARAT_SUBMENU_TEXT);
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Budidaya Ikan Darat Tematik KKP',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -2041,11 +3881,12 @@ client.on('message', async (message) => {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
             await sendUserMessage(sender, "Terima kasih! Sesi informasi Swasembada Garam Nasional telah selesai. Menuju kemandirian garam industri dan konsumsi Indonesia! 🧂🇮🇩\n\nKetik *Menu* jika membutuhkan layanan lainnya.\n\nSalam hormat.");
             return;
         }
 
-        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ')) {
+        if (text === '1' || text.startsWith('1.') || text.startsWith('1 ') || /sentra|wilayah|sebaran|garam rakyat|madura|ntt/i.test(text)) {
             await sendUserMessage(sender,
                 `🗺️ *SENTRA KAWASAN TAMBAK GARAM RAKYAT TERPADU*\n\n` +
                 `KKP memprioritaskan modernisasi dan penataan integrasi lahan tambak garam di wilayah sentra nasional:\n` +
@@ -2063,7 +3904,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ')) {
+        } else if (text === '2' || text.startsWith('2.') || text.startsWith('2 ') || /roadmap|tahapan|integrasi|washing plant|srg/i.test(text)) {
             await sendUserMessage(sender,
                 `📅 *ROADMAP & TAHAPAN SWASEMBADA GARAM NASIONAL*\n\n` +
                 `1. *Integrasi Lahan (Land Consolidation):* Menggabungkan petak garam rakyat berukuran sempit menjadi satu hamparan luas terpadu agar sirkulasi air muda ke meja kristalisasi lebih efisien.\n` +
@@ -2078,7 +3919,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ')) {
+        } else if (text === '3' || text.startsWith('3.') || text.startsWith('3 ') || /teknologi|geomembran|mutu|nacl|k1/i.test(text)) {
             await sendUserMessage(sender,
                 `🧂 *TEKNOLOGI GEOMEMBRAN & STANDAR MUTU GARAM INDUSTRI*\n\n` +
                 `• *Alas Terpal Geomembran (HDPE):*\n` +
@@ -2095,7 +3936,7 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ')) {
+        } else if (text === '4' || text.startsWith('4.') || text.startsWith('4 ') || /syarat|bantuan|kugar|proposal|pompa|gudang/i.test(text)) {
             await sendUserMessage(sender,
                 `📝 *SYARAT BANTUAN SARANA USAHA GARAM RAKYAT (KUGAR)*\n\n` +
                 `1. *Kelembagaan Kelompok Usaha Garam Rakyat (Kugar):* Terdaftar resmi pada basis data Dinas Perikanan dan memiliki struktur pengurus aktif.\n` +
@@ -2110,13 +3951,13 @@ client.on('message', async (message) => {
                 `• Ketik *MENU* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ')) {
+        } else if (text === '5' || text.startsWith('5.') || text.startsWith('5 ') || /kontak|pkrl|ruang laut|wa|call center/i.test(text)) {
             await sendUserMessage(sender,
                 `☎️ *KONTAK LAYANAN DITJEN PENGELOLAAN KELAUTAN & RUANG LAUT (PKRL)*\n\n` +
                 `📱 *WhatsApp Layanan PKRL:* +62 811-1934-800\n` +
                 `🌐 *Website:* https://pkrl.kkp.go.id\n` +
                 `📧 *Email:* humas.djpkrl@kkp.go.id\n` +
-                `☎️ *Call Center KKP:* 159\n\n` +
+                `☎️ *Call Center KKP:* 141\n\n` +
                 `Gunakan kontak di atas untuk konsultasi teknis kawasan pergaraman terpadu, bantuan sarana geomembran, atau tata ruang pesisir.\n\n` +
                 `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                 `💡 *Apakah informasi kontak PKRL pergaraman ini sudah tuntas?*\n` +
@@ -2127,7 +3968,30 @@ client.on('message', async (message) => {
             );
             return;
         } else {
-            await sendUserMessage(sender, GARAM_SUBMENU_TEXT);
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: 'Swasembada Garam Nasional KKP',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -2146,11 +4010,12 @@ client.on('message', async (message) => {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
+            clearChatHistory(senderPhone);
             await sendUserMessage(sender, "Terima kasih! Sesi informasi 5 Kebijakan Ekonomi Biru KKP telah selesai. Bersama kita rawat ekosistem laut Indonesia! 🌊🇮🇩\n\nKetik *Menu* jika membutuhkan layanan lainnya.");
             return;
         }
 
-        if (text === '1') {
+        if (text === '1' || /konservasi|kawasan|laut 30|blue carbon|karbon biru/i.test(text)) {
             await sendUserMessage(sender,
                 `🏝️ *PILAR 1: PERLUASAN KAWASAN KONSERVASI LAUT*\n\n` +
                 `• Target perluasan hingga 30% (32,5 juta hektare) pada tahun 2045.\n` +
@@ -2163,7 +4028,7 @@ client.on('message', async (message) => {
                 `• Ketik *0* untuk kembali ke Menu Utama.`
             );
             return;
-        } else if (text === '2') {
+        } else if (text === '2' || /pit|kuota|terukur|penangkapan ikan terukur/i.test(text)) {
             await sendUserMessage(sender,
                 `🎣 *PILAR 2: PENANGKAPAN IKAN TERUKUR (PIT) & KUOTA*\n\n` +
                 `• Pengaturan kuota penangkapan ikan di 11 WPPNRI untuk mencegah penangkapan berlebih (*overfishing*).\n` +
@@ -2175,7 +4040,7 @@ client.on('message', async (message) => {
                 `• Atau pilih opsi angka lainnya, atau ketik *0* untuk Menu Utama.`
             );
             return;
-        } else if (text === '3') {
+        } else if (text === '3' || /budidaya|udang|lobster|kepiting|rumput laut|nila salin/i.test(text)) {
             await sendUserMessage(sender,
                 `🦐 *PILAR 3: BUDI DAYA BERKELANJUTAN*\n\n` +
                 `• Pengembangan komoditas ekspor unggulan: udang, lobster, kepiting, rumput laut, dan nila salin.\n` +
@@ -2186,7 +4051,7 @@ client.on('message', async (message) => {
                 `• Atau pilih opsi angka lainnya, atau ketik *0* untuk Menu Utama.`
             );
             return;
-        } else if (text === '4') {
+        } else if (text === '4' || /pkkprl|pesisir|ruang laut|izin ruang laut/i.test(text)) {
             await sendUserMessage(sender,
                 `🌊 *PILAR 4: PENGAWASAN PESISIR & IZIN RUANG LAUT (PKKPRL)*\n\n` +
                 `• Pengendalian ketat kegiatan pemanfaatan ruang laut dan pulau-pulau kecil melalui izin *PKKPRL*.\n` +
@@ -2198,7 +4063,7 @@ client.on('message', async (message) => {
                 `• Atau pilih opsi angka lainnya, atau ketik *0* untuk Menu Utama.`
             );
             return;
-        } else if (text === '5') {
+        } else if (text === '5' || /bcl|bulan cinta laut|sampah|plastik/i.test(text)) {
             await sendUserMessage(sender,
                 `🚯 *PILAR 5: BULAN CINTA LAUT (GERAKAN PEMBERSIHAN SAMPAH LAUT)*\n\n` +
                 `• Gerakan nasional aksi bersih laut yang melibatkan langsung para nelayan saat melaut.\n` +
@@ -2211,16 +4076,30 @@ client.on('message', async (message) => {
             );
             return;
         } else {
-            await sendUserMessage(sender,
-                `Silakan balas dengan angka *1* sampai *5* untuk memilih pilar Kebijakan Ekonomi Biru KKP:\n\n` +
-                `*1* 🏝️ Kawasan Konservasi Laut (Target 30%)\n` +
-                `*2* 🎣 Penangkapan Ikan Terukur (PIT) & Kuota\n` +
-                `*3* 🦐 Budi Daya Ramah Lingkungan\n` +
-                `*4* 🌊 Pengawasan Pesisir & Izin PKKPRL\n` +
-                `*5* 🚯 Bulan Cinta Laut (BCL & Sampah Plastik)\n` +
-                `*0* ❌ Keluar / Kembali\n\n` +
-                `_Atau balas *YA* jika masalah Anda sudah selesai._`
-            );
+            // Pemohon mengetikkan pertanyaan mengerucut / spesifik (JANGAN kirim ulang menu pilihan berulang!)
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                await sendUserMessage(sender, jawabanTemplate + getResolutionFooter(text));
+                return;
+            }
+
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    topicContext: '5 Kebijakan Ekonomi Biru KKP',
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+            } catch (err) {
+                await sendUserMessage(sender, "Pertanyaan Anda telah kami terima. Silakan ketik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
@@ -2229,23 +4108,104 @@ client.on('message', async (message) => {
     // ❓ KONFIRMASI PERTANYAAN TIDAK JELAS / DILUAR KEWENANGAN
     // ==========================================
     if (userState[sender] === 'UNCLEAR_PROMPT') {
-        if (text === '1') {
-            userState[sender] = 'AI_MODE';
-            await sendUserMessage(sender,
-                `Baik #SahabatBahari,\n\n` +
-                `Silakan ketikkan kendala atau pertanyaan sektor kelautan dan perikanan yang Anda butuhkan (contoh: izin kapal, budidaya ikan, bantuan alat tangkap, data PPID, atau lokasi KNMP):\n\n` +
-                `_(Ketik *0* untuk kembali ke Menu Utama)_`
-            );
+        const wantsExit = ['0', 'selesai', 'batal', 'keluar', 'akhiri', 'tidak', 'bukan', 'tutup', 'stop', 'cukup', 'end', 'sudah'];
+        const isExit = wantsExit.includes(text) || text === '0';
+
+        const wantsOfficer = text === '1' ||
+            isEscalationQuery(text) ||
+            /\b(petug[a-z]*|ngobrol|bicara|ngomong|admin|cs|operator|manusia|orang|helpdesk|livechat|kontak|hubungi|sambung)\b/i.test(text);
+
+        if (wantsOfficer) {
+            await connectUserToPetugas({
+                sender,
+                senderDetails,
+                text: message.body,
+                userReply:
+                    `👨‍💻 *TERHUBUNG KE PETUGAS LAYANAN PPID KKP*\n\n` +
+                    `Halo #SahabatBahari,\n` +
+                    `Anda telah terhubung langsung ke antrean Petugas Layanan Informasi PPID KKP.\n\n` +
+                    `Silakan sampaikan pertanyaan atau kendala Anda di sini. Petugas kami akan segera merespons chat Anda. 🙏\n\n` +
+                    `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                adminAlertTitle: `👨‍💻 *[KONSULTASI PETUGAS: DARI PILIHAN PEMOHON]*`
+            });
             return;
-        } else {
-            // Pilihan '2', '0', atau input acak lainnya -> Selesaikan / abaikan sesi
+        } else if (isExit) {
             userState[sender] = null;
             userAiChatCount[sender] = 0;
             tracker.closeUserSession(senderPhone);
             await sendUserMessage(sender,
-                `Sesi layanan diselesaikan karena di luar kewenangan Kementerian Kelautan dan Perikanan RI. \n\n` +
-                `Terima kasih telah menghubungi PPID KKP. Ketik *Menu* kapan saja jika Anda ingin memulai kembali. 🌊🇮🇩`
+                `Sesi layanan diselesaikan. Terima kasih telah menghubungi PPID Kementerian Kelautan dan Perikanan RI. \n\n` +
+                `Ketik *Menu* kapan saja jika Anda ingin memulai kembali. 🌊🇮🇩`
             );
+            return;
+        } else if (text === '2') {
+            userState[sender] = 'AI_MODE';
+            await sendUserMessage(sender,
+                `Baik #SahabatBahari,\n\n` +
+                `Silakan ketikkan kendala atau pertanyaan sektor kelautan dan perikanan yang Anda butuhkan (contoh: izin kapal, bantuan budidaya ikan, beasiswa, atau lokasi KNMP):\n\n` +
+                `_(Ketik *0* untuk kembali ke Menu Utama)_`
+            );
+            return;
+        } else {
+            // Pemohon langsung mengetikkan pertanyaan lain atau penjelasan (Jangan selesaikan sesi secara sepihak!)
+            userState[sender] = 'AI_MODE';
+            userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
+
+            // 1. Cek FAQ template
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
+
+            if (jawabanTemplate) {
+                const senderName = userKnownName[senderPhone] || userKnownName[sender] || senderDetails?.name || '';
+                let personalizedFaq = jawabanTemplate;
+                if (senderName && personalizedFaq.startsWith('Halo #SahabatBahari,')) {
+                    personalizedFaq = personalizedFaq.replace('Halo #SahabatBahari,', `Halo #SahabatBahari Kak ${senderName},`);
+                }
+                await sendUserMessage(sender, personalizedFaq + getResolutionFooter(text));
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: personalizedFaq,
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+                return;
+            }
+
+            // 2. Oper ke Gemini AI
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: replyText,
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+            } catch (error) {
+                console.error("Error AI fallback di UNCLEAR_PROMPT:", error);
+                await sendUserMessage(sender,
+                    `Halo #SahabatBahari,\n\n` +
+                    `Pertanyaan Anda telah kami terima dalam sistem layanan informasi PPID KKP.\n\n` +
+                    `Silakan pilih bantuan yang Anda butuhkan:\n` +
+                    `*1* 👨‍💻 Hubungkan langsung ke Petugas Layanan PPID\n` +
+                    `*2* 💬 Tuliskan pertanyaan lebih spesifik\n` +
+                    `*0* ❌ Selesai / Menu Utama\n\n` +
+                    `_Balas angka *1*, *2*, atau *0*._\n\n` +
+                    `Salam hormat.`
+                );
+            }
             return;
         }
     }
@@ -2324,9 +4284,24 @@ client.on('message', async (message) => {
             return;
         }
 
+        // 📢 Intercept Ingin Laporan Umum -> Tampilkan 3 Pilihan Laporan (Umum, PRL, AKP)
+        if (isGenericReportInquiry(text)) {
+            userState[sender] = 'SELECT_LAPORAN';
+            await sendUserMessage(sender, PILIHAN_LAPORAN_MENU_TEXT);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Menampilkan 3 Pilihan Menu Kategori Laporan (Umum/PSDKP, Ruang Laut/PRL, Awak Kapal/AKP)',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
         // 🔒 Intercept Pengaduan AKP / ABK
         if (isPengaduanAkpQuery(text)) {
-            await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
+            await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE);
             tracker.recordConversation({
                 phone: senderPhone,
                 text: message.body,
@@ -2338,57 +4313,29 @@ client.on('message', async (message) => {
             return;
         }
 
-        // 🔒 Intercept Pengaduan Umum
-        if (isPengaduanQuery(text)) {
-            await sendUserMessage(sender, PENGADUAN_UMUM_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
-            tracker.recordConversation({
-                phone: senderPhone,
-                text: message.body,
-                answer: 'Diarahkan ke Layanan Pengaduan KKP (Email: pengaduan@kkp.go.id, WA: 0811989011)',
-                source: 'BOT',
-                aiModel,
-                status: 'DONE'
-            });
-            return;
-        }
-
-        // 🔒 Intercept perizinan → redirect ke PTSA
-        if (isPerizinanQuery(text)) {
-            await sendUserMessage(sender, PTSA_REDIRECT_MESSAGE + "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
-            tracker.recordConversation({
-                phone: senderPhone,
-                text: message.body,
-                answer: 'Diarahkan ke PTSA KKP (WA: 0811-8430-610, Email: ptsp@kkp.go.id)',
-                source: 'BOT',
-                aiModel,
-                status: 'DONE'
-            });
-            return;
-        }
-
         // ⛵ Intercept Tematik Modernisasi Kapal
-        if (isModernisasiKapalQuery(text)) {
+        if (!isSpecificQuestion(text) && isModernisasiKapalQuery(text)) {
             userState[sender] = 'PKPN_KAPAL_MENU';
             await sendUserMessage(sender, KAPAL_SUBMENU_TEXT);
             return;
         }
 
         // 🌊 Intercept Tematik KNMP
-        if (isKnmpQuery(text)) {
+        if (!isSpecificQuestion(text) && isKnmpQuery(text)) {
             userState[sender] = 'PKPN_KNMP_MENU';
             await sendUserMessage(sender, KNMP_SUBMENU_TEXT);
             return;
         }
 
         // 🎯 Intercept Tematik PKPN (Dua Tingkat Menu Interaktif)
-        if (isPkpnQuery(text)) {
+        if (!isSpecificQuestion(text) && isPkpnQuery(text)) {
             userState[sender] = 'PKPN_SELECT_PROGRAM';
             await sendUserMessage(sender, PKPN_PROGRAM_MENU_TEXT);
             return;
         }
 
         // 🌍 Intercept Tematik Ekonomi Biru
-        if (isEkonomiBiruQuery(text)) {
+        if (!isSpecificQuestion(text) && isEkonomiBiruQuery(text)) {
             userState[sender] = 'TROUBLESHOOT_EKONOMI_BIRU';
             await sendUserMessage(sender,
                 `Halo #SahabatBahari,\n\n` +
@@ -2404,25 +4351,21 @@ client.on('message', async (message) => {
         }
 
         // Cek kecocokan FAQ lokal terlebih dahulu
-        let faqJawaban = null;
-        try {
-            const faqData = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
-            for (const item of faqData) {
-                if (item.keywords.some(k => text.includes(k))) {
-                    faqJawaban = tracker.cleanWhatsAppFormatting(item.answer);
-                    break;
-                }
-            }
-        } catch (err) { }
+        const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+        const faqJawaban = canUseDirectFaq ? findBestFaqMatch(text) : null;
 
         if (faqJawaban) {
             userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
-            const footer = "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 *Apakah jawaban di atas sudah menyelesaikan kendala Anda?*\n• Balas *YA* jika sudah selesai.\n• Ketik *0* untuk kembali ke Menu Utama.";
-            await sendUserMessage(sender, faqJawaban + footer);
+            const senderName = userKnownName[senderPhone] || userKnownName[sender] || senderDetails?.name || '';
+            let personalizedFaq = faqJawaban;
+            if (senderName && personalizedFaq.startsWith('Halo #SahabatBahari,')) {
+                personalizedFaq = personalizedFaq.replace('Halo #SahabatBahari,', `Halo #SahabatBahari Kak ${senderName},`);
+            }
+            await sendUserMessage(sender, personalizedFaq + getResolutionFooter(text));
             tracker.recordConversation({
                 phone: senderPhone,
                 text: message.body,
-                answer: faqJawaban,
+                answer: personalizedFaq,
                 source: 'BOT',
                 aiModel,
                 status: 'DONE'
@@ -2434,16 +4377,35 @@ client.on('message', async (message) => {
             // Tambahkan hitungan pertanyaan AI
             userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
 
-            const result = await aiModel.generateContent(message.body);
-            let replyText = tracker.cleanWhatsAppFormatting(result.response.text());
+            const replyText = await generateGroundedAiResponse({
+                sender,
+                senderPhone,
+                messageBody: message.body,
+                text,
+                topicContext: '',
+                isMultiChat: message.isMultiChat,
+                multiChatCount: message.multiChatCount,
+                isLongText: message.isLongText
+            });
 
-            // Trigger 1: Counter Fallback (Jika sudah bertanya 2 kali atau lebih, tawarkan eskalasi)
-            let footer = "\n\n_(Ketik *0* untuk kembali ke Menu Utama)_";
-            if (userAiChatCount[sender] >= 2) {
-                footer = "\n\n💡 *Belum menemukan jawaban yang dicari?*\nKetik *BANTUAN* untuk diteruskan ke Petugas PPID.\n_(Atau ketik *0* untuk kembali ke Menu Utama)_";
+            // Jika informasi tersebut tidak ada / belum bisa dijawab -> alihkan kepada petugas
+            const isUnavailableInfo =
+                replyText.includes('belum bisa kami jawab') ||
+                replyText.includes('kami alihkan kepada petugas') ||
+                replyText.includes('dialihkan kepada petugas');
+
+            if (isUnavailableInfo) {
+                await connectUserToPetugas({
+                    sender,
+                    senderDetails,
+                    text: message.body,
+                    userReply: replyText,
+                    adminAlertTitle: `👨‍💻 *[ASISTENSI PETUGAS: INFORMASI BELUM TERSEDIA]*`
+                });
+                return;
             }
 
-            await sendUserMessage(sender, replyText + footer);
+            await sendUserMessage(sender, replyText + getResolutionFooter(text));
 
             // Rekam ke tracker percakapan inti
             tracker.recordConversation({
@@ -2462,111 +4424,41 @@ client.on('message', async (message) => {
     }
 
     // ==========================================
-    // 👨‍💻 MODE LIVE CHAT (TERHUBUNG KE PETUGAS ASLI)
-    // ==========================================
-    if (userState[sender] === 'CS_MODE') {
-        if (text === '0' || text === 'kembali') {
-            userState[sender] = 'MENU';
-            await sendUserMessage(sender, "Sesi layanan dengan Petugas telah diakhiri.\n\nKetik *Menu* untuk menampilkan layanan kembali.");
-            return;
-        }
-
-        const pemohonPhone = senderDetails.phone || (sender.endsWith('@c.us') ? sender.split('@')[0].split(':')[0].replace(/\D/g, '') : '');
-        const directWaLink = pemohonPhone ? `https://wa.me/${pemohonPhone}` : '';
-
-        // Simpan pemohon ini sebagai target aktif untuk admin
-        lastCsUserJid = sender;
-        lastCsUserPhone = pemohonPhone;
-        if (pemohonPhone) {
-            phoneToOriginalJid.set(pemohonPhone, sender);
-            if (senderDetails.lid) {
-                lidToPhoneMap.set(senderDetails.lid, pemohonPhone);
-            }
-            if (sender.endsWith('@lid')) {
-                const lidUser = sender.split('@')[0].split(':')[0];
-                lidToPhoneMap.set(lidUser, pemohonPhone);
-            }
-        }
-        for (const admPhone of ADMIN_PHONES) {
-            activeAdminTarget[admPhone] = sender;
-            activeAdminTargetPhone[admPhone] = pemohonPhone;
-        }
-        for (const admLid of ADMIN_LIDS) {
-            activeAdminTarget[admLid] = sender;
-            activeAdminTargetPhone[admLid] = pemohonPhone;
-        }
-        activeAdminTarget['LAST_ACTIVE'] = sender;
-        activeAdminTargetPhone['LAST_ACTIVE'] = pemohonPhone;
-
-        const forwardText =
-            `🚨 *PESAN MASUK (LIVE CHAT PPID)* 🚨\n\n` +
-            `👤 *Dari Nomor:* +${pemohonPhone}\n` +
-            `💬 *Pesan:*\n"${message.body || '[Media/Lampiran]'}"\n\n` +
-            `-----------------------------------------\n` +
-            `💡 *Cara Membalas:*\n` +
-            `• *Swipe / Balas Kutipan* pesan ini, ATAU langsung ketik balasan Anda di sini.\n` +
-            `• Ketik */selesai* jika konsultasi sudah tuntas.\n` +
-            `👉 *Chat Pribadi Langsung:* ${directWaLink}`;
-
-        // Teruskan ke semua nomor admin terdaftar (mendukung teks dan media)
-        let forwardedCount = 0;
-        let mediaObj = null;
-        if (message.hasMedia) {
-            try {
-                mediaObj = await message.downloadMedia();
-            } catch (e) {
-                console.error("Gagal mengunduh media dari pemohon:", e);
-            }
-        }
-
-        for (const admPhone of ADMIN_PHONES) {
-            try {
-                if (mediaObj) {
-                    await client.sendMessage(`${admPhone}@c.us`, mediaObj, { caption: forwardText });
-                } else {
-                    await client.sendMessage(`${admPhone}@c.us`, forwardText);
-                }
-                forwardedCount++;
-            } catch (e) {
-                console.error(`Gagal meneruskan chat ke Admin ${admPhone}:`, e);
-            }
-        }
-
-        if (forwardedCount === 0) {
-            console.error("Gagal mem-forward pesan. Nomor Admin belum disetting dengan benar di .env");
-        }
-
-        // Catat ke rekapan: ada pesan yang diteruskan dan sedang menunggu balasan petugas (PENDING)
-        tracker.recordConversation({
-            phone: pemohonPhone,
-            text: message.body || '[Media/Lampiran]',
-            answer: '',
-            source: 'BOT',
-            aiModel,
-            status: 'PENDING'
-        });
-
-        // Beri konfirmasi ke pemohon bahwa pesan sudah diteruskan
-        await sendUserMessage(sender, "✅ Pesan Anda telah diteruskan ke Petugas Layanan PPID KKP. Mohon ditunggu ya, petugas kami akan segera membalasnya. 🙏\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
-        return;
-    }
-
-    // ==========================================
     // 📋 ROUTING MENU UTAMA PPID KKP
     // ==========================================
     if (text === '1') {
-        await sendUserMessage(sender,
-            `📋 *Syarat & Formulir Permohonan Informasi Publik*\n\n` +
-            `Untuk mengajukan permohonan informasi publik ke PPID KKP, Anda perlu menyiapkan:\n` +
-            `1. Nomor / Salinan Identitas Diri (KTP/NIK)\n` +
-            `2. Rincian Informasi yang dibutuhkan secara jelas\n` +
-            `3. Tujuan Penggunaan Informasi\n\n` +
+        const menu1Detail =
+            `📋 *PANDUAN LENGKAP PERMOHONAN INFORMASI PUBLIK (PPID KKP)*\n\n` +
+            `Berdasarkan amanat *UU No. 14 Tahun 2008 tentang Keterbukaan Informasi Publik (KIP)* dan Peraturan Menteri KP, setiap warga negara, akademisi/mahasiswa, pelaku usaha kelautan, maupun badan hukum berhak memperoleh informasi publik yang dikelola KKP secara transparan dan akuntabel.\n\n` +
+            `1. *Syarat Dokumen Pemohon:*\n` +
+            `   • *Individu/Perorangan:* Salinan KTP / NIK yang sah dan nomor kontak aktif.\n` +
+            `   • *Mahasiswa/Peneliti:* Surat rekomendasi/pengantar dari kampus, KTP, dan daftar rincian data penelitian.\n` +
+            `   • *Kelompok/Badan Usaha/LSM:* Akta pendirian/SK Kemenkumham, surat kuasa pimpinan, dan KTP penerima kuasa.\n\n` +
+            `2. *Jangka Waktu & Biaya Layanan:*\n` +
+            `   ⏱️ *Waktu Proses:* Maksimal *10 hari kerja* (dapat diperpanjang 7 hari kerja dengan pemberitahuan tertulis resmi).\n` +
+            `   💰 *Biaya Layanan:* *100% GRATIS (Rp 0)*. KKP tidak memungut biaya apapun untuk penyediaan data softcopy/digital.\n\n` +
+            `3. *Kanal Pengajuan Permohonan:*\n` +
+            `   📲 *Melalui WhatsApp ini:* Ketik *DAFTAR* untuk mengisi formulir digital langsung sekarang (otomatis terbit nomor tiket registrasi).\n` +
+            `   🌐 *Portal Web PPID:* https://ppid.kkp.go.id/layanan-informasi/pemohonan-informasi/\n` +
+            `   📧 *Email Resmi:* ppidkkp@kkp.go.id\n` +
+            `   🏛️ *Layanan Tatap Muka:* Desk Layanan Informasi PPID, Gedung Mina Bahari I Lt. 1, Jl. Medan Merdeka Timur No. 16, Jakarta Pusat.\n\n` +
             `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-            `✨ *PILIHAN PENDAFTARAN (TAHAP 2):*\n` +
-            `👉 Ketik *DAFTAR* untuk mengisi formulir permohonan langsung di WhatsApp ini secara mandiri.\n` +
-            `👉 Atau akses portal web resmi: https://ppid.kkp.go.id\n\n` +
-            `_(Ketik *0* untuk kembali ke Menu Utama)_`
-        );
+            `💡 *Apakah panduan permohonan informasi publik ini sudah jelas?*\n` +
+            `• Balas *DAFTAR* untuk langsung registrasi formulir di chat ini.\n` +
+            `• Balas *YA* jika penjelasan sudah cukup / selesai.\n` +
+            `• Balas *BANTUAN* jika ingin terhubung ke Petugas PPID.\n` +
+            `• Ketik *0* untuk kembali ke Menu Utama.\n\n` +
+            `Salam hormat.`;
+
+        await sendUserMessage(sender, menu1Detail);
+        tracker.recordConversation({
+            phone: senderPhone,
+            text: 'Menu 1: Syarat & Formulir Permohonan Informasi Publik',
+            answer: 'Panduan Detail Permohonan Informasi Publik UU 14/2008',
+            source: 'BOT',
+            aiModel,
+            status: 'DONE'
+        });
         return;
     }
     else if (text === '2') {
@@ -2604,7 +4496,41 @@ client.on('message', async (message) => {
         await sendUserMessage(sender, "🤖 *Asisten Virtual PPID KKP*\n\nHalo! Saya adalah Asisten AI dari PPID Kementerian Kelautan dan Perikanan. \n\nSilakan ajukan pertanyaan Anda seputar layanan informasi publik, prosedur permohonan, atau transparansi data di lingkungan KKP.\n\n_(Ketik *0* untuk kembali ke Menu Utama)_");
     }
     else if (text === '4') {
-        await sendUserMessage(sender, "⚖️ *Tata Cara Pengajuan Keberatan*\n\nApabila permohonan informasi Anda ditolak atau tidak ditanggapi dalam waktu 10 hari kerja, Anda berhak mengajukan keberatan secara tertulis kepada Atasan PPID KKP.\n\nPanduan lengkap dan formulir keberatan dapat dilihat di: https://ppid.kkp.go.id\n\nKetik *0* untuk kembali ke Menu Utama.");
+        const menu4Detail =
+            `⚖️ *PANDUAN TATA CARA PENGAJUAN KEBERATAN INFORMASI PUBLIK (PPID KKP)*\n\n` +
+            `Sesuai mekanisme *UU No. 14 Tahun 2008 tentang KIP* dan Perki No. 1 Tahun 2021, Pemohon Informasi berhak mengajukan keberatan kepada *Atasan PPID KKP* apabila menemukan kendala dalam pelayanan informasi publik.\n\n` +
+            `1. *Alasan Sah Pengajuan Keberatan:*\n` +
+            `   • Permohonan informasi publik ditolak tanpa dasar alasan yang sah.\n` +
+            `   • Informasi yang diminta tidak disediakan atau tidak ditanggapi dalam tenggat 10 (+7) hari kerja.\n` +
+            `   • Permintaan informasi ditanggapi tidak sebagaimana yang diminta.\n` +
+            `   • Permohonan informasi tidak dipenuhi sebagian atau seluruhnya.\n` +
+            `   • Pengenaan biaya yang tidak wajar atau melampaui ketentuan peraturan.\n` +
+            `   • Penyampaian informasi melebihi batas waktu yang ditetapkan undang-undang.\n\n` +
+            `2. *Tahapan & Batas Waktu Penyelesaian:*\n` +
+            `   ⏱️ *Batas Pengajuan:* Paling lambat *30 hari kerja* setelah ditemukannya alasan keberatan.\n` +
+            `   🏛️ *Tanggapan Atasan PPID:* Wajib memberikan tanggapan/keputusan tertulis maksimal *30 hari kerja* sejak keberatan diterima.\n` +
+            `   ⚖️ *Sengketa Informasi (KIP):* Jika tanggapan Atasan PPID belum memuaskan, pemohon berhak mendaftarkan sengketa ke *Komisi Informasi Pusat (KIP)* dalam tempo 14 hari kerja.\n\n` +
+            `3. *Kanal Pengajuan Formulir Keberatan:*\n` +
+            `   🌐 *Portal Web Pengajuan Keberatan:* https://ppid.kkp.go.id/layanan-informasi/pengajuan-keberatan/\n` +
+            `   📧 *Email Pengaduan PPID:* ppidkkp@kkp.go.id\n` +
+            `   🏛️ *Desk Layanan:* Gedung Mina Bahari I Lt. 1, Kantor Pusat KKP Jakarta.\n\n` +
+            `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+            `💡 *Apakah panduan tata cara keberatan informasi ini sudah menyelesaikan kebutuhan Anda?*\n` +
+            `• Balas *YA* jika informasi sudah cukup / tuntas.\n` +
+            `• Balas *BANTUAN* untuk menyampaikan keberatan langsung ke Petugas PPID.\n` +
+            `• Ketik *0* untuk kembali ke Menu Utama.\n\n` +
+            `Salam hormat.`;
+
+        await sendUserMessage(sender, menu4Detail);
+        tracker.recordConversation({
+            phone: senderPhone,
+            text: 'Menu 4: Tata Cara Pengajuan Keberatan Informasi',
+            answer: 'Panduan Detail Keberatan Informasi Publik UU KIP 14/2008',
+            source: 'BOT',
+            aiModel,
+            status: 'DONE'
+        });
+        return;
     }
     else if (text === '6') {
         await sendUserMessage(sender,
@@ -2614,22 +4540,82 @@ client.on('message', async (message) => {
         );
         return;
     }
-    else if (isEscalationQuery(text)) {
-        if (text === 'bantuan' || (userAiChatCount[sender] && userAiChatCount[sender] >= 1)) {
-            userState[sender] = 'CS_MODE';
-            await sendUserMessage(sender, "👨‍💻 *Terhubung ke Petugas PPID*\n\nMohon tunggu, pesan Anda akan langsung diteruskan ke Petugas Layanan Informasi PPID kami.\n\nSilakan ketikkan permohonan atau pertanyaan Anda secara lengkap di bawah ini:\n\n_(Ketik *0* jika Anda ingin membatalkan dan kembali ke Menu Utama)_");
-        } else {
-            await sendUserMessage(sender, "Halo #SahabatBahari,\n\nUntuk mempercepat penanganan, layanan Petugas kami prioritaskan bagi pemohon yang telah berkonsultasi melalui sistem terlebih dahulu.\n\nSilakan sampaikan pertanyaan atau kendala Anda di sini, atau pilih menu *3* untuk dibantu oleh Asisten AI. Jika belum terselesaikan, sistem akan langsung menghubungkan Anda ke Petugas.");
-        }
-        return;
-    }
     // Trigger Menu Utama atau Jawab Pertanyaan Langsung
     else {
+        // 0. Deteksi pembuka percakapan / ingin bertanya / perkenalan nama (contoh: "saya indah", "saya ingin bertanya", "mau tanya")
+        if (isIntroductoryOrAskQuery(text)) {
+            const nameMatch = text.match(/(?:saya|nama\s+saya|namaku)\s+([a-zA-Z]+)/i);
+            const pemohonName = nameMatch && nameMatch[1] && !['ingin', 'mau', 'bisa', 'akan', 'ada'].includes(nameMatch[1].toLowerCase())
+                ? ` *${nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1).toLowerCase()}*`
+                : '';
+
+            const introReply =
+                `Halo #SahabatBahari${pemohonName},\n\n` +
+                `Silakan langsung tuliskan pertanyaan, kendala, atau informasi yang Anda butuhkan seputar Kementerian Kelautan dan Perikanan (KKP).\n\n` +
+                `💡 *Contoh topik layanan yang dapat Anda tanyakan:*\n` +
+                `• Program Prioritas KKP (PKPN & Kampung Nelayan KNMP)\n` +
+                `• Perizinan Kapal & Sertifikasi (SIPI, SIUP, SKKP via PTSA)\n` +
+                `• Bantuan Usaha Budi Daya Ikan & Petunjuk Teknis DJPB\n` +
+                `• Permohonan Informasi Publik PPID & Pelacakan Tiket\n` +
+                `• Verifikasi Dokumen & Pengaduan Surat Palsu\n\n` +
+                `Bot pintar kami siap menjawab dan membantu kendala Anda! 🌊🇮🇩\n\n` +
+                `_(Ketik *0* untuk melihat Menu Utama)_`;
+
+            await sendUserMessage(sender, introReply);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: `Menyambut pembuka chat pemohon${pemohonName ? ` (${pemohonName.trim()})` : ''} & mengundang pertanyaan`,
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
         // Daftar kata sapaan umum (kata 'bantuan' dialihkan ke trigger eskalasi di atas)
-        const greetings = ['halo', 'hai', 'p', 'menu', 'assalamualaikum', 'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam', 'help', 'info'];
+        const greetings = [
+            'halo', 'hai', 'hey', 'p', 'menu', 'assalamualaikum', 'assalamu alaikum',
+            'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam',
+            'pagi', 'siang', 'sore', 'malam', 'help', 'info', 'permisi',
+            'halo min', 'hai min', 'halo admin', 'hai admin', 'siang min', 'pagi min'
+        ];
+
+        // Jika pesan dalam bahasa Inggris dan bersifat sapaan / menu awal (Request 1)
+        if (isEnglishQuery(text) && (text.length < 20 || ['hi', 'hello', 'good morning', 'good afternoon', 'good evening', 'dear sir', 'dear madam'].some(g => text.startsWith(g) || text === g))) {
+            const englishMenuText =
+                `Hello #SahabatBahari,\n\n` +
+                `Welcome to the Official WhatsApp Service of *PPID Ministry of Marine Affairs and Fisheries (KKP RI)* 🇮🇩🐟\n\n` +
+                `How can we assist you today?\n\n` +
+                `*1* 📋 Public Information Service & Procedures (Law No. 14/2008)\n` +
+                `*2* 🔍 Track Information Request Status / Ticket\n` +
+                `*3* 💬 Inquire About Marine & Fisheries Policies, Permits & Blue Economy\n` +
+                `*4* ⚖️ Public Information Dispute / Objection Procedure\n` +
+                `*5* ❌ End Conversation\n\n` +
+                `💡 *Direct Inquiry:*\n` +
+                `You may directly type your specific question anytime (e.g. fishing vessel licensing, foreign marine research clearance, Blue Economy policies, or official MMAF contacts).\n\n` +
+                `_Reply with a number (e.g. 1) to select an option, or type your question directly._\n\n` +
+                `Best regards, PPID MMAF / KKP RI.`;
+
+            await sendUserMessage(sender, englishMenuText);
+            tracker.recordConversation({
+                phone: senderPhone,
+                text: message.body,
+                answer: 'Menampilkan Menu Utama Versi Bahasa Inggris',
+                source: 'BOT',
+                aiModel,
+                status: 'DONE'
+            });
+            return;
+        }
+
+        const isAllGreetings = bufferedMessages && bufferedMessages.every(m => {
+            const t = (m.body || '').trim().toLowerCase();
+            return greetings.includes(t) || t.length < 4;
+        });
 
         // Jika teks berupa sapaan ATAU sangat pendek (kurang dari 4 huruf) -> Tampilkan Menu
-        if (greetings.includes(text) || text.length < 4) {
+        if (greetings.includes(text) || text.length < 4 || isAllGreetings) {
             const menuText = `Selamat datang di Layanan Bantuan WhatsApp Resmi *PPID Kementerian Kelautan dan Perikanan RI* 🇮🇩🐟\n\n` +
                 `Silakan balas dengan angka layanan yang tersedia:\n\n` +
                 `*1* 📋 Syarat & Formulir Permohonan Informasi (Daftar Digital)\n` +
@@ -2650,66 +4636,24 @@ client.on('message', async (message) => {
         }
         // Jika teks berupa pertanyaan atau kendala -> Deteksi langsung alur penyelesaian
         else {
-            // 🚨 1. DETEKSI CEPAT: Pengaduan Kepalsuan Surat / Dokumen Bodong (Priority 1)
-            if (isKepalsuanSuratQuery(text)) {
-                const pemohonPhone = senderDetails.phone || (sender.endsWith('@c.us') ? sender.split('@')[0].split(':')[0].replace(/\D/g, '') : '');
-                const directWaLink = pemohonPhone ? `https://wa.me/${pemohonPhone}` : '';
-
-                userState[sender] = 'CS_MODE';
-                lastCsUserJid = sender;
-                lastCsUserPhone = pemohonPhone;
-                if (pemohonPhone) {
-                    phoneToOriginalJid.set(pemohonPhone, sender);
-                    if (senderDetails.lid) lidToPhoneMap.set(senderDetails.lid, pemohonPhone);
-                }
-                for (const admPhone of ADMIN_PHONES) {
-                    activeAdminTarget[admPhone] = sender;
-                    activeAdminTargetPhone[admPhone] = pemohonPhone;
-                }
-                activeAdminTarget['LAST_ACTIVE'] = sender;
-                activeAdminTargetPhone['LAST_ACTIVE'] = pemohonPhone;
-
-                const replyPalsu =
-                    `🚨 *PERINGATAN RESMI: DETEKSI PENGADUAN DOKUMEN / SURAT PALSU KKP*\n\n` +
-                    `Halo #SahabatBahari,\n` +
-                    `Kementerian Kelautan dan Perikanan (KKP) menindak tegas segala bentuk pemalsuan surat dinas, pesanan barang fiktif mengatasnamakan Sekjen/pejabat KKP, undangan seminar berbayar, atau perizinan bodong.\n\n` +
-                    `Laporan Anda *TELAH KAMI DETEKSI DAN LANGSUNG DIHUBUNGKAN KE PETUGAS RESMI PPID / PENGADUAN KKP*.\n\n` +
-                    `📲 *TINDAK LANJUT CEPAT:*\n` +
-                    `Silakan *KIRIMKAN FOTO / DOKUMEN (PDF/JPG)* surat yang Anda terima di chat ini sekarang, beserta nomor kontak dan keterangan singkat. Petugas kami akan segera memverifikasi keabsahan surat dan nomor registrasi dinasnya.\n\n` +
-                    `_(Ketik *0* untuk membatalkan dan kembali ke Menu Utama)_`;
-
-                await sendUserMessage(sender, replyPalsu);
-
-                const alertAdmin =
-                    `🚨🚨 *[URGENT: LAPORAN DUGAAN SURAT PALSU / PENIPUAN KKP]* 🚨🚨\n\n` +
-                    `👤 *Dari Nomor Pemohon:* +${pemohonPhone}\n` +
-                    `💬 *Pesan Laporan:* "${message.body || '[Media/Lampiran]'}"\n\n` +
-                    `-----------------------------------------\n` +
-                    `Petugas dimohon segera memeriksa keabsahan surat dan membalas langsung di sini.\n` +
-                    `👉 *Chat Pemohon:* ${directWaLink}`;
-
-                for (const admPhone of ADMIN_PHONES) {
-                    try {
-                        await client.sendMessage(`${admPhone}@c.us`, alertAdmin);
-                    } catch (e) {
-                        console.error(`Gagal mengirim alert surat palsu ke admin ${admPhone}:`, e);
-                    }
-                }
-
+            // 📢 0. Intercept Ingin Laporan Umum -> Tampilkan 3 Pilihan Laporan (Umum, PRL, AKP)
+            if (isGenericReportInquiry(text)) {
+                userState[sender] = 'SELECT_LAPORAN';
+                await sendUserMessage(sender, PILIHAN_LAPORAN_MENU_TEXT);
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
-                    answer: 'Terdeteksi Pengaduan Surat Palsu -> Langsung dialihkan ke CS Petugas PPID & Notifikasi Admin Terkirim',
+                    answer: 'Menampilkan 3 Pilihan Menu Kategori Laporan (Umum/PSDKP, Ruang Laut/PRL, Awak Kapal/AKP)',
                     source: 'BOT',
                     aiModel,
-                    status: 'PENDING'
+                    status: 'DONE'
                 });
                 return;
             }
 
-            // 🔒 2. Intercept Pengaduan AKP / ABK (Priority 2)
+            // 🔒 1. Intercept Pengaduan AKP / ABK
             if (isPengaduanAkpQuery(text)) {
-                await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE + "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 *Apakah kendala AKP Anda sudah tertampung?*\n• Balas *YA* jika sudah cukup.\n• Ketik *0* atau *Menu* untuk opsi layanan lain.");
+                await sendUserMessage(sender, AKP_PENGADUAN_MESSAGE);
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
@@ -2722,8 +4666,8 @@ client.on('message', async (message) => {
             }
 
             // 🔒 3. Intercept Pengaduan Umum (Priority 3)
-            if (isPengaduanQuery(text)) {
-                await sendUserMessage(sender, PENGADUAN_UMUM_MESSAGE + "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 *Apakah laporan Anda sudah tertampung?*\n• Balas *YA* jika sudah cukup.\n• Ketik *0* atau *Menu* untuk opsi layanan lain.");
+            if (!isSpecificQuestion(text) && isPengaduanQuery(text)) {
+                await sendUserMessage(sender, PENGADUAN_UMUM_MESSAGE);
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
@@ -2735,9 +4679,57 @@ client.on('message', async (message) => {
                 return;
             }
 
+            // 🔒 Intercept Ingin Ngobrol dengan Suatu Bagian Langsung (Request 3)
+            if (isInginNgobrolBagianQuery(text)) {
+                await sendUserMessage(sender, ARAHAN_PENGAJUAN_SURAT_BAGIAN_MESSAGE + getResolutionFooter(text));
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: 'Diarahkan ke Prosedur Pengajuan Surat Resmi untuk Koordinasi/Audiensi Bagian KKP',
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+                return;
+            }
+
+            // 🔒 Intercept Permintaan Kontak PPID (Request 1)
+            if (isPpidContactQuery(text)) {
+                await connectUserToPetugas({
+                    sender,
+                    senderDetails,
+                    text: message.body,
+                    userReply:
+                        `Halo #SahabatBahari,\n\n` +
+                        `Anda saat ini sudah terhubung di ruang percakapan WhatsApp resmi PPID Kementerian Kelautan dan Perikanan.\n\n` +
+                        `*Pesan Anda LANGSUNG KAMI HUBUNGKAN KE PETUGAS LAYANAN PPID KKP* agar dapat dibantu secara langsung.\n\n` +
+                        `Silakan sampaikan pertanyaan atau informasi publik yang Anda butuhkan. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                        `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                    adminAlertTitle: `👨‍💻 *[LAYANAN PPID: PERMINTAAN INFORMASI / PETUGAS]*`
+                });
+                return;
+            }
+
+            // 🔒 Intercept Pertanyaan Satu Data / Portal Data KKP
+            if (isSatuDataQuery(text)) {
+                await connectUserToPetugas({
+                    sender,
+                    senderDetails,
+                    text: message.body,
+                    userReply:
+                        `Halo #SahabatBahari,\n\n` +
+                        `Terkait permohonan data atau portal Satu Data KKP, seluruh permohonan data statistik dan informasi publik kelautan perikanan secara resmi berada di bawah tata kelola *PPID (Pejabat Pengelola Informasi dan Dokumentasi) KKP* (https://ppid.kkp.go.id).\n\n` +
+                        `Portal satudata.kkp.go.id saat ini tidak aktif/tidak tersedia untuk umum. Agar kebutuhan data Anda dapat diverifikasi langsung melalui sistem data internal KKP, *Pesan Anda LANGSUNG KAMI HUBUNGKAN KE PETUGAS LAYANAN PPID KKP*.\n\n` +
+                        `Silakan sampaikan rincian data (jenis komoditas, tahun, dan wilayah) yang Anda butuhkan. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                        `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                    adminAlertTitle: `👨‍💻 *[LAYANAN PPID: PERMOHONAN DATA / SATU DATA]*`
+                });
+                return;
+            }
+
             // 🔒 4. Intercept Perizinan → redirect ke PTSA (Priority 4)
-            if (isPerizinanQuery(text)) {
-                await sendUserMessage(sender, PTSA_REDIRECT_MESSAGE + "\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 *Apakah informasi kontak perizinan PTSA sudah jelas?*\n• Balas *YA* jika sudah cukup.\n• Ketik *0* atau *Menu* untuk opsi layanan lain.");
+            if (!isSpecificQuestion(text) && isPerizinanQuery(text)) {
+                await sendUserMessage(sender, PTSA_REDIRECT_MESSAGE);
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
@@ -2750,7 +4742,7 @@ client.on('message', async (message) => {
             }
 
             // ⛵ 5. Intercept Tematik: Modernisasi Kapal Perikanan
-            if (isModernisasiKapalQuery(text)) {
+            if (!isSpecificQuestion(text) && isModernisasiKapalQuery(text)) {
                 userState[sender] = 'PKPN_KAPAL_MENU';
                 await sendUserMessage(sender, KAPAL_SUBMENU_TEXT);
                 tracker.recordConversation({
@@ -2765,7 +4757,7 @@ client.on('message', async (message) => {
             }
 
             // 🌊 6. Intercept Tematik: KNMP (Kampung Nelayan Merah Putih)
-            if (isKnmpQuery(text)) {
+            if (!isSpecificQuestion(text) && isKnmpQuery(text)) {
                 userState[sender] = 'PKPN_KNMP_MENU';
                 await sendUserMessage(sender, KNMP_SUBMENU_TEXT);
                 tracker.recordConversation({
@@ -2780,7 +4772,7 @@ client.on('message', async (message) => {
             }
 
             // 🎯 7. Intercept Tematik: PKPN (Program Kerja Prioritas Nasional - Menu Berjenjang)
-            if (isPkpnQuery(text)) {
+            if (!isSpecificQuestion(text) && isPkpnQuery(text)) {
                 userState[sender] = 'PKPN_SELECT_PROGRAM';
                 await sendUserMessage(sender, PKPN_PROGRAM_MENU_TEXT);
                 tracker.recordConversation({
@@ -2795,7 +4787,7 @@ client.on('message', async (message) => {
             }
 
             // 🌍 8. Intercept Tematik: Ekonomi Biru (5 Pilar)
-            if (isEkonomiBiruQuery(text)) {
+            if (!isSpecificQuestion(text) && isEkonomiBiruQuery(text)) {
                 userState[sender] = 'TROUBLESHOOT_EKONOMI_BIRU';
                 await sendUserMessage(sender,
                     `Halo #SahabatBahari,\n\n` +
@@ -2825,37 +4817,25 @@ client.on('message', async (message) => {
                 return;
             }
 
-            // 9. Cek kecocokan dengan file database template (faq.json)
-            let jawabanTemplate = null;
-            try {
-                const faqData = JSON.parse(fs.readFileSync('./faq.json', 'utf8'));
-                for (const item of faqData) {
-                    const isMatch = item.keywords.some(keyword => text.includes(keyword));
-                    if (isMatch) {
-                        jawabanTemplate = tracker.cleanWhatsAppFormatting(item.answer);
-                        break;
-                    }
-                }
-            } catch (err) {
-                console.error("Gagal membaca faq.json:", err);
-            }
+            // 9. Cek kecocokan dengan file database template (faq.json) dengan prinsip best match
+            // HANYA gunakan template FAQ langsung jika BUKAN multi-chat dan BUKAN teks panjang naratif
+            const canUseDirectFaq = !message.isMultiChat && !message.isLongText;
+            const jawabanTemplate = canUseDirectFaq ? findBestFaqMatch(text) : null;
 
             // Jika ada jawaban di template FAQ
             if (jawabanTemplate) {
                 userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
-                const footer =
-                    `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                    `💡 *Apakah jawaban di atas sudah menyelesaikan kendala Anda?*\n` +
-                    `• Balas *YA* jika kendala sudah selesai.\n` +
-                    `• Atau ketikkan pertanyaan detail lainnya.\n` +
-                    `• Ketik *0* untuk kembali ke Menu Utama.`;
-
-                await sendUserMessage(sender, jawabanTemplate + footer);
+                const senderName = userKnownName[senderPhone] || userKnownName[sender] || senderDetails?.name || '';
+                let personalizedFaq = jawabanTemplate;
+                if (senderName && personalizedFaq.startsWith('Halo #SahabatBahari,')) {
+                    personalizedFaq = personalizedFaq.replace('Halo #SahabatBahari,', `Halo #SahabatBahari Kak ${senderName},`);
+                }
+                await sendUserMessage(sender, personalizedFaq + getResolutionFooter(text));
 
                 tracker.recordConversation({
                     phone: senderPhone,
                     text: message.body,
-                    answer: jawabanTemplate,
+                    answer: personalizedFaq,
                     source: 'BOT',
                     aiModel,
                     status: 'DONE'
@@ -2863,52 +4843,76 @@ client.on('message', async (message) => {
                 return;
             }
 
-            // 10. Jika bukan FAQ dan relevan dengan KKP -> Oper ke Gemini AI
-            if (isRelevantKKPQuery(text) || text.length > 25) {
-                userState[sender] = 'AI_MODE';
-                userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
-                try {
-                    const result = await aiModel.generateContent(message.body);
-                    let replyText = tracker.cleanWhatsAppFormatting(result.response.text());
-                    const footer =
-                        `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                        `💡 *Apakah informasi ini sudah menyelesaikan kendala Anda?*\n` +
-                        `• Balas *YA* jika sudah selesai.\n` +
-                        `• Atau ajukan pertanyaan lebih lanjut.\n` +
-                        `• Ketik *0* untuk kembali ke Menu Utama.`;
+            // 10. Oper ke Gemini AI (Mendukung Percakapan Natural, Bahasa Inggris, Multi-Chat Synthesis & Analisis Longtext)
+            userState[sender] = 'AI_MODE';
+            userAiChatCount[sender] = (userAiChatCount[sender] || 0) + 1;
 
-                    await sendUserMessage(sender, replyText + footer);
-
-                    tracker.recordConversation({
-                        phone: senderPhone,
-                        text: message.body,
-                        answer: replyText,
-                        source: 'BOT',
-                        aiModel,
-                        status: 'DONE'
-                    });
-                } catch (error) {
-                    console.error('Error dari Gemini API:', error);
-                    await sendUserMessage(sender, "Maaf, Asisten AI sedang mengalami gangguan koneksi.\n\nKetik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
-                }
+            // Jika pemohon mengirim karakter acak / tidak jelas (gibberish) yang berulang kali tidak teridentifikasi
+            const isGibberish = text.length > 0 && !/[a-zA-Z]{3,}/.test(text) && !/^\d+$/.test(text);
+            if (isGibberish && userAiChatCount[sender] >= 5) {
+                await connectUserToPetugas({
+                    sender,
+                    senderDetails,
+                    text: message.body,
+                    userReply:
+                        `Halo #SahabatBahari,\n\n` +
+                        `Pertanyaan Anda belum teridentifikasi dalam sistem layanan otomatis kami setelah beberapa kali interaksi.\n\n` +
+                        `*Pesan Anda LANGSUNG KAMI HUBUNGKAN KE PETUGAS RESMI PPID KKP* agar dapat dibantu secara personal.\n\n` +
+                        `Silakan sampaikan pertanyaan atau kendala Anda secara lebih mendalam. Petugas kami akan segera membalas pesan Anda. 🙏\n\n` +
+                        `_(Ketik *0* untuk kembali ke Menu Utama)_`,
+                    adminAlertTitle: `👨‍💻 *[ASISTENSI PETUGAS: PERTANYAAN PERLU PENANGANAN MANUAL]*`
+                });
                 return;
             }
 
-            // 11. Jika tidak masuk kemana-mana / tidak jelas -> Berikan pertanyaan tertutup, jika tetap tidak jelas selesaikan/abaikan
-            userState[sender] = 'UNCLEAR_PROMPT';
-            await sendUserMessage(sender,
-                `Halo #SahabatBahari,\n\n` +
-                `Pesan Anda belum teridentifikasi dalam lingkup tugas dan layanan informasi Kementerian Kelautan dan Perikanan (KKP).\n\n` +
-                `Silakan konfirmasi melalui pilihan tertutup berikut:\n` +
-                `*1* 🌊 Ya, kendala saya tentang sektor Kelautan & Perikanan (silakan sebutkan topik perikanan/kelautan yang dimaksud)\n` +
-                `*2* ❌ Bukan / Di luar KKP (akhiri sesi)\n\n` +
-                `_Balas angka *1* atau *2*._\n\n` +
-                `Salam hormat.`
-            );
+            try {
+                const replyText = await generateGroundedAiResponse({
+                    sender,
+                    senderPhone,
+                    messageBody: message.body,
+                    text,
+                    isMultiChat: message.isMultiChat,
+                    multiChatCount: message.multiChatCount,
+                    isLongText: message.isLongText
+                });
+
+                // Request 4: Jika informasi tersebut tidak ada / belum bisa dijawab -> alihkan kepada petugas
+                const isUnavailableInfo =
+                    replyText.includes('belum bisa kami jawab') ||
+                    replyText.includes('kami alihkan kepada petugas') ||
+                    replyText.includes('dialihkan kepada petugas');
+
+                if (isUnavailableInfo) {
+                    await connectUserToPetugas({
+                        sender,
+                        senderDetails,
+                        text: message.body,
+                        userReply: replyText,
+                        adminAlertTitle: `👨‍💻 *[ASISTENSI PETUGAS: INFORMASI BELUM TERSEDIA]*`
+                    });
+                    return;
+                }
+
+                await sendUserMessage(sender, replyText + getResolutionFooter(text));
+
+                tracker.recordConversation({
+                    phone: senderPhone,
+                    text: message.body,
+                    answer: replyText,
+                    source: 'BOT',
+                    aiModel,
+                    status: 'DONE'
+                });
+            } catch (error) {
+                console.error('Error dari Gemini API:', error);
+                await sendUserMessage(sender, isEnglishQuery(text)
+                    ? "Sorry, the AI Assistant is currently experiencing connection issues.\n\nType *0* to return to Main Menu or type *HELP* to connect to an Officer."
+                    : "Maaf, Asisten AI sedang mengalami gangguan koneksi.\n\nKetik *0* untuk kembali ke Menu Utama atau ketik *BANTUAN* untuk terhubung ke Petugas.");
+            }
             return;
         }
     }
-});
+}
 
 // ==========================================
 // ⏰ JADWAL OTOMATIS: REKAP EXCEL JAM 16:00 WIB
